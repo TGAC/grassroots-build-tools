@@ -2,6 +2,14 @@
 
 MAKEDEPEND 	:= gcc -MM -MF
 
+ifeq ($(CC),)
+CC := gcc
+endif
+
+ifeq ($(CXX),)
+CXX := g++
+endif
+
 ifeq ($(DIR_BUILD),)
 export DIR_BUILD = $(realpath .)
 endif
@@ -61,7 +69,9 @@ init:
 	@echo "c: $(C_SRCS)"	
 	@echo "c++: $(CXX_SRCS)"	
 	@echo "VPATH: $(VPATH)" 
-	@echo "IRODS: =$(DIR_IRODS)=" 
+	@echo "DIR_CORE: $(DIR_CORE)"
+	@echo "DIR_GRASSROOTS_UTIL: $(DIR_GRASSROOTS_UTIL)"
+	@echo "DIR_GRASSROOTS_NETWORK: $(DIR_GRASSROOTS_NETWORK)"
 	@echo "-----------------------------------------------" 
 	
 clean:
@@ -74,7 +84,7 @@ clean:
 $(DIR_OBJS)/%.o : %.c
 	@echo ">>> c build for $@"
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
-	$(MAKEDEPEND) $(basename $@).d -MT $(basename $@).o $(CPPFLAGS) $(CFLAGS) $<  
+	@$(MAKEDEPEND) $(basename $@).d -MT $(basename $@).o $(CPPFLAGS) $(CFLAGS) $<  
 	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$*.o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@sed -e 's/.*://' -e 's/\\$$//' < $(basename $@).d.tmp | fmt -1 | \
@@ -87,7 +97,7 @@ $(DIR_OBJS)/%.o : %.c
 $(DIR_OBJS)/%.o : %.cpp 
 	@echo ">>> c++ build for $@"
 	$(CXX) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
-	$(MAKEDEPEND) $(basename $@).d -MT $(basename $@).o $(CPPFLAGS) $(CFLAGS) $<  
+	@$(MAKEDEPEND) $(basename $@).d -MT $(basename $@).o $(CPPFLAGS) $(CFLAGS) $<  
 	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$*.o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@sed -e 's/.*://' -e 's/\\$$//' < $(basename $@).d.tmp | fmt -1 | \
