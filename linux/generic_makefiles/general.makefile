@@ -1,5 +1,6 @@
 .DEFAULT_GOAL = all
 
+MAKEDEPEND 	:= gcc -MM -MF
 
 ifeq ($(DIR_BUILD),)
 export DIR_BUILD = $(realpath .)
@@ -64,7 +65,7 @@ init:
 	@echo "-----------------------------------------------" 
 	
 clean:
-	@rm -fr $(BUILD)/
+	rm -fr $(DIR_OBJS)/
 
  
 # Compile and generate dependency info
