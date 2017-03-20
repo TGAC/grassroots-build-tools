@@ -1,6 +1,6 @@
 TARGET_NAME = $(NAME)
 
-include $(DIR_BUILD_ROOT)/generic_makefiles/general.makefile
+include $(realpath $(dir $(lastword $(MAKEFILE_LIST))))/general.makefile
 
 .PHONY: exe
 
