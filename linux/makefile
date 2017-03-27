@@ -46,6 +46,9 @@ endif
 COPY	:= cp 
 DELETE := rm
 
+GIT_REMOTE := origin
+GIT_BRANCH := master
+
 #################################################################
 ##### Hopefully you should not need to edit below this line #####
 #################################################################
@@ -117,15 +120,15 @@ git-pull:
 	@echo ">>> Updating $(DIR_BUILD_CONFIG)" 
 	@git pull
 	@echo ">>> Updating $(DIR_CORE)" 
-	@cd $(DIR_CORE) && git pull;
+	@cd $(DIR_CORE) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-		echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull;)	
+		echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-		echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git pull;)	
+		echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-		echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull;)	
+		echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-		echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull;)	
+		echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
 		
 
 show-config:
