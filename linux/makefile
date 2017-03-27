@@ -53,6 +53,7 @@ GIT_BRANCH := master
 ##### Hopefully you should not need to edit below this line #####
 #################################################################
 
+
 #
 # Get the directory containing this makefile
 #
@@ -63,29 +64,90 @@ include $(DIR_BUILD_CONFIG)/project.properties
 #
 # Get all of the build files for each component
 #
-SERVERS_BUILD_DIRS := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
-SERVICES_BUILD_DIRS := $(shell find $(DIR_SERVICES) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
-HANDLERS_BUILD_DIRS := $(shell find $(DIR_HANDLERS) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
-CLIENTS_BUILD_DIRS := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
+
+ifneq ($(DIR_SERVERS),)
+	SERVERS_MAKEFILES := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile')
+
+	ifneq ($(SERVERS_MAKEFILES),)
+		SERVERS_BUILD_DIRS := $(shell dirname $(SERVERS_MAKEFILES))
+	else
+		SERVERS_BUILD_DIRS := 
+	endif 
+
+else
+	SERVERS_BUILD_DIRS := 
+endif
+
+
+ifneq ($(DIR_CLIENTS),)
+	CLIENTS_MAKEFILES := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile')
+
+	ifneq ($(CLIENTS_MAKEFILES),)
+		CLIENTS_BUILD_DIRS := $(shell dirname $(CLIENTS_MAKEFILES))
+	else
+		CLIENTS_BUILD_DIRS := 
+	endif 
+
+else
+	CLIENTS_BUILD_DIRS := 
+endif
+
+
+ifneq ($(DIR_SERVICES),)
+	SERVICES_MAKEFILES := $(shell find $(DIR_SERVICES) -path '*/build/$(PLATFORM)/makefile')
+
+	ifneq ($(SERVICES_MAKEFILES),)
+		SERVICES_BUILD_DIRS := $(shell dirname $(SERVICES_MAKEFILES))
+	else
+		SERVICES_BUILD_DIRS := 
+	endif 
+
+else
+	SERVICES_BUILD_DIRS := 
+endif
+
+
+ifneq ($(DIR_HANDLERS),)
+	HANDLERS_MAKEFILES := $(shell find $(DIR_HANDLERS) -path '*/build/$(PLATFORM)/makefile')
+
+	ifneq ($(HANDLERS_MAKEFILES),)
+		HANDLERS_BUILD_DIRS := $(shell dirname $(HANDLERS_MAKEFILES))
+	else
+		HANDLERS_BUILD_DIRS := 
+	endif 
+
+else
+	HANDLERS_BUILD_DIRS := 
+endif
+
 
 #
 # Make some phony targets to allow us to pass targets to the makefiles in each of subdirectories
 #
-SERVICES_ALL := $(SERVICES_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
-SERVICES_INSTALL := $(SERVICES_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
-SERVICES_CLEAN := $(SERVICES_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+ifneq ($(SERVICES_BUILD_DIRS),)
+	SERVICES_ALL := $(SERVICES_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
+	SERVICES_INSTALL := $(SERVICES_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
+	SERVICES_CLEAN := $(SERVICES_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+endif
 
-HANDLERS_ALL := $(HANDLERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
-HANDLERS_INSTALL := $(HANDLERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
-HANDLERS_CLEAN := $(HANDLERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+ifneq ($(HANDLERS_BUILD_DIRS),)
+	HANDLERS_ALL := $(HANDLERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
+	HANDLERS_INSTALL := $(HANDLERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
+	HANDLERS_CLEAN := $(HANDLERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+endif
 
-SERVERS_ALL := $(SERVERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
-SERVERS_INSTALL := $(SERVERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
-SERVERS_CLEAN := $(SERVERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+ifneq ($(SERVERS_BUILD_DIRS),)
+	SERVERS_ALL := $(SERVERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
+	SERVERS_INSTALL := $(SERVERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
+	SERVERS_CLEAN := $(SERVERS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+endif
 
-CLIENTS_ALL := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
-CLIENTS_INSTALL := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
-CLIENTS_CLEAN := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+ifneq ($(CLIENTS_BUILD_DIRS),)
+	CLIENTS_ALL := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
+	CLIENTS_INSTALL := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
+	CLIENTS_CLEAN := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+endif
+
 
 #
 # targets depends on the same target name in each of the directories 
@@ -118,7 +180,7 @@ git-pull:
 	@echo "Updating local copies:"
 	@echo "======================\n"
 	@echo ">>> Updating $(DIR_BUILD_CONFIG)" 
-	@git pull
+	@git pull $(GIT_REMOTE) $(GIT_BRANCH)
 	@echo ">>> Updating $(DIR_CORE)" 
 	@cd $(DIR_CORE) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
@@ -130,6 +192,26 @@ git-pull:
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
 		echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
 		
+
+#
+# Push all changes to the repositories
+#
+git-push:
+	@echo "Pushing local copies:"
+	@echo "======================\n"
+	@echo ">>> Pushing $(DIR_BUILD_CONFIG)" 
+	@git push $(GIT_REMOTE) $(GIT_BRANCH);
+	@echo ">>> Pushing $(DIR_CORE)" 
+	@cd $(DIR_CORE) && git push $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
+		echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
+		echo ">>> Pushing $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
+		echo ">>> Pushing $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
+		echo ">>> Pushing $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+
 
 show-config:
 	@echo "DIR_SERVERS: $(DIR_SERVERS)"
@@ -143,7 +225,7 @@ show-config:
 	@echo "CLIENTS_BUILD_DIRS: $(CLIENTS_BUILD_DIRS)"
 
 #
-# Show all of the avialable targets, taken from 
+# Show all of the available targets, taken from 
 # http://stackoverflow.com/questions/4219255/how-do-you-get-the-list-of-targets-in-a-makefile
 #
 .PHONY: list
