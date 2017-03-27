@@ -63,10 +63,10 @@ include $(DIR_BUILD_CONFIG)/project.properties
 #
 # Get all of the build files for each component
 #
-SERVERS_BUILD_DIRS := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile' | xargs dirname)
-SERVICES_BUILD_DIRS := $(shell find $(DIR_SERVICES) -path '*/build/$(PLATFORM)/makefile' | xargs dirname)
-HANDLERS_BUILD_DIRS := $(shell find $(DIR_HANDLERS) -path '*/build/$(PLATFORM)/makefile' | xargs dirname)
-CLIENTS_BUILD_DIRS := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile' | xargs dirname)
+SERVERS_BUILD_DIRS := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
+SERVICES_BUILD_DIRS := $(shell find $(DIR_SERVICES) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
+HANDLERS_BUILD_DIRS := $(shell find $(DIR_HANDLERS) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
+CLIENTS_BUILD_DIRS := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile' | xargs -n 1 dirname)
 
 #
 # Make some phony targets to allow us to pass targets to the makefiles in each of subdirectories
