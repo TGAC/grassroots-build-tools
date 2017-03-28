@@ -1,3 +1,6 @@
+#
+# Get the directory containing this makefile
+#
 THIS_MAKEFILE := $(lastword $(MAKEFILE_LIST))
 export DIR_BUILD_CONFIG :=  $(realpath $(dir $(THIS_MAKEFILE)))
 
@@ -55,16 +58,19 @@ endif
 COPY	:= cp 
 DELETE := rm
 
+# The name of the remote that we will use for our git operations
 GIT_REMOTE := origin
+
+# The name of the branch that we will use for our git operations
 GIT_BRANCH := master
 
 #################################################################
 ##### Hopefully you should not need to edit below this line #####
 #################################################################
 
-
-#
-# Get the directory containing this makefile
+# 
+# The prefix that we will use to manage the targets
+# for all of the subdirectories
 #
 FAKE_TARGET_PREFIX := --
 
@@ -73,7 +79,6 @@ include $(DIR_BUILD_CONFIG)/project.properties
 #
 # Get all of the build files for each component
 #
-
 ifneq ($(DIR_SERVERS),)
 	SERVERS_MAKEFILES := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile')
 
