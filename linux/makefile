@@ -43,6 +43,15 @@ export DIR_CORE := $(realpath $(DIR_BUILD_CONFIG)/../../core)
 endif
 
 
+#
+# If it is not already set, get the path to where the Grassroots
+# docs repository is checked out to.
+#
+ifeq ($(DIR_DOCS),)
+export DIR_DOCS := $(realpath $(DIR_BUILD_CONFIG)/../../docs)
+endif
+
+
 COPY	:= cp 
 DELETE := rm
 
@@ -81,6 +90,9 @@ endif
 
 ifneq ($(DIR_CLIENTS),)
 	CLIENTS_MAKEFILES := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile')
+	
+	# Add any qt projects
+	CLIENTS_MAKEFILES += $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/*.pro')
 
 	ifneq ($(CLIENTS_MAKEFILES),)
 		CLIENTS_BUILD_DIRS := $(shell dirname $(CLIENTS_MAKEFILES))
@@ -183,6 +195,8 @@ git-pull:
 	@git pull $(GIT_REMOTE) $(GIT_BRANCH)
 	@echo ">>> Updating $(DIR_CORE)" 
 	@cd $(DIR_CORE) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@echo ">>> Updating $(DIR_DOCS)" 
+	@cd $(DIR_DOCS) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
 		echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -203,6 +217,8 @@ git-push:
 	@git push $(GIT_REMOTE) $(GIT_BRANCH);
 	@echo ">>> Pushing $(DIR_CORE)" 
 	@cd $(DIR_CORE) && git push $(GIT_REMOTE) $(GIT_BRANCH);
+	@echo ">>> Pushing $(DIR_DOCS)" 
+	@cd $(DIR_DOCS) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
 		echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -219,6 +235,7 @@ show-config:
 	@echo "DIR_HANDLERS: $(DIR_HANDLERS)"
 	@echo "DIR_CLIENTS: $(DIR_CLIENTS)"
 	@echo "DIR_CORE: $(DIR_CORE)"
+	@echo "DIR_DOCS: $(DIR_DOCS)"
 	@echo "SERVERS_BUILD_DIRS: $(SERVERS_BUILD_DIRS)"
 	@echo "SERVICES_BUILD_DIRS: $(SERVICES_BUILD_DIRS)"
 	@echo "HANDLERS_BUILD_DIRS: $(HANDLERS_BUILD_DIRS)"
