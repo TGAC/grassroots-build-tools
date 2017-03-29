@@ -296,7 +296,13 @@ $(CLIENTS_CLEAN):
 .PHONY: subdirs $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL)
 .PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN)
 .PHONY: all install clean core-all core-clean 
-.PHONY: git-pull git-check show-config
+.PHONY: git-pull git-push git-check show-config create-dirs 
+
+
+create-dirs:
+	mkdir -p ../clients
+	mkdir -p ../servers
+	mkdir -p ../services
 
 core-all:
 	@echo "****** BEGIN GRASSROOTS CORE ******"
