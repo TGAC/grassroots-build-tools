@@ -200,8 +200,10 @@ git-pull:
 	@git pull $(GIT_REMOTE) $(GIT_BRANCH)
 	@echo ">>> Updating $(DIR_CORE)" 
 	@cd $(DIR_CORE) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
-	@echo ">>> Updating $(DIR_DOCS)" 
-	@cd $(DIR_DOCS) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(ifneq ($(DIR_DOCS),""))
+		@echo ">>> Updating \"$(DIR_DOCS)\"" 
+		@cd $(DIR_DOCS) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
 		echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
