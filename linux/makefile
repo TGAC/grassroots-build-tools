@@ -55,7 +55,7 @@ export DIR_DOCS := $(realpath $(DIR_BUILD_CONFIG)/../../docs)
 endif
 
 
-COPY	:= cp 
+COPY	:= cp
 DELETE := rm
 
 # The name of the remote that we will use for our git operations
@@ -68,7 +68,7 @@ GIT_BRANCH := master
 ##### Hopefully you should not need to edit below this line #####
 #################################################################
 
-# 
+#
 # The prefix that we will use to manage the targets
 # for all of the subdirectories
 #
@@ -80,61 +80,33 @@ include $(DIR_BUILD_CONFIG)/project.properties
 # Get all of the build files for each component
 #
 ifneq ($(DIR_SERVERS),)
-	SERVERS_MAKEFILES := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile')
-
-	ifneq ($(SERVERS_MAKEFILES),)
-		SERVERS_BUILD_DIRS := $(shell dirname $(SERVERS_MAKEFILES))
-	else
-		SERVERS_BUILD_DIRS := 
-	endif 
-
+	SERVERS_BUILD_DIRS := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
-	SERVERS_BUILD_DIRS := 
+	SERVERS_BUILD_DIRS :=
 endif
 
 
 ifneq ($(DIR_CLIENTS),)
-	CLIENTS_MAKEFILES := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile')
+	CLIENTS_BUILD_DIRS := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
 	
 	# Add any qt projects
-	CLIENTS_MAKEFILES += $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/*.pro')
-
-	ifneq ($(CLIENTS_MAKEFILES),)
-		CLIENTS_BUILD_DIRS := $(shell dirname $(CLIENTS_MAKEFILES))
-	else
-		CLIENTS_BUILD_DIRS := 
-	endif 
-
+	CLIENTS_BUILD_DIRS += $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/*.pro' -exec dirname {} \;)
 else
-	CLIENTS_BUILD_DIRS := 
+	CLIENTS_BUILD_DIRS :=
 endif
 
 
 ifneq ($(DIR_SERVICES),)
-	SERVICES_MAKEFILES := $(shell find $(DIR_SERVICES) -path '*/build/$(PLATFORM)/makefile')
-
-	ifneq ($(SERVICES_MAKEFILES),)
-		SERVICES_BUILD_DIRS := $(shell dirname $(SERVICES_MAKEFILES))
-	else
-		SERVICES_BUILD_DIRS := 
-	endif 
-
+	SERVICES_BUILD_DIRS := $(shell find $(DIR_SERVICES) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
-	SERVICES_BUILD_DIRS := 
+	SERVICES_BUILD_DIRS :=
 endif
 
 
 ifneq ($(DIR_HANDLERS),)
-	HANDLERS_MAKEFILES := $(shell find $(DIR_HANDLERS) -path '*/build/$(PLATFORM)/makefile')
-
-	ifneq ($(HANDLERS_MAKEFILES),)
-		HANDLERS_BUILD_DIRS := $(shell dirname $(HANDLERS_MAKEFILES))
-	else
-		HANDLERS_BUILD_DIRS := 
-	endif 
-
+	HANDLERS_BUILD_DIRS := $(shell find $(DIR_HANDLERS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
-	HANDLERS_BUILD_DIRS := 
+	HANDLERS_BUILD_DIRS :=
 endif
 
 
@@ -167,7 +139,7 @@ endif
 
 
 #
-# targets depends on the same target name in each of the directories 
+# targets depends on the same target name in each of the directories
 #
 all: core-all $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL)
 install: all core-install $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL)
@@ -182,13 +154,13 @@ git-check:
 	@git diff-index --name-only --quiet HEAD -- || echo "$(DIR_BUILD_CONFIG)";
 	@cd $(DIR_CORE) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_CORE)";
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-		cd $(SERVER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVER_BUILD_DIR)";)	
+   	 cd $(SERVER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVER_BUILD_DIR)";)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-		cd $(SERVICE_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVICE_BUILD_DIR)";)	
+   	 cd $(SERVICE_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVICE_BUILD_DIR)";)	
 	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-		cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)	
+   	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-		cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
+   	 cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
 
 #
 # Update any local copies of repositories
@@ -196,23 +168,23 @@ git-check:
 git-pull:
 	@echo "Updating local copies:"
 	@echo "======================\n"
-	@echo ">>> Updating $(DIR_BUILD_CONFIG)" 
+	@echo ">>> Updating $(DIR_BUILD_CONFIG)"
 	@git pull $(GIT_REMOTE) $(GIT_BRANCH)
-	@echo ">>> Updating $(DIR_CORE)" 
+	@echo ">>> Updating $(DIR_CORE)"
 	@cd $(DIR_CORE) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(ifneq ($(DIR_DOCS),""))
-		@echo ">>> Updating \"$(DIR_DOCS)\"" 
-		@cd $(DIR_DOCS) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@echo ">>> Updating \"$(DIR_DOCS)\""
+	@cd $(DIR_DOCS) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-		echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull  $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-		echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-		echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-		echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
-		
+   	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 
 
 #
 # Push all changes to the repositories
@@ -220,20 +192,20 @@ git-pull:
 git-push:
 	@echo "Pushing local copies:"
 	@echo "======================\n"
-	@echo ">>> Pushing $(DIR_BUILD_CONFIG)" 
+	@echo ">>> Pushing $(DIR_BUILD_CONFIG)"
 	@git push $(GIT_REMOTE) $(GIT_BRANCH);
-	@echo ">>> Pushing $(DIR_CORE)" 
+	@echo ">>> Pushing $(DIR_CORE)"
 	@cd $(DIR_CORE) && git push $(GIT_REMOTE) $(GIT_BRANCH);
-	@echo ">>> Pushing $(DIR_DOCS)" 
+	@echo ">>> Pushing $(DIR_DOCS)"
 	@cd $(DIR_DOCS) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-		echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-		echo ">>> Pushing $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Pushing $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-		echo ">>> Pushing $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Pushing $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-		echo ">>> Pushing $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Pushing $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 
 
 show-config:
@@ -249,7 +221,7 @@ show-config:
 	@echo "CLIENTS_BUILD_DIRS: $(CLIENTS_BUILD_DIRS)"
 
 #
-# Show all of the available targets, taken from 
+# Show all of the available targets, taken from
 # http://stackoverflow.com/questions/4219255/how-do-you-get-the-list-of-targets-in-a-makefile
 #
 .PHONY: list
@@ -297,8 +269,8 @@ $(CLIENTS_CLEAN):
 .PHONY: subdirs $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL)
 .PHONY: subdirs $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL)
 .PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN)
-.PHONY: all install clean core-all core-clean 
-.PHONY: git-pull git-push git-check show-config create-dirs 
+.PHONY: all install clean core-all core-clean
+.PHONY: git-pull git-push git-check show-config create-dirs
 
 
 create-dirs:
@@ -309,20 +281,22 @@ create-dirs:
 core-all:
 	@echo "****** BEGIN GRASSROOTS CORE ******"
 	@echo ">>> DIR_CORE $(DIR_CORE)"
-	echo "****** CALLING $(MAKE) -C $(DIR_CORE) all ******"; 
-	$(MAKE) -C $(DIR_CORE) all 
+	echo "****** CALLING $(MAKE) -C $(DIR_CORE) all ******";
+	$(MAKE) -C $(DIR_CORE) all
 	@echo "****** END GRASSROOTS CORE ******"	
 
 core-clean:
 	@echo "****** BEGIN GRASSROOTS CORE ******"
 	@echo ">>> DIR_CORE $(DIR_CORE)"
-	echo "****** CALLING $(MAKE) -C $(DIR_CORE) clean ******"; 
-	$(MAKE) -C $(DIR_CORE) clean 
+	echo "****** CALLING $(MAKE) -C $(DIR_CORE) clean ******";
+	$(MAKE) -C $(DIR_CORE) clean
 	@echo "****** END GRASSROOTS CORE ******"	
 	
 core-install:
 	@echo "****** BEGIN GRASSROOTS CORE ******"
 	@echo ">>> DIR_CORE $(DIR_CORE)"
-	echo "****** CALLING $(MAKE) -C $(DIR_CORE) install ******"; 
-	$(MAKE) -C $(DIR_CORE) install 
+	echo "****** CALLING $(MAKE) -C $(DIR_CORE) install ******";
+	$(MAKE) -C $(DIR_CORE) install
 	@echo "****** END GRASSROOTS CORE ******"	
+
+
