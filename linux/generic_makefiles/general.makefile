@@ -59,6 +59,7 @@ install: all
 	@echo "ROOT DIR $(DIR_ROOT)"
 	@echo "THIS DIR $(THIS_DIR)"
 	@echo "Installing $(TARGET_NAME) to $(DIR_INSTALL)"
+	mkdir -p $(DIR_INSTALL)
 	cp $(DIR_OBJS)/$(TARGET_NAME) $(DIR_INSTALL)/  
 
 init:
