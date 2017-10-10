@@ -161,7 +161,9 @@ git-check:
    	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
-
+	@$(ifneq ($(DIR_DOCS),""))
+	@cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";)	
+	@$(endif)
 #
 # Update any local copies of repositories
 #
@@ -299,4 +301,9 @@ core-install:
 	$(MAKE) -C $(DIR_CORE) install
 	@echo "****** END GRASSROOTS CORE ******"	
 
+
+docs:
+	@$(ifneq ($(DIR_DOCS),""))
+	@cd $(DIR_DOCS) && doxygen
+	@$(endif)
 
