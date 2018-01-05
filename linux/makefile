@@ -55,6 +55,15 @@ export DIR_DOCS := $(realpath $(DIR_BUILD_CONFIG)/../../docs)
 endif
 
 
+#
+# If it is not already set, get the path to where the Grassroots
+# references repository is checked out to.
+#
+ifeq ($(DIR_REFERENCES),)
+export DIR_REFERENCES := $(realpath $(DIR_BUILD_CONFIG)/../../references)
+endif
+
+
 COPY	:= cp
 DELETE := rm
 
@@ -142,7 +151,7 @@ endif
 # targets depends on the same target name in each of the directories
 #
 all: core-all $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL)
-install: all core-install $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL)
+install: all core-install $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) references-install
 clean: core-clean $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN)
 
 #
@@ -164,6 +173,9 @@ git-check:
 	@$(ifneq ($(DIR_DOCS),""))
 	@cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";)	
 	@$(endif)
+	@$(ifneq ($(DIR_REFERENCES),""))
+	@cd $(DIR_REFERENCES) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_REFERENCES)";)	
+	@$(endif)
 #
 # Update any local copies of repositories
 #
@@ -177,6 +189,10 @@ git-pull:
 	@$(ifneq ($(DIR_DOCS),""))
 	@echo ">>> Updating \"$(DIR_DOCS)\""
 	@cd $(DIR_DOCS) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(endif)
+	@$(ifneq ($(DIR_REFERENCES),""))
+	@echo ">>> Updating \"$(DIR_REFERENCES)\""
+	@cd $(DIR_REFERENCES) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull  $(GIT_REMOTE) $(GIT_BRANCH);)	
@@ -200,6 +216,8 @@ git-push:
 	@cd $(DIR_CORE) && git push $(GIT_REMOTE) $(GIT_BRANCH);
 	@echo ">>> Pushing $(DIR_DOCS)"
 	@cd $(DIR_DOCS) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
+	@echo ">>> Pushing $(DIR_REFERENCES)"
+	@cd $(DIR_REFERENCES) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -217,6 +235,7 @@ show-config:
 	@echo "DIR_CLIENTS: $(DIR_CLIENTS)"
 	@echo "DIR_CORE: $(DIR_CORE)"
 	@echo "DIR_DOCS: $(DIR_DOCS)"
+	@echo "DIR_REFERENCES: $(DIR_REFERENCES)"
 	@echo "SERVERS_BUILD_DIRS: $(SERVERS_BUILD_DIRS)"
 	@echo "SERVICES_BUILD_DIRS: $(SERVICES_BUILD_DIRS)"
 	@echo "HANDLERS_BUILD_DIRS: $(HANDLERS_BUILD_DIRS)"
@@ -302,6 +321,15 @@ core-install:
 	@echo "****** END GRASSROOTS CORE ******"	
 
 
+references-install:
+	@$(ifneq ($(DIR_REFERENCES),""))
+	@echo "****** BEGIN GRASSROOTS REFERENCES ******"
+	@echo ">>> DIR_REFERENCES $(DIR_REFERENCES)"
+	echo "****** CALLING $(MAKE) -C $(DIR_REFERENCES)/build/linux install ******";
+	$(MAKE) -C $(DIR_REFERENCES)/build/linux install
+	@echo "****** END GRASSROOTS REFERENCES ******"	
+	@$(endif)
+	
 docs:
 	@$(ifneq ($(DIR_DOCS),""))
 	@cd $(DIR_DOCS) && doxygen
