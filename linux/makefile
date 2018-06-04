@@ -38,6 +38,14 @@ export DIR_CLIENTS := $(realpath $(DIR_BUILD_CONFIG)/../../clients)
 endif
 
 #
+# If it is not already set, get the path to where all
+# of the separate extra libraries are stored
+#
+ifeq ($(DIR_EXTRA_LIBS),)
+export DIR_EXTRA_LIBS := $(realpath $(DIR_BUILD_CONFIG)/../../libs)
+endif
+
+#
 # If it is not already set, get the path to where the Grassroots
 # core repository is checked out to.
 #
@@ -118,6 +126,12 @@ else
 	HANDLERS_BUILD_DIRS :=
 endif
 
+ifneq ($(DIR_EXTRA_LIBS),)
+	EXTRA_LIBS_BUILD_DIRS := $(shell find $(DIR_EXTRA_LIBS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
+else
+	EXTRA_LIBS_BUILD_DIRS :=
+endif
+
 
 #
 # Make some phony targets to allow us to pass targets to the makefiles in each of subdirectories
@@ -146,13 +160,18 @@ ifneq ($(CLIENTS_BUILD_DIRS),)
 	CLIENTS_CLEAN := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
 endif
 
+ifneq ($(EXTRA_LIBS_BUILD_DIRS),)
+	EXTRA_LIBS_ALL := $(EXTRA_LIB_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
+	EXTRA_LIBS_INSTALL := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
+	EXTRA_LIBS_CLEAN := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+endif
 
 #
 # targets depends on the same target name in each of the directories
 #
-all: core-all $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL)
-install: all core-install $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) references-install
-clean: core-clean $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN)
+all: core-all $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) $(EXTRA_LIBS_ALL)
+install: all core-install $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) $(EXTRA_LIBS_INSTALL) references-install
+clean: core-clean $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) $(EXTRA_LIBS_CLEAN)
 
 #
 # Check any repositories to see if they are modified and need committing
@@ -170,6 +189,8 @@ git-check:
    	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
+	@$(foreach EXTRA_LIBS_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
+   	 cd $(EXTRA_LIB_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(EXTRA_LIB_BUILD_DIR)";)	
 	@$(ifneq ($(DIR_DOCS),""))
 	@cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";)	
 	@$(endif)
@@ -177,7 +198,7 @@ git-check:
 	@cd $(DIR_REFERENCES) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_REFERENCES)";)	
 	@$(endif)
 #
-# Update any local copies of repositories
+# Update any local copies of 
 #
 git-pull:
 	@echo "Updating local copies:"
@@ -202,6 +223,8 @@ git-pull:
    	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
+   	 echo ">>> Updating $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
    	 
 
 #
@@ -226,6 +249,8 @@ git-push:
    	 echo ">>> Pushing $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 echo ">>> Pushing $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
+   	 echo ">>> Pushing $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 
 
 show-config:
@@ -240,6 +265,7 @@ show-config:
 	@echo "SERVICES_BUILD_DIRS: $(SERVICES_BUILD_DIRS)"
 	@echo "HANDLERS_BUILD_DIRS: $(HANDLERS_BUILD_DIRS)"
 	@echo "CLIENTS_BUILD_DIRS: $(CLIENTS_BUILD_DIRS)"
+	@echo "EXTRA_LIBS_BUILD_DIRS: $(EXTRA_LIBS_BUILD_DIRS)"
 
 #
 # Show all of the available targets, taken from
@@ -286,10 +312,20 @@ $(CLIENTS_INSTALL): core-install
 $(CLIENTS_CLEAN):
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)clean-%=%) clean
 
+$(EXTRA_LIBS_ALL): core-all
+	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all
+
+$(EXTRA_LIBS_INSTALL): core-install
+	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)install-%=%) install
+
+$(EXTRA_LIBS_CLEAN):
+	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)clean-%=%) clean
+
+
 # declare the phony targets
-.PHONY: subdirs $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL)
-.PHONY: subdirs $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL)
-.PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN)
+.PHONY: subdirs $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) $(EXTRA_LIBS_ALL)
+.PHONY: subdirs $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) $(EXTRA_LIBS_INSTALL)
+.PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) $(EXTRA_LIBS_CLEAN)
 .PHONY: all install clean core-all core-clean
 .PHONY: git-pull git-push git-check show-config create-dirs
 
