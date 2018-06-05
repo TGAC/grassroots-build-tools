@@ -127,7 +127,7 @@ else
 endif
 
 ifneq ($(DIR_EXTRA_LIBS),)
-	EXTRA_LIBS_BUILD_DIRS := $(shell find $(DIR_EXTRA_LIBS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
+	EXTRA_LIBS_BUILD_DIRS := $(shell find $(DIR_EXTRA_LIBS_ROOT) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
 	EXTRA_LIBS_BUILD_DIRS :=
 endif
@@ -189,7 +189,7 @@ git-check:
    	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
-	@$(foreach EXTRA_LIBS_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
+	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
    	 cd $(EXTRA_LIB_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(EXTRA_LIB_BUILD_DIR)";)	
 	@$(ifneq ($(DIR_DOCS),""))
 	@cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";)	
