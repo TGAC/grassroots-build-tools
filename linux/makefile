@@ -169,9 +169,9 @@ endif
 #
 # targets depends on the same target name in each of the directories
 #
-all: core-all $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) $(EXTRA_LIBS_ALL)
-install: all core-install $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) $(EXTRA_LIBS_INSTALL) references-install
-clean: core-clean $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) $(EXTRA_LIBS_CLEAN)
+all: core-all $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) $(EXTRA_LIBS_ALL)
+install: all core-install  $(EXTRA_LIBS_INSTALL) $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) references-install
+clean: core-clean $(EXTRA_LIBS_CLEAN) $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) 
 
 #
 # Check any repositories to see if they are modified and need committing
@@ -263,9 +263,11 @@ show-config:
 	@echo "DIR_REFERENCES: $(DIR_REFERENCES)"
 	@echo "SERVERS_BUILD_DIRS: $(SERVERS_BUILD_DIRS)"
 	@echo "SERVICES_BUILD_DIRS: $(SERVICES_BUILD_DIRS)"
+	@echo "SERVICES_LIBS_ALL: $(SERVICES_LIBS_ALL)"
 	@echo "HANDLERS_BUILD_DIRS: $(HANDLERS_BUILD_DIRS)"
 	@echo "CLIENTS_BUILD_DIRS: $(CLIENTS_BUILD_DIRS)"
 	@echo "EXTRA_LIBS_BUILD_DIRS: $(EXTRA_LIBS_BUILD_DIRS)"
+	@echo "EXTRA_LIBS_ALL: $(EXTRA_LIBS_ALL)"
 
 #
 # Show all of the available targets, taken from
@@ -313,7 +315,7 @@ $(CLIENTS_CLEAN):
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)clean-%=%) clean
 
 $(EXTRA_LIBS_ALL): core-all
-	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all
+	echo "@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all"
 
 $(EXTRA_LIBS_INSTALL): core-install
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)install-%=%) install
