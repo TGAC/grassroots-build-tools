@@ -37,15 +37,7 @@ ifeq ($(DIR_CLIENTS),)
 export DIR_CLIENTS := $(realpath $(DIR_BUILD_CONFIG)/../../clients)
 endif
 
-#
-# If it is not already set, get the path to where all
-# of the separate extra libraries are stored
-#
-ifeq ($(DIR_EXTRA_LIBS),)
-export DIR_EXTRA_LIBS := $(realpath $(DIR_BUILD_CONFIG)/../../libs)
-endif
 
-#
 # If it is not already set, get the path to where the Grassroots
 # core repository is checked out to.
 #
@@ -126,12 +118,6 @@ else
 	HANDLERS_BUILD_DIRS :=
 endif
 
-ifneq ($(DIR_EXTRA_LIBS),)
-	EXTRA_LIBS_BUILD_DIRS := $(shell find $(DIR_EXTRA_LIBS_ROOT) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
-else
-	EXTRA_LIBS_BUILD_DIRS :=
-endif
-
 
 #
 # Make some phony targets to allow us to pass targets to the makefiles in each of subdirectories
@@ -161,9 +147,10 @@ ifneq ($(CLIENTS_BUILD_DIRS),)
 endif
 
 ifneq ($(EXTRA_LIBS_BUILD_DIRS),)
-	EXTRA_LIBS_ALL := $(EXTRA_LIB_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
+	EXTRA_LIBS_ALL := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
 	EXTRA_LIBS_INSTALL := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
 	EXTRA_LIBS_CLEAN := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+	include $(EXTRA_LIBS_BUILD_DIRS)/lib.properties
 endif
 
 #
@@ -253,7 +240,7 @@ git-push:
    	 echo ">>> Pushing $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 
 
-show-config:
+show-config: 
 	@echo "DIR_SERVERS: $(DIR_SERVERS)"
 	@echo "DIR_SERVICES: $(DIR_SERVICES)"
 	@echo "DIR_HANDLERS: $(DIR_HANDLERS)"
@@ -262,12 +249,17 @@ show-config:
 	@echo "DIR_DOCS: $(DIR_DOCS)"
 	@echo "DIR_REFERENCES: $(DIR_REFERENCES)"
 	@echo "SERVERS_BUILD_DIRS: $(SERVERS_BUILD_DIRS)"
+	@echo "SERVERS_ALL: $(SERVERS_ALL)"
 	@echo "SERVICES_BUILD_DIRS: $(SERVICES_BUILD_DIRS)"
-	@echo "SERVICES_LIBS_ALL: $(SERVICES_LIBS_ALL)"
+	@echo "SERVICES_ALL: $(SERVICES_ALL)"
 	@echo "HANDLERS_BUILD_DIRS: $(HANDLERS_BUILD_DIRS)"
 	@echo "CLIENTS_BUILD_DIRS: $(CLIENTS_BUILD_DIRS)"
 	@echo "EXTRA_LIBS_BUILD_DIRS: $(EXTRA_LIBS_BUILD_DIRS)"
 	@echo "EXTRA_LIBS_ALL: $(EXTRA_LIBS_ALL)"
+	@echo "GRASSROOTS_GEOCODER_LIB_NAME: $(GRASSROOTS_GEOCODER_LIB_NAME)"
+	@echo "DIR_GRASSROOTS_GEOCODER: $(DIR_GRASSROOTS_GEOCODER)"
+	@echo "CURRENT_DIR: $(CURRENT_DIR)"
+
 
 #
 # Show all of the available targets, taken from
@@ -278,10 +270,11 @@ list:
 	@$(MAKE) -pRrq -f $(THIS_MAKEFILE) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | xargs
 	  
 # remove the fake prefixes and call the targets
-$(SERVICES_ALL): core-all
+$(SERVICES_ALL): core-all 
+	@echo "calling: @$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all"
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all
 
-$(SERVICES_INSTALL): core-install
+$(SERVICES_INSTALL): core-install 
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)install-%=%) install
 
 $(SERVICES_CLEAN):
@@ -325,7 +318,7 @@ $(EXTRA_LIBS_CLEAN):
 
 
 # declare the phony targets
-.PHONY: subdirs $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) $(EXTRA_LIBS_ALL)
+.PHONY: subdirs $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) 
 .PHONY: subdirs $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) $(EXTRA_LIBS_INSTALL)
 .PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) $(EXTRA_LIBS_CLEAN)
 .PHONY: all install clean core-all core-clean
@@ -336,6 +329,9 @@ create-dirs:
 	mkdir -p ../clients
 	mkdir -p ../servers
 	mkdir -p ../services
+
+
+all: core-all $(SERVICES_ALL)
 
 core-all:
 	@echo "****** BEGIN GRASSROOTS CORE ******"

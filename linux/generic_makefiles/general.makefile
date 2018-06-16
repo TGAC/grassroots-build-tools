@@ -54,7 +54,7 @@ $(DIR_OBJS)/$(TARGET_NAME): init  $(OBJS)
 	$(CXX) -o $(DIR_OBJS)/$(TARGET_NAME) $(OBJS) $(STATIC_LIBS) $(LDFLAGS)
 
 
-install: all
+install:: all
 	@echo "ROOT DIR $(DIR_ROOT)"
 	@echo "THIS DIR $(THIS_DIR)"
 	@echo "Installing $(TARGET_NAME) to $(DIR_INSTALL)"
@@ -74,7 +74,7 @@ init:
 	@echo "DIR_GRASSROOTS_NETWORK: $(DIR_GRASSROOTS_NETWORK)"
 	@echo "-----------------------------------------------" 
 	
-clean:
+clean::
 	rm -fr $(DIR_OBJS)/
 
  
