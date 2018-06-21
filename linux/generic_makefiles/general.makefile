@@ -96,7 +96,7 @@ $(DIR_OBJS)/%.o : %.c
 # 2. Generate dependency information, explicitly specifying the target name
 $(DIR_OBJS)/%.o : %.cpp 
 	@echo ">>> c++ build for $@"
-	$(CXX) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(CXX) $(CFLAGS) $(CPPFLAGS) -o $@ -c $< 
 	@$(MAKEDEPEND) $(basename $@).d -MT $(basename $@).o $(CPPFLAGS) $(CFLAGS) $<  
 	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$*.o:|' < $(basename $@).d.tmp > $(basename $@).d
