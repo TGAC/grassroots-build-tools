@@ -37,3 +37,39 @@ then
 	cd ..
 fi
 
+# MONGO DB C
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c/lib/libmongoc-1.0.so ]
+then
+	wget https://github.com/mongodb/mongo-c-driver/releases/download/1.12.0/mongo-c-driver-1.12.0.tar.gz
+	tar xzf mongo-c-driver-1.12.0.tar.gz
+	cd mongo-c-driver-1.12.0
+	mkdir cmake-build
+	cd cmake-build
+	cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_INSTALL_PREFIX=$GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c ..
+	make install
+	cd ..
+fi
+
+
+# HTMLCXX
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx/lib/libhtmlcxx.so ]
+then
+	https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/0.86/htmlcxx-0.86.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fhtmlcxx%2Ffiles%2Flatest%2Fdownload%3Fsource%3Dtyp_redirect&ts=1532444157
+	tar xzf htmlcxx-0.86.tar.gz
+	cd htmlcxx-0.86
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx
+	make install
+	cd ..
+fi
+
+# HCX SELECT
+
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib/libhcxselect.so ]
+then
+	wget https://github.com/jgehring/hcxselect/archive/1.1.tar.gz 
+	tar xzf 1.1.tar.gz
+	cd hcxselect-1.1
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect
+	make install
+	cd ..
+fi
