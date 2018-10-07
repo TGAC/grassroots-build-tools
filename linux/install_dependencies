@@ -8,11 +8,11 @@
 # or  
 #  apt install libcurl4-openssl-dev
 
-GRASSROOTS_EXTRAS_INSTALL_PATH=/home/billy/test_install
+GRASSROOTS_EXTRAS_INSTALL_PATH=/home/billy/Applications/grassroots/extras
 
 mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH
 
-mkdir temp
+mkdir -p temp
 cd temp
 
 # JANSSON
@@ -29,7 +29,7 @@ fi
 # LIBUUID
 if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/libuuid/lib/libuuid.so ]
 then
-	wget https://downloads.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-1.0.3.tar.gz%2Fdownload&ts=1532275139
+	wget -O libuuid-1.0.3.tar.gz "https://downloads.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-1.0.3.tar.gz%2Fdownload&ts=1532275139" 
 	tar xzf libuuid-1.0.3.tar.gz
 	cd libuuid-1.0.3
 	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/libuuid
@@ -40,9 +40,9 @@ fi
 # MONGO DB C
 if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c/lib/libmongoc-1.0.so ]
 then
-	wget https://github.com/mongodb/mongo-c-driver/releases/download/1.12.0/mongo-c-driver-1.12.0.tar.gz
-	tar xzf mongo-c-driver-1.12.0.tar.gz
-	cd mongo-c-driver-1.12.0
+	wget https://github.com/mongodb/mongo-c-driver/releases/download/1.13.0/mongo-c-driver-1.13.0.tar.gz
+	tar xzf mongo-c-driver-1.13.0.tar.gz
+	cd mongo-c-driver-1.13.0
 	mkdir cmake-build
 	cd cmake-build
 	cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_INSTALL_PREFIX=$GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c ..
@@ -50,11 +50,24 @@ then
 	cd ..
 fi
 
+# SQLITE
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/libsqlite.so ]
+then
+	wget https://www.sqlite.org/2018/sqlite-amalgamation-3250200.zip
+	unzip sqlite-amalgamation-3250200.zip
+	cd sqlite-amalgamation-3250200
+    gcc sqlite3.c -o libsqlite.so -shared -fPIC
+    mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include
+    mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib
+    cp libsqlite.so $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/
+    cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include
+    cd ..
+fi
 
 # HTMLCXX
 if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx/lib/libhtmlcxx.so ]
 then
-	https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/0.86/htmlcxx-0.86.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fhtmlcxx%2Ffiles%2Flatest%2Fdownload%3Fsource%3Dtyp_redirect&ts=1532444157
+	wget -O htmlcxx-0.86.tar.gz "https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/0.86/htmlcxx-0.86.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fhtmlcxx%2Ffiles%2Flatest%2Fdownload%3Fsource%3Dtyp_redirect&ts=1532444157"
 	tar xzf htmlcxx-0.86.tar.gz
 	cd htmlcxx-0.86
 	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx
@@ -62,14 +75,60 @@ then
 	cd ..
 fi
 
-# HCX SELECT
 
+# HCX SELECT
 if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib/libhcxselect.so ]
 then
 	wget https://github.com/jgehring/hcxselect/archive/1.1.tar.gz 
 	tar xzf 1.1.tar.gz
-	cd hcxselect-1.1
-	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect
+	cd hcxselect-1.1/src
+    patch < ../../../hcxselect.patch
+	make shared DIR_HTMLCXX=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx
+    mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include
+    mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib
+    cp libhcxselect.so $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib/
+    cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include
+	cd ../../../
+fi
+
+
+# sudo apt install zlib1g-dev
+
+# HTSLIB
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/htslib/lib/libhtslib.so ]
+then
+	wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2 
+	tar xjf htslib-1.9.tar.bz2
+	cd htslib-1.9
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/htslib --disable-bz2 --disable-lzma
+	make install
+	cd ..    
+fi
+
+# SQLITE
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/libsqlite.so ]
+then
+	wget https://www.sqlite.org/2018/sqlite-amalgamation-3250200.zip
+	unzip sqlite-amalgamation-3250200.zip
+	cd sqlite-amalgamation-3250200
+    gcc sqlite3.c -o libsqlite.so -shared -fPIC
+    mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include
+    mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib
+    cp libsqlite.so $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/
+    cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include
+    cd ..
+fi
+
+# PCRE
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/pcre/lib/libpcre.so ]
+then
+	wget https://ftp.pcre.org/pub/pcre/pcre-8.42.zip
+	unzip pcre-8.42.zip
+	cd pcre-8.42
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre
 	make install
 	cd ..
 fi
+
+
+cd ..
