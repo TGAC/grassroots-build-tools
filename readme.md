@@ -158,3 +158,25 @@ export HTCONDOR_DRMAA_ENABLED := 1
 
 
 Once you have finished setting up the ```dependencies.properties``` file, you can then proceed to building Grassroots. 
+
+# Building Grassroots
+
+To build the Grassroots system type
+
+```make all```
+
+and the system will proceed to build. To then install it, type
+
+```make install```
+
+# Additional build tool functionality
+
+# Keeping Grassroots up to date
+
+If you wish to get the latest versions of all of the Grassroots repositories that you have checked out, you can run 
+
+```
+make git-pull
+```
+
+
