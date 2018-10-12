@@ -9,8 +9,8 @@ The default layout for the subdirectories containing the Grassroots can be achie
 ```
 mkdir grassroots
 cd grassroots
-git clone https://github.com/TGAC/grassroots-build-tools.git
-git clone https://github.com/TGAC/grassroots-core.git
+git clone https://github.com/TGAC/grassroots-build-tools.git build-config
+git clone https://github.com/TGAC/grassroots-core.git core
 mkdir clients
 mkdir servers
 mkdir services
@@ -21,7 +21,7 @@ which gives the layout shown below
 ```
 grassroots
 	|
-	|--- build_config
+	|--- build-config
 	|
 	|--- clients
 	|
@@ -116,8 +116,7 @@ The three main variables are:
  * **DIR_APACHE**: This is the path to your Apache Httpd installation. So to set to this to ```/opt/apache```, the setting would be
 
   ```export DIR_GRASSROOTS_INSTALL := /opt/apache```
- 
- 
+
  * **DIR_GRASSROOTS_EXTRAS**: This should be set to the value you used for ```GRASSROOTS_EXTRAS_INSTALL_PATH``` when you installed the dependencies. So to set to this to ```/opt/grassroots/extras```, the setting would be
  
 
@@ -131,10 +130,10 @@ If you have [iRODS](https://irods.org/) installed and you wish to the Grassroots
 The variables are:
  * **IRODS_ENABLED**: Set this to 0 to disable the iRODS support and 1 to enable it. For example, to enable the iRODS functionality within Grassroots: 
 
-  ```export IRODS_ENABLED := 1```
+    ```export IRODS_ENABLED := 1```
  
  * **IRODS_VERSION**: This specifies the major version of the iRODS installation. For recent installations this will be 4.x, so the setting is
-
+ 
   ```export IRODS_VERSION := 4```
 
 
@@ -161,7 +160,7 @@ Once you have finished setting up the ```dependencies.properties``` file, you ca
 
 # Building Grassroots
 
-To build the Grassroots system type
+To build the Grassroots system, type
 
 ```make all```
 
@@ -171,7 +170,10 @@ and the system will proceed to build. To then install it, type
 
 # Additional build tool functionality
 
-# Keeping Grassroots up to date
+
+As well as the standard targets to build the Grassroots system, the makefile has a number of other targets to perform useful operations. These are listed below.
+
+## Keeping Grassroots up to date
 
 If you wish to get the latest versions of all of the Grassroots repositories that you have checked out, you can run 
 
@@ -181,7 +183,7 @@ make git-pull
 
 to run ```git pull``` on all of the Grassroots repositories that you have checked out. 
 
-# See which checked out repositories have local changes
+## See which checked out repositories have local changes
 
 If you are are developing some of the Grassroots repos and you wish to see which projects have local changes you can run 
 
@@ -190,3 +192,13 @@ make git-check
 ```
 
 to list all of the repositories that have changes.
+
+
+## Show the Grassroots build configuration 
+
+If you are having problems building Grassroots which revolve around missing files, you can check the configuration of which folders Grassroots is using to build itself by typing: 
+
+```
+make show-config
+```
+ 
