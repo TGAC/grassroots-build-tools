@@ -92,7 +92,7 @@ sudo apt install zlib1g-dev
 ## Other dependencies 
 
 
-The other dependencies can be installed using the supplied installation script at ```linux/install_dependencies.sh```. The first stage is to edit this file and set the path that you want to install the Grassroots dependencies to. this is specified by the ```GRASSROOTS_EXTRAS_INSTALL_PATH``` variable. Once you''ve set this to the path that you would like to install to, you can run this script. This is done by sourcing this script, *e.g.*
+The other dependencies can be installed using the supplied installation script at ```linux/install_dependencies```. The first stage is to edit this file and set the path that you want to install the Grassroots dependencies to. this is specified by the ```GRASSROOTS_EXTRAS_INSTALL_PATH``` variable. Once you have set this to the path that you would like to install to, you can run this script. This is done by sourcing this script, *e.g.*
 
 ```
 . linux/install_dependencies
@@ -195,7 +195,7 @@ to run ```git pull``` on all of the Grassroots repositories that you have checke
 
 ## See which checked out repositories have local changes
 
-If you are are developing some of the Grassroots repos and you wish to see which projects have local changes you can run 
+If you are are developing some of the Grassroots repositories and you wish to see which projects have local changes you can run 
 
 ```
 make git-check
