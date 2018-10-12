@@ -38,11 +38,15 @@ Where any client, server or service components can be cloned inside the *clients
 
 There are various third party packages that Grassroots uses and there is an installation script to simplify this process. 
 
-The first stage is to make sure that the required os packages are installed. 
+The first stage is to make sure that the required OS packages are installed. On most systems the following packages are already installed, but you can make sure by running:
+
+```
+sudo apt install gcc wget automake unzip
+```
 
 ## Libcurl
 
-Check to see whether libsurl is installed by runing the following command
+Check to see whether libcurl is installed by running the following command
 
 ```
 locate -b "\libcurl.so"
@@ -86,7 +90,7 @@ The other dependencies can be installed using the supplied installation script a
 
 or 
 
-```https://research.cs.wisc.edu/htcondor/
+```
 source linux/install_dependencies
 ```
 
