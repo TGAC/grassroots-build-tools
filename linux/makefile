@@ -156,8 +156,8 @@ endif
 #
 # targets depends on the same target name in each of the directories
 #
-all: core-all $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) $(EXTRA_LIBS_ALL)
-install: all core-install  $(EXTRA_LIBS_INSTALL) $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) references-install
+all: core-all $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(EXTRA_LIBS_ALL)  $(CLIENTS_ALL)
+install: all core-install  $(EXTRA_LIBS_INSTALL) $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL)  $(CLIENTS_INSTALL) references-install
 clean: core-clean $(EXTRA_LIBS_CLEAN) $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) 
 
 #
