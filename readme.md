@@ -1,4 +1,4 @@
-﻿# Build tools
+﻿# Build tools  {#installation_guide}
 
 Although each component of the Grassroots infrastructure can be built in isolation, it can be much easier to manage all of the components together. That is what this package achieves.
 
@@ -121,16 +121,15 @@ The three main variables are:
 
  * **DIR_GRASSROOTS_INSTALL**: This is the Grassroots folder where the libraries, services, configuration, *etc.* will be stored. So to set to this to ```/opt/grassroots```, the setting would be
  
-  ```export DIR_GRASSROOTS_INSTALL := /opt/grassroots```
+    ```export DIR_GRASSROOTS_INSTALL := /opt/grassroots```
 
  * **DIR_APACHE**: This is the path to your Apache Httpd installation. So to set to this to ```/opt/apache```, the setting would be
 
-  ```export DIR_GRASSROOTS_INSTALL := /opt/apache```
+    ```export DIR_GRASSROOTS_INSTALL := /opt/apache```
 
  * **DIR_GRASSROOTS_EXTRAS**: This should be set to the value you used for ```GRASSROOTS_EXTRAS_INSTALL_PATH``` when you installed the dependencies. So to set to this to ```/opt/grassroots/extras```, the setting would be
  
-
-  ```export DIR_GRASSROOTS_EXTRAS := /opt/grassroots/extras``` 
+    ```export DIR_GRASSROOTS_EXTRAS := /opt/grassroots/extras``` 
 
 ### iRODS support
  
@@ -144,7 +143,7 @@ The variables are:
  
  * **IRODS_VERSION**: This specifies the major version of the iRODS installation. For recent installations this will be 4.x, so the setting is
  
-  ```export IRODS_VERSION := 4```
+    ```export IRODS_VERSION := 4```
 
 
 ### DRMAA support
@@ -172,11 +171,15 @@ Once you have finished setting up the ```dependencies.properties``` file, you ca
 
 To build the Grassroots system, type
 
-```make all```
+```
+make all
+```
 
 and the system will proceed to build. To then install it, type
 
-```make install```
+```
+make install
+```
 
 # Additional build tool functionality
 
