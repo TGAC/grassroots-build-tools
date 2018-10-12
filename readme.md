@@ -86,7 +86,7 @@ The other dependencies can be installed using the supplied installation script a
 
 or 
 
-```
+```https://research.cs.wisc.edu/htcondor/
 source linux/install_dependencies
 ```
 
@@ -122,7 +122,7 @@ The three main variables are:
 ### iRODS support
  
 
-If you have iRODS installed and you wish to the Grassroots iRODS functionality such as the search service, *etc., then this can be configured here too.
+If you have [iRODS](https://irods.org/) installed and you wish to the Grassroots iRODS functionality such as the [search service](https://github.com/TGAC/grassroots-service-irods), *etc.*, then this can be configured here too.
 
 The variables are:
  * **IRODS_ENABLED**: Set this to 0 to disable the iRODS support and 1 to enable it. For example, to enable the iRODS functionality within Grassroots: 
@@ -135,3 +135,22 @@ The variables are:
 
 
 ### DRMAA support
+
+Grassroots has support for running jobs on high performance computing clusters using [DRMAA](http://www.drmaa.org) via [LSF](https://www.ibm.com/support/knowledgecenter/en/SSETD4/product_welcome_platform_lsf.html), [Slurm](https://slurm.schedmd.com/) or [HTCondor](https://research.cs.wisc.edu/htcondor/). When Grassroots is built, you have to specify which system, if any, you wish to use it with. The 3 variables are  ```SLURM_DRMAA_ENABLED```, ```LSF_DRMAA_ENABLED``` and ```HTCONDOR_DRMAA_ENABLED``` and setting them to 0 disables and setting one of them to 1 enables the DRMAA support for that system. So for example, to disable all DRMAA support, the configuration would be:
+
+```
+export SLURM_DRMAA_ENABLED := 0
+export LSF_DRMAA_ENABLED := 0
+export HTCONDOR_DRMAA_ENABLED := 0
+```
+
+To enable HTCondor support, the configuration would be:
+
+```
+export SLURM_DRMAA_ENABLED := 0
+export LSF_DRMAA_ENABLED := 0
+export HTCONDOR_DRMAA_ENABLED := 1
+``` 
+
+
+Once you have finished setting up the ```dependencies.properties``` file, you can then proceed to building Grassroots. 
