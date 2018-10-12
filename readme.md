@@ -12,6 +12,7 @@ cd grassroots
 git clone https://github.com/TGAC/grassroots-build-tools.git build-config
 git clone https://github.com/TGAC/grassroots-core.git core
 mkdir clients
+mkdir handlers
 mkdir servers
 mkdir services
 ```
@@ -27,12 +28,21 @@ grassroots
 	|
 	|--- core
 	|
+	|--- handlers 
+	|
 	|--- servers
 	|
 	|--- services
 ```
 
-Where any client, server or service components can be cloned inside the *clients*, *servers* or *services* directories respectively.
+Where any client, server or service components can be cloned inside the *clients*, *handlers*, *servers* or *services* directories respectively.
+
+You can view the available repositories of each type by going to one of the links below:
+ 
+ * [Clients](https://github.com/TGAC?q=grassroots-client)
+ * [Handlers](https://github.com/TGAC?q=grassroots-handler)
+ * [Services](https://github.com/TGAC?q=grassroots-service)
+ * [Servers](https://github.com/TGAC?q=grassroots-server)
 
 # Installing dependencies
 
