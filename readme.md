@@ -179,4 +179,14 @@ If you wish to get the latest versions of all of the Grassroots repositories tha
 make git-pull
 ```
 
+to run ```git pull``` on all of the Grassroots repositories that you have checked out. 
 
+# See which checked out repositories have local changes
+
+If you are are developing some of the Grassroots repos and you wish to see which projects have local changes you can run 
+
+```
+make git-check
+```
+
+to list all of the repositories that have changes.
