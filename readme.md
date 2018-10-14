@@ -13,6 +13,7 @@ git clone https://github.com/TGAC/grassroots-build-tools.git build-config
 git clone https://github.com/TGAC/grassroots-core.git core
 mkdir clients
 mkdir handlers
+mkdir libs
 mkdir servers
 mkdir services
 ```
@@ -30,6 +31,8 @@ grassroots
 	|
 	|--- handlers 
 	|
+	|--- libs 
+	|
 	|--- servers
 	|
 	|--- services
@@ -41,6 +44,7 @@ You can view the available repositories of each type by going to one of the link
  
  * [Clients](https://github.com/TGAC?q=grassroots-client)
  * [Handlers](https://github.com/TGAC?q=grassroots-handler)
+ * [Libs](https://github.com/TGAC?q=grassroots-lib)
  * [Services](https://github.com/TGAC?q=grassroots-service)
  * [Servers](https://github.com/TGAC?q=grassroots-server)
 
@@ -123,9 +127,13 @@ The three main variables are:
  
     ```export DIR_GRASSROOTS_INSTALL := /opt/grassroots```
 
- * **DIR_APACHE**: This is the path to your Apache Httpd installation. So to set to this to ```/opt/apache```, the setting would be
+ * **DIR_APACHE**: This is the path to your [Apache Httpd](http://httpd.apache.org/) installation. So to set to this to ```/opt/apache```, the setting would be
 
-    ```export DIR_GRASSROOTS_INSTALL := /opt/apache```
+    ```export DIR_APACHE := /opt/apache```
+
+  If however you are using an Apache Httpd that is spread across different directories, such as is often the case when using the OS package manager, then simply leave this blank 
+
+    ```export DIR_APACHE :=```
 
  * **DIR_GRASSROOTS_EXTRAS**: This should be set to the value you used for ```GRASSROOTS_EXTRAS_INSTALL_PATH``` when you installed the dependencies. So to set to this to ```/opt/grassroots/extras```, the setting would be
  
