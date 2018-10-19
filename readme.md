@@ -177,7 +177,14 @@ Once you have finished setting up the ```dependencies.properties``` file, you ca
 
 # Building Grassroots
 
-To build the Grassroots system, type
+To build the Grassroots system, navigate to the build subfolder which is ```build/<PLATFORM>```. So, for example,
+to build it for linux, go to the appropriate build folder
+
+```
+cd build/linux
+```
+
+and then type
 
 ```
 make all
