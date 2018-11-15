@@ -2,6 +2,65 @@
 
 Although each component of the Grassroots infrastructure can be built in isolation, it can be much easier to manage all of the components together. That is what this package achieves.
 
+# Installing dependencies
+
+There are various third party packages that Grassroots uses and there is an installation script to simplify this process. 
+
+The first stage is to make sure that the required OS packages are installed. On most systems the following packages are already installed, but you can make sure by running:
+
+```
+sudo apt install gcc wget automake unzip flex make git cmake zlib1g-dev g++
+```
+
+## Libcurl
+
+Check to see whether libcurl is installed by running the following command
+
+```
+locate -b "\libcurl.so"
+```
+
+If no file is found it can be installed from one of the following packages:
+
+```
+sudo apt install libcurl4-gnutls-dev 
+```
+
+or 
+
+```
+sudo apt install libcurl4-nss-dev
+```
+or 
+
+```
+sudo apt install libcurl4-openssl-dev
+```
+
+You only need to install one of these so simply choose whichever one you prefer.
+
+
+## Other dependencies 
+
+
+The other dependencies can be installed using the supplied installation script at ```build-config/linux/install_dependencies```. 
+
+The first stage is to edit this file and set the path that you want to install the Grassroots dependencies to. This is specified by the ```GRASSROOTS_EXTRAS_INSTALL_PATH``` variable within this file. 
+
+
+
+Once you have set this to the path that you would like to install to, you can run this script. This is done by sourcing this script, *e.g.*
+
+```
+. linux/install_dependencies
+```
+
+or 
+
+```
+source linux/install_dependencies
+```
+
 # Configuration
 
 The default layout for the subdirectories containing the Grassroots can be achieved by:
@@ -48,71 +107,14 @@ You can view the available repositories of each type by going to one of the link
  * [Services](https://github.com/TGAC?q=grassroots-service)
  * [Servers](https://github.com/TGAC?q=grassroots-server)
 
-# Installing dependencies
 
-There are various third party packages that Grassroots uses and there is an installation script to simplify this process. 
-
-The first stage is to make sure that the required OS packages are installed. On most systems the following packages are already installed, but you can make sure by running:
-
-```
-sudo apt install gcc wget automake unzip
-```
-
-## Libcurl
-
-Check to see whether libcurl is installed by running the following command
-
-```
-locate -b "\libcurl.so"
-```
-
-If no file is found it can be installed from one of the following packages:
-
-```
-sudo apt install libcurl4-gnutls-dev 
-```
-
-or 
-
-```
-sudo apt install libcurl4-nss-dev
-```
-or 
-
-```
-sudo apt install libcurl4-openssl-dev
-```
-
-You only need to install one of these so simply choose whichever one you prefer.
-
-## zlib
-
-Another required dependency is zlib which can be installed by typing 
-
-```
-sudo apt install zlib1g-dev
-```
-
-## Other dependencies 
-
-
-The other dependencies can be installed using the supplied installation script at ```linux/install_dependencies```. The first stage is to edit this file and set the path that you want to install the Grassroots dependencies to. this is specified by the ```GRASSROOTS_EXTRAS_INSTALL_PATH``` variable. Once you have set this to the path that you would like to install to, you can run this script. This is done by sourcing this script, *e.g.*
-
-```
-. linux/install_dependencies
-```
-
-or 
-
-```
-source linux/install_dependencies
-```
 
 ## Setting user preferences
 
-The next stage is to set your preferences which is done in a file called ```linux/dependencies.properties```. An example one is provided so you can get an initial version of your preferences file by making a copy of this by doing
+The next stage is to set your preferences which is done in a file called ```build-config/<PLATFORM NAME>/dependencies.properties```. For example if you are running on Linux, then this would be ``build-config/linux/dependencies.properties```. An example one is provided so you can get an initial version of your preferences file by making a copy of this by doing
 
 ```
+cd build-config
 cp linux/example-dependencies.properties linux/dependencies.properties
 ```
 
@@ -177,11 +179,11 @@ Once you have finished setting up the ```dependencies.properties``` file, you ca
 
 # Building Grassroots
 
-To build the Grassroots system, navigate to the build subfolder which is ```build/<PLATFORM>```. So, for example,
+To build the Grassroots system, navigate to the build subfolder which is ```<PLATFORM>```. So, for example,
 to build it for linux, go to the appropriate build folder
 
 ```
-cd build/linux
+cd linux
 ```
 
 and then type
