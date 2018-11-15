@@ -356,16 +356,16 @@ core-install:
 
 
 references-install:
-	@$(ifneq ($(DIR_REFERENCES),""))
+ifneq ($(DIR_REFERENCES),"")
 	@echo "****** BEGIN GRASSROOTS REFERENCES ******"
 	@echo ">>> DIR_REFERENCES $(DIR_REFERENCES)"
 	echo "****** CALLING $(MAKE) -C $(DIR_REFERENCES)/build/linux install ******";
 	$(MAKE) -C $(DIR_REFERENCES)/build/linux install
 	@echo "****** END GRASSROOTS REFERENCES ******"	
-	@$(endif)
+endif
 	
 docs:
-	@$(ifneq ($(DIR_DOCS),""))
+ifneq ($(DIR_DOCS),"")
 	@cd $(DIR_DOCS) && doxygen
-	@$(endif)
+endif
 
