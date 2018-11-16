@@ -179,7 +179,7 @@ export HTCONDOR_DRMAA_ENABLED := 1
 Once you have finished setting up the ```dependencies.properties``` file, you can then proceed to building Grassroots. 
 
 
-# Get the Apache httpd module 
+# Apache httpd installation
 
 Although any web server could potentially be used as Grassroots server, the default is to use the [Apache httpd](http://httpd.apache.org) web server as it has the the benefit of being able to add functionality easily with its modular approach.
 
