@@ -75,6 +75,8 @@ mkdir handlers
 mkdir libs
 mkdir servers
 mkdir services
+cd servers
+git clone https://github.com/TGAC/grassroots-server-apache-httpd.git httpd-server
 ```
 
 which gives the layout shown below
@@ -106,28 +108,6 @@ You can view the available repositories of each type by going to one of the link
  * [Libs](https://github.com/TGAC?q=grassroots-lib)
  * [Services](https://github.com/TGAC?q=grassroots-service)
  * [Servers](https://github.com/TGAC?q=grassroots-server)
-
-
-
-## Get the Apache httpd module 
-
-```
-cd servers
-git clone https://github.com/TGAC/grassroots-server-apache-httpd.git httpd-server
-```
-
-
-### Using an Apache httpd from an OS Package Manager
-
-```
-sudo apt install apache2
-sudo apt install apache2-dev
-sudo a2enmod cache socache socache_shmcb 
-```
-
-
-
-
 
 
 ## Setting user preferences
@@ -197,6 +177,25 @@ export HTCONDOR_DRMAA_ENABLED := 1
 
 
 Once you have finished setting up the ```dependencies.properties``` file, you can then proceed to building Grassroots. 
+
+
+# Get the Apache httpd module 
+
+Although any web server could potentially be used as Grassroots server, the default is to use the [Apache httpd](http://httpd.apache.org) web server as it has the the benefit of being able to add functionality easily with its modular approach.
+
+On Linux, there are 2 options for installing httpd; using  the OS package manager or building it from source
+
+## Using an Apache httpd from an OS Package Manager
+
+To install httpd using the package manager on Debian and its derivatives such as Ubuntu, Mint, *etc.*, you can run the following commands
+
+```
+sudo apt install apache2
+sudo apt install apache2-dev
+sudo a2enmod cache socache socache_shmcb 
+```
+
+
 
 # Building Grassroots
 
