@@ -109,6 +109,27 @@ You can view the available repositories of each type by going to one of the link
 
 
 
+## Get the Apache httpd module 
+
+```
+cd servers
+git clone https://github.com/TGAC/grassroots-server-apache-httpd.git httpd-server
+```
+
+
+### Using an Apache httpd from an OS Package Manager
+
+```
+sudo apt install apache2
+sudo apt install apache2-dev
+sudo a2enmod cache socache socache_shmcb 
+```
+
+
+
+
+
+
 ## Setting user preferences
 
 The next stage is to set your preferences which is done in a file called ```build-config/<PLATFORM NAME>/dependencies.properties```. For example if you are running on Linux, then this would be ```build-config/linux/dependencies.properties```. An example one is provided so you can get an initial version of your preferences file by making a copy of this by doing
