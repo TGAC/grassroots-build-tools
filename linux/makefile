@@ -73,6 +73,8 @@ GIT_REMOTE := origin
 # The name of the branch that we will use for our git operations
 GIT_BRANCH := master
 
+DOXYGEN := doxygen
+
 #################################################################
 ##### Hopefully you should not need to edit below this line #####
 #################################################################
@@ -366,6 +368,6 @@ endif
 	
 docs:
 ifneq ($(DIR_DOCS),"")
-	@cd $(DIR_DOCS) && doxygen
+	@cd $(DIR_DOCS) && $(DOXYGEN)
 endif
 
