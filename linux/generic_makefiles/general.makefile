@@ -60,7 +60,8 @@ install:: all
 	@echo "Installing $(TARGET_NAME) to $(DIR_INSTALL)"
 	mkdir -p $(DIR_INSTALL)
 	cp $(DIR_OBJS)/$(TARGET_NAME) $(DIR_INSTALL)/  
-
+	git -C $(DIR_OBJS) log -1 > $(DIR_INSTALL)/$(TARGET_NAME).log
+	
 init:
 	@mkdir -p $(DIR_OBJS)
 	@echo "-----------------------------------------------" 
