@@ -78,7 +78,7 @@ then
 	wget https://github.com/jgehring/hcxselect/archive/1.1.tar.gz 
 	tar xzf 1.1.tar.gz
 	cd hcxselect-1.1/src
-	patch < $THIS_PATH/linux/hcxselect.patch
+	patch < $THIS_PATH/hcxselect.patch
 	make shared DIR_HTMLCXX=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx
 	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include
 	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib
