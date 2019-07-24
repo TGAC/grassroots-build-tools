@@ -4,6 +4,9 @@ GRASSROOTS_EXTRAS_INSTALL_PATH=/home/billy/Applications/grassroots/extras
 
 mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH
 
+THIS_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+
+
 mkdir -p temp
 cd temp
 
@@ -74,7 +77,7 @@ then
 	wget https://github.com/jgehring/hcxselect/archive/1.1.tar.gz 
 	tar xzf 1.1.tar.gz
 	cd hcxselect-1.1/src
-	patch < ../../../hcxselect.patch
+	patch < $THIS_PATH/linux/hcxselect.patch
 	make shared DIR_HTMLCXX=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx
 	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include
 	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib
