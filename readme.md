@@ -49,16 +49,10 @@ The first stage is to edit this file and set the path that you want to install t
 
 
 
-Once you have set this to the path that you would like to install to, you can run this script. This is done by sourcing this script, *e.g.*
+Once you have set this to the path that you would like to install to, you can run this script *e.g.*
 
 ```
-. linux/install_dependencies
-```
-
-or 
-
-```
-source linux/install_dependencies
+linux/install_dependencies
 ```
 
 # Configuration
