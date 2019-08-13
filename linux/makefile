@@ -217,6 +217,38 @@ git-pull:
    	 
 
 #
+# Update any local copies of 
+#
+git-fetch:
+	@echo "Updating local copies:"
+	@echo "======================\n"
+	@echo ">>> Updating $(DIR_BUILD_CONFIG)"
+	@git fetch $(GIT_REMOTE) $(GIT_BRANCH)
+	@echo ">>> Updating $(DIR_CORE)"
+	@cd $(DIR_CORE) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(ifneq ($(DIR_DOCS),""))
+	@echo ">>> Updating \"$(DIR_DOCS)\""
+	@cd $(DIR_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(endif)
+	@$(ifneq ($(DIR_REFERENCES),""))
+	@echo ">>> Updating \"$(DIR_REFERENCES)\""
+	@cd $(DIR_REFERENCES) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(endif)
+	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
+   	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git fetch  $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
+   	 echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
+   	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
+   	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
+   	 echo ">>> Updating $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 
+
+#
+
+#
 # Push all changes to the repositories
 #
 git-push:
