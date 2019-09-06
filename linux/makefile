@@ -193,28 +193,37 @@ git-pull:
 	@echo "Updating local copies:"
 	@echo "======================\n"
 	@echo ">>> Updating $(DIR_BUILD_CONFIG)"
-	@git pull $(GIT_REMOTE) $(GIT_BRANCH)
+	@git pull $(GIT_ARG)
 	@echo ">>> Updating $(DIR_CORE)"
-	@cd $(DIR_CORE) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@cd $(DIR_CORE) && git pull $(GIT_ARG);
 	@$(ifneq ($(DIR_DOCS),""))
 	@echo ">>> Updating \"$(DIR_DOCS)\""
-	@cd $(DIR_DOCS) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@cd $(DIR_DOCS) && git pull $(GIT_ARG);
 	@$(endif)
 	@$(ifneq ($(DIR_REFERENCES),""))
 	@echo ">>> Updating \"$(DIR_REFERENCES)\""
-	@cd $(DIR_REFERENCES) && git pull $(GIT_REMOTE) $(GIT_BRANCH);
+	@cd $(DIR_REFERENCES) && git pull $(GIT_ARG);
 	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-   	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull  $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull $(GIT_ARG);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-   	 echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git pull $(GIT_ARG);)	
 	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-   	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_ARG);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-   	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_ARG);)	
 	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
-   	 echo ">>> Updating $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git pull $(GIT_REMOTE) $(GIT_BRANCH);)	
+   	 echo ">>> Updating $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git pull $(GIT_ARG);)	
    	 
+
+git-pull-current:
+	GIT_ARG=$(GIT_REMOTE) $(GIT_BRANCH)
+	@$(MAKE) git-pull
+
+git-pull-all:
+	GIT_ARG=--all
+	@$(MAKE) git-pull
+
 
 #
 # Update any local copies of 
