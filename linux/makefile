@@ -290,6 +290,7 @@ show-config:
 	@echo "DIR_CLIENTS: $(DIR_CLIENTS)"
 	@echo "DIR_CORE: $(DIR_CORE)"
 	@echo "DIR_DOCS: $(DIR_DOCS)"
+	@echo "DIR_APACHE: $(DIR_APACHE)"
 	@echo "DIR_REFERENCES: $(DIR_REFERENCES)"
 	@echo "SERVERS_BUILD_DIRS: $(SERVERS_BUILD_DIRS)"
 	@echo "SERVERS_ALL: $(SERVERS_ALL)"
