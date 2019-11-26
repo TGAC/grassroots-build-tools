@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GRASSROOTS_EXTRAS_INSTALL_PATH=/opt/grassroots/extras
+GRASSROOTS_EXTRAS_INSTALL_PATH=/home/billy/Applications/grassroots/extras
 
 mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH
 
