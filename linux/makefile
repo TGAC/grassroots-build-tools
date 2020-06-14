@@ -63,6 +63,14 @@ ifeq ($(DIR_REFERENCES),)
 export DIR_REFERENCES := $(realpath $(DIR_BUILD_CONFIG)/../../references)
 endif
 
+#
+# If it is not already set, get the path to where the Grassroots
+# docs repository is checked out to.
+#
+ifeq ($(DIR_DUSER_OCS),)
+export DIR_USER_DOCS := $(realpath $(DIR_BUILD_CONFIG)/../../user-docs)
+endif
+
 
 COPY	:= cp
 DELETE := rm
@@ -186,6 +194,9 @@ git-check:
 	@$(ifneq ($(DIR_REFERENCES),""))
 	@cd $(DIR_REFERENCES) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_REFERENCES)";)	
 	@$(endif)
+	@$(ifneq ($(DIR_USER_DOCS),""))
+	@cd $(DIR_USER_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_USER_DOCS)";)	
+	@$(endif)
 #
 # Update any local copies of 
 #
@@ -203,6 +214,9 @@ git-pull:
 	@$(ifneq ($(DIR_REFERENCES),""))
 	@echo ">>> Updating \"$(DIR_REFERENCES)\""
 	@cd $(DIR_REFERENCES) && git pull $(GIT_ARG);
+	@$(endif)
+	@echo ">>> Updating \"$(DIR_USER_DOCS)\""
+	@cd $(DIR_USER_DOCS) && git pull $(GIT_ARG);
 	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull $(GIT_ARG);)	
@@ -243,6 +257,9 @@ git-fetch:
 	@echo ">>> Updating \"$(DIR_REFERENCES)\""
 	@cd $(DIR_REFERENCES) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(endif)
+	@echo ">>> Updating \"$(DIR_USER_DOCS)\""
+	@cd $(DIR_USER_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git fetch  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -271,6 +288,8 @@ git-push:
 	@cd $(DIR_DOCS) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@echo ">>> Pushing $(DIR_REFERENCES)"
 	@cd $(DIR_REFERENCES) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
+	@echo ">>> Pushing $(DIR_USER_DOCS)"
+	@cd $(DIR_USER_DOCS) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
