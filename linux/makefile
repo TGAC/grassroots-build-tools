@@ -67,8 +67,17 @@ endif
 # If it is not already set, get the path to where the Grassroots
 # docs repository is checked out to.
 #
-ifeq ($(DIR_DUSER_OCS),)
+ifeq ($(DIR_USER_DOCS),)
 export DIR_USER_DOCS := $(realpath $(DIR_BUILD_CONFIG)/../../user-docs)
+endif
+
+
+#
+# If it is not already set, get the path to where the Grassroots
+# docs repository is checked out to.
+#
+ifeq ($(DIR_LUCENE),)
+export DIR_LUCENE := $(realpath $(DIR_BUILD_CONFIG)/../../lucene)
 endif
 
 
@@ -166,9 +175,9 @@ endif
 #
 # targets depends on the same target name in each of the directories
 #
-all: core-all $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(EXTRA_LIBS_ALL)  $(CLIENTS_ALL)
-install: all core-install  $(EXTRA_LIBS_INSTALL) $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL)  $(CLIENTS_INSTALL) references-install
-clean: core-clean $(EXTRA_LIBS_CLEAN) $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) 
+all: core-all $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL)  $(CLIENTS_ALL) lucene-all
+install: all core-install  $(EXTRA_LIBS_INSTALL) $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL)  $(CLIENTS_INSTALL) references-install lucene-install
+clean: core-clean $(EXTRA_LIBS_CLEAN) $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) lucene-clean
 
 #
 # Check any repositories to see if they are modified and need committing
@@ -197,6 +206,11 @@ git-check:
 	@$(ifneq ($(DIR_USER_DOCS),""))
 	@cd $(DIR_USER_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_USER_DOCS)";)	
 	@$(endif)
+	@$(ifneq ($(DIR_LUCENE),""))
+	@cd $(DIR_LUCENE) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_LUCENE)";)	
+	@$(endif)
+
+
 #
 # Update any local copies of 
 #
@@ -217,6 +231,9 @@ git-pull:
 	@$(endif)
 	@echo ">>> Updating \"$(DIR_USER_DOCS)\""
 	@cd $(DIR_USER_DOCS) && git pull $(GIT_ARG);
+	@$(endif)
+	@echo ">>> Updating \"$(DIR_LUCENE)\""
+	@cd $(DIR_LUCENE) && git pull $(GIT_ARG);
 	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull $(GIT_ARG);)	
@@ -260,6 +277,9 @@ git-fetch:
 	@echo ">>> Updating \"$(DIR_USER_DOCS)\""
 	@cd $(DIR_USER_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
 	@$(endif)
+	@echo ">>> Updating \"$(DIR_LUCENE)\""
+	@cd $(DIR_LUCENE) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
+	@$(endif)
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git fetch  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -290,6 +310,8 @@ git-push:
 	@cd $(DIR_REFERENCES) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@echo ">>> Pushing $(DIR_USER_DOCS)"
 	@cd $(DIR_USER_DOCS) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
+	@echo ">>> Pushing $(DIR_LUCENE)"
+	@cd $(DIR_LUCENE) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -309,6 +331,8 @@ show-config:
 	@echo "DIR_CLIENTS: $(DIR_CLIENTS)"
 	@echo "DIR_CORE: $(DIR_CORE)"
 	@echo "DIR_DOCS: $(DIR_DOCS)"
+	@echo "DIR_USER_DOCS: $(DIR_USER_DOCS)"
+	@echo "DIR_LUCENE: $(DIR_LUCENE)"
 	@echo "DIR_APACHE: $(DIR_APACHE)"
 	@echo "DIR_REFERENCES: $(DIR_REFERENCES)"
 	@echo "SERVERS_BUILD_DIRS: $(SERVERS_BUILD_DIRS)"
@@ -426,6 +450,37 @@ ifneq ($(DIR_REFERENCES),"")
 	$(MAKE) -C $(DIR_REFERENCES)/build/linux install
 	@echo "****** END GRASSROOTS REFERENCES ******"	
 endif
+	
+lucene-all:	
+ifneq ($(DIR_LUCENE),"")
+	@echo "****** BEGIN GRASSROOTS LUCENE ******"
+	@echo ">>> DIR_LUCENE $(DIR_LUCENE)"
+	@echo "****** CALLING ant -f $(DIR_LUCENE)/build.xml ******";
+	ant -f $(DIR_LUCENE)/build.xml
+	@echo "****** END GRASSROOTS LUCENE ******"	
+endif
+
+lucene-install:	
+ifneq ($(DIR_LUCENE),"")
+	@echo "****** BEGIN GRASSROOTS LUCENE ******"
+	@echo ">>> DIR_LUCENE $(DIR_LUCENE)"
+	@echo "****** CALLING ant -f $(DIR_LUCENE)/build.xml install ******";
+	ant -f $(DIR_LUCENE)/build.xml install
+	@echo "****** END GRASSROOTS LUCENE ******"	
+endif
+
+
+lucene-clean:	
+ifneq ($(DIR_LUCENE),"")
+	@echo "****** BEGIN GRASSROOTS LUCENE ******"
+	@echo ">>> DIR_LUCENE $(DIR_LUCENE)"
+	@echo "****** CALLING ant -f $(DIR_LUCENE)/build.xml clean ******";
+	ant -f $(DIR_LUCENE)/build.xml clean
+	@echo "****** END GRASSROOTS LUCENE ******"	
+endif
+
+
+	
 	
 docs:
 ifneq ($(DIR_DOCS),"")
