@@ -39,10 +39,10 @@ endif
 
 
 ifeq ($(BUILD),release)
-	CFLAGS 	+= -O3 -s
+	CFLAGS 	+= -O3 -s -Wshadow
  	LDFLAGS += -s
 else
-	CFLAGS 	+= -g -O0 -pg -ggdb
+	CFLAGS 	+= -g -O0 -pg -ggdb  -Wshadow
 	LDFLAGS +=  -g -pg
 	CPPFLAGS += -D_DEBUG
 endif
