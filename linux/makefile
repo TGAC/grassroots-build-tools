@@ -165,19 +165,19 @@ ifneq ($(CLIENTS_BUILD_DIRS),)
 	CLIENTS_CLEAN := $(CLIENTS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
 endif
 
-ifneq ($(EXTRA_LIBS_BUILD_DIRS),)
-	EXTRA_LIBS_ALL := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
-	EXTRA_LIBS_INSTALL := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
-	EXTRA_LIBS_CLEAN := $(EXTRA_LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
-	-include $(EXTRA_LIBS_BUILD_DIRS)/lib.properties
+ifneq ($(LIBS_BUILD_DIRS),)
+	LIBS_ALL := $(LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)all-%)
+	LIBS_INSTALL := $(LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)install-%)
+	LIBS_CLEAN := $(LIBS_BUILD_DIRS:%=$(FAKE_TARGET_PREFIX)clean-%)
+#	-include $(LIBS_BUILD_DIRS)/lib.properties
 endif
 
 #
 # targets depends on the same target name in each of the directories
 #
-all: core-all $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL)  $(CLIENTS_ALL) lucene-all
-install: all core-install  $(EXTRA_LIBS_INSTALL) $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL)  $(CLIENTS_INSTALL) references-install lucene-install
-clean: core-clean $(EXTRA_LIBS_CLEAN) $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) lucene-clean
+all: core-all $(LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL)  $(CLIENTS_ALL) lucene-all
+install: all core-install  $(LIBS_INSTALL) $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL)  $(CLIENTS_INSTALL) references-install lucene-install
+clean: core-clean $(LIBS_CLEAN) $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) lucene-clean
 
 #
 # Check any repositories to see if they are modified and need committing
@@ -195,8 +195,8 @@ git-check:
    	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
-	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
-   	 cd $(EXTRA_LIB_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(EXTRA_LIB_BUILD_DIR)";)	
+	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
+   	 cd $(LIB_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(LIB_BUILD_DIR)";)	
 	@$(ifneq ($(DIR_DOCS),""))
 	@cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";)	
 	@$(endif)
@@ -243,8 +243,8 @@ git-pull:
    	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_ARG);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_ARG);)	
-	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
-   	 echo ">>> Updating $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git pull $(GIT_ARG);)	
+	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
+   	 echo ">>> Updating $(LIB_BUILD_DIR)"; cd $(LIB_BUILD_DIR); git pull $(GIT_ARG);)	
    	 
 
 git-pull-current:
@@ -288,8 +288,8 @@ git-fetch:
    	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
-   	 echo ">>> Updating $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
+   	 echo ">>> Updating $(LIB_BUILD_DIR)"; cd $(LIB_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
    	 
 
 #
@@ -320,8 +320,8 @@ git-push:
    	 echo ">>> Pushing $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 echo ">>> Pushing $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach EXTRA_LIB_BUILD_DIR,$(EXTRA_LIBS_BUILD_DIRS), \
-   	 echo ">>> Pushing $(EXTRA_LIB_BUILD_DIR)"; cd $(EXTRA_LIB_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
+   	 echo ">>> Pushing $(LIB_BUILD_DIR)"; cd $(LIB_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 
 
 show-config: 
@@ -341,8 +341,8 @@ show-config:
 	@echo "SERVICES_ALL: $(SERVICES_ALL)"
 	@echo "HANDLERS_BUILD_DIRS: $(HANDLERS_BUILD_DIRS)"
 	@echo "CLIENTS_BUILD_DIRS: $(CLIENTS_BUILD_DIRS)"
-	@echo "EXTRA_LIBS_BUILD_DIRS: $(EXTRA_LIBS_BUILD_DIRS)"
-	@echo "EXTRA_LIBS_ALL: $(EXTRA_LIBS_ALL)"
+	@echo "LIBS_BUILD_DIRS: $(LIBS_BUILD_DIRS)"
+	@echo "LIBS_ALL: $(LIBS_ALL)"
 	@echo "GRASSROOTS_GEOCODER_LIB_NAME: $(GRASSROOTS_GEOCODER_LIB_NAME)"
 	@echo "DIR_GRASSROOTS_GEOCODER: $(DIR_GRASSROOTS_GEOCODER)"
 	@echo "CURRENT_DIR: $(CURRENT_DIR)"
@@ -394,20 +394,20 @@ $(CLIENTS_INSTALL): core-install
 $(CLIENTS_CLEAN):
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)clean-%=%) clean
 
-$(EXTRA_LIBS_ALL): core-all
+$(LIBS_ALL): core-all
 	echo "@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all"
 
-$(EXTRA_LIBS_INSTALL): core-install
+$(LIBS_INSTALL): core-install
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)install-%=%) install
 
-$(EXTRA_LIBS_CLEAN):
+$(LIBS_CLEAN):
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)clean-%=%) clean
 
 
 # declare the phony targets
-.PHONY: subdirs $(EXTRA_LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) 
-.PHONY: subdirs $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) $(EXTRA_LIBS_INSTALL)
-.PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) $(EXTRA_LIBS_CLEAN)
+.PHONY: subdirs $(LIBS_ALL) $(SERVICES_ALL) $(HANDLERS_ALL) $(SERVERS_ALL) $(CLIENTS_ALL) 
+.PHONY: subdirs $(SERVICES_INSTALL) $(HANDLERS_INSTALL) $(SERVERS_INSTALL) $(CLIENTS_INSTALL) $(LIBS_INSTALL)
+.PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) $(LIBS_CLEAN)
 .PHONY: all install clean core-all core-clean
 .PHONY: git-pull git-push git-check show-config create-dirs
 
