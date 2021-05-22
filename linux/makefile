@@ -394,8 +394,11 @@ $(CLIENTS_INSTALL): core-install
 $(CLIENTS_CLEAN):
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)clean-%=%) clean
 
+
+libs-all: $(LIBS_ALL)
+
 $(LIBS_ALL): core-all
-	echo "@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all"
+	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all
 
 $(LIBS_INSTALL): core-install
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)install-%=%) install
