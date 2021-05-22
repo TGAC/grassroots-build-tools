@@ -495,7 +495,7 @@ services-clean: $(SERVICES_CLEAN)
 	
 services-all: $(SERVICES_ALL)
 
-services-clean: services-all $(SERVICES_INSTALL)
+services-install: services-all $(SERVICES_INSTALL)
 
 
 	
