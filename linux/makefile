@@ -395,7 +395,6 @@ $(CLIENTS_CLEAN):
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)clean-%=%) clean
 
 
-libs-all: $(LIBS_ALL)
 
 $(LIBS_ALL): core-all
 	@$(MAKE) $(MAKE_FLAGS) -C $(@:$(FAKE_TARGET_PREFIX)all-%=%) all
@@ -413,7 +412,8 @@ $(LIBS_CLEAN):
 .PHONY: subdirs $(SERVICES_CLEAN) $(HANDLERS_CLEAN) $(SERVERS_CLEAN) $(CLIENTS_CLEAN) $(LIBS_CLEAN)
 .PHONY: all install clean core-all core-clean
 .PHONY: git-pull git-push git-check show-config create-dirs
-
+.PHONY: services-all services-clean services-install
+.PHONY: libs-all libs-clean libs-install
 
 create-dirs:
 	mkdir -p ../clients
@@ -483,7 +483,21 @@ ifneq ($(DIR_LUCENE),"")
 endif
 
 
+
+libs-clean: $(LIBS_CLEAN)
+
+libs-all: $(LIBS_ALL)
+
+libs-install: libs-all $(LIBS_INSTALL)
+
+
+services-clean: $(SERVICES_CLEAN)
 	
+services-all: $(SERVICES_ALL)
+
+services-clean: services-all $(SERVICES_INSTALL)
+
+
 	
 docs:
 ifneq ($(DIR_DOCS),"")
