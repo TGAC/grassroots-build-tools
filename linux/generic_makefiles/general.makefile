@@ -83,8 +83,8 @@ clean::
 # 1. Compile the .c file
 # 2. Generate dependency information, explicitly specifying the target name
 $(DIR_OBJS)/%.o : %.c
-	@echo ">>> c build for $@"
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+	@echo ">>> c build for $@ using CC=$(CC)"
+	gcc $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 	@$(MAKEDEPEND) $(basename $@).d -MT $(basename $@).o $(CPPFLAGS) $(CFLAGS) $<  
 	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$*.o:|' < $(basename $@).d.tmp > $(basename $@).d
