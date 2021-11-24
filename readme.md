@@ -9,7 +9,7 @@ There are various third party packages that Grassroots uses and there is an inst
 The first stage is to make sure that the required OS packages are installed. On most systems the following packages are already installed, but you can make sure by running:
 
 ```
-sudo apt install gcc wget automake unzip flex make git cmake zlib1g-dev g++
+sudo apt install gcc wget automake unzip flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev
 ```
 
 ## Libcurl
