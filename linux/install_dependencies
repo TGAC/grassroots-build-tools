@@ -10,6 +10,10 @@ HCXSELECT_VER=1.1
 HTSLIB_VER=1.14
 SQLITE_VER=3360000
 PCRE_VER=8.45
+LUCENE_VER=8.11.0
+SOLR_VER=8.11.0
+
+
 
 mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH
 
@@ -114,6 +118,24 @@ then
 	cd pcre-$PCRE_VER 
 	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre 
 	make install 
+fi
+
+
+# LUCENE
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/lucene-$LUCENE_VER/analysis/common/lucene-analyzers-common-$LUCENE_VER.jar" ]
+then
+	cd $THIS_PATH/temp
+	wget https://dlcdn.apache.org/lucene/java/$LUCENE_VER/lucene-$LUCENE_VER.tgz 
+	tar xzf lucene-$LUCENE_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
+fi
+
+
+# SOLR
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/solr-$SOLR_VER/bin/solr" ]
+then
+	cd $THIS_PATH/temp
+	wget "https://www.apache.org/dyn/closer.lua/lucene/solr/$SOLR_VER/solr-$SOLR_VER.tgz?action=download" -O solr-$SOLR_VER.tgz
+	tar xzf solr-$SOLR_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
 fi
 
 
