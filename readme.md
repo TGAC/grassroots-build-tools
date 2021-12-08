@@ -9,7 +9,7 @@ There are various third party packages that Grassroots uses and there is an inst
 The first stage is to make sure that the required OS packages are installed. On most systems the following packages are already installed, but you can make sure by running:
 
 ```
-sudo apt install gcc wget automake unzip flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev
+sudo apt install gcc wget automake unzip flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev ant
 ```
 
 ## Libcurl
@@ -57,13 +57,14 @@ linux/install_dependencies
 
 # Configuration
 
-The default layout for the subdirectories containing the Grassroots can be achieved by:
+The various libraries annd tools that are part of Grassroots are built from source so you need to create the structure to store them. This is not where the actual files that are generated will be installed to, this is simply a place to generate them. The default layout for the subdirectories containing the Grassroots can be achieved by:
 
 ```
 mkdir grassroots
 cd grassroots
 git clone https://github.com/TGAC/grassroots-build-tools.git build-config
 git clone https://github.com/TGAC/grassroots-core.git core
+git clone https://github.com/TGAC/grassroots-lucene.git lucene
 mkdir clients
 mkdir handlers
 mkdir libs
@@ -87,6 +88,8 @@ grassroots
 	|--- handlers 
 	|
 	|--- libs 
+    |
+    |--- lucene
 	|
 	|--- servers
 	|
