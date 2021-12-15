@@ -80,28 +80,28 @@ which gives the layout shown below
 
 ```
 grassroots
-	|
-	|--- build-config
-	|
-	|--- clients
-	|
-	|--- core
-	|
-	|--- handlers 
-	|
-	|--- libs 
-  |
-  |--- lucene
-	|
-	|--- servers
-	        |
-	        |--- httpd-server
-	        |
-	        |--- mongodb-jobs-manager
-	        |
-	        |--- simple-servers-manager
-	|
-	|--- services
+    |
+    |--- build-config
+    |
+    |--- clients
+    |
+    |--- core
+    |
+    |--- handlers 
+    |
+    |--- libs 
+    |
+    |--- lucene
+    |
+    |--- servers
+	       |
+	       |--- httpd-server
+	       |
+	       |--- mongodb-jobs-manager
+	       |
+	       |--- simple-servers-manager
+    |
+    |--- services
 ```
 
 Where any client, server or service components can be cloned inside the *clients*, *handlers*, *servers* or *services* directories respectively.
