@@ -72,6 +72,8 @@ mkdir servers
 mkdir services
 cd servers
 git clone https://github.com/TGAC/grassroots-server-apache-httpd.git httpd-server
+git clone https://github.com/TGAC/grassroots-jobs-manager-mongodb.git mongodb-jobs-manager
+git clone https://github.com/TGAC/grassroots-simple-servers-manager.git simple-servers-manager
 ```
 
 which gives the layout shown below
@@ -88,10 +90,16 @@ grassroots
 	|--- handlers 
 	|
 	|--- libs 
-    |
-    |--- lucene
+  |
+  |--- lucene
 	|
 	|--- servers
+	        |
+					|--- httpd-server
+					|
+					|--- mongodb-jobs-manager
+					|
+					|--- simple-servers-manager
 	|
 	|--- services
 ```

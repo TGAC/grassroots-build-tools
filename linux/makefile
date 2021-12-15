@@ -502,5 +502,6 @@ services-install: services-all $(SERVICES_INSTALL)
 docs:
 ifneq ($(DIR_DOCS),"")
 	@cd $(DIR_DOCS) && $(DOXYGEN)
+	zip -r $(DIR_DOCS)/api.zip $(DIR_DOCS)/api
 endif
 
