@@ -95,11 +95,11 @@ grassroots
 	|
 	|--- servers
 	        |
-					|--- httpd-server
-					|
-					|--- mongodb-jobs-manager
-					|
-					|--- simple-servers-manager
+	        |--- httpd-server
+	        |
+	        |--- mongodb-jobs-manager
+	        |
+	        |--- simple-servers-manager
 	|
 	|--- services
 ```
