@@ -190,30 +190,23 @@ git-check:
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 cd $(SERVER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVER_BUILD_DIR)";)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-   	 cd $(SERVICE_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVICE_BUILD_DIR)";)	
+   	 cd $(SERVICE_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVICE_BUILD_DIR)";)
 	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-   	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)	
+   	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)
 	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
    	 cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
 	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
    	 cd $(LIB_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(LIB_BUILD_DIR)";)	
-	@$(ifneq ($(DIR_DOCS),""))
-	@cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";)	
-	@$(endif)
-	@$(ifneq ($(DIR_REFERENCES),""))
-	@cd $(DIR_REFERENCES) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_REFERENCES)";)	
-	@$(endif)
-	@$(ifneq ($(DIR_USER_DOCS),""))
-	@cd $(DIR_USER_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_USER_DOCS)";)	
-	@$(endif)
-	@$(ifneq ($(DIR_LUCENE),""))
-	@cd $(DIR_LUCENE) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_LUCENE)";)	
-	@$(endif)
-
+	@[ "${DIR_DOCS}" ] && cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";
+	@[ "${DIR_REFERENCES}" ] && cd $(DIR_REFERENCES) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_REFERENCES)";
+	@[ "${DIR_USER_DOCS}" ] && cd $(DIR_USER_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_USER_DOCS)";
+	@[ "${DIR_LUCENE}" ] && cd $(DIR_LUCENE) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_LUCENE)";
 
 #
 # Update any local copies of 
 #
+
+
 git-pull:
 	@echo "Updating local copies:"
 	@echo "======================\n"
@@ -221,20 +214,10 @@ git-pull:
 	@git pull $(GIT_ARG)
 	@echo ">>> Updating $(DIR_CORE)"
 	@cd $(DIR_CORE) && git pull $(GIT_ARG);
-	@$(ifneq ($(DIR_DOCS),""))
-	@echo ">>> Updating \"$(DIR_DOCS)\""
-	@cd $(DIR_DOCS) && git pull $(GIT_ARG);
-	@$(endif)
-	@$(ifneq ($(DIR_REFERENCES),""))
-	@echo ">>> Updating \"$(DIR_REFERENCES)\""
-	@cd $(DIR_REFERENCES) && git pull $(GIT_ARG);
-	@$(endif)
-	@echo ">>> Updating \"$(DIR_USER_DOCS)\""
-	@cd $(DIR_USER_DOCS) && git pull $(GIT_ARG);
-	@$(endif)
-	@echo ">>> Updating \"$(DIR_LUCENE)\""
-	@cd $(DIR_LUCENE) && git pull $(GIT_ARG);
-	@$(endif)
+	@[ "${DIR_DOCS}" ] && echo ">>> Updating \"$(DIR_DOCS)\"" && cd $(DIR_DOCS) && git pull $(GIT_ARG) || echo "";
+	@[ "${DIR_REFERENCES}" ] && echo ">>> Updating \"$(DIR_REFERENCES)\"" && cd $(DIR_REFERENCES) && git pull $(GIT_ARG) || echo "";
+	@[ "${DIR_USER_DOCS}" ] && echo ">>> Updating \"$(DIR_USER_DOCS)\"" && cd $(DIR_USER_DOCS) && git pull $(GIT_ARG) || echo "";
+	@[ "${DIR_LUCENE}" ] && echo ">>> Updating \"$(DIR_LUCENE)\"" && cd $(DIR_LUCENE) && git pull $(GIT_ARG) || echo "";
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull $(GIT_ARG);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -266,20 +249,10 @@ git-fetch:
 	@git fetch $(GIT_REMOTE) $(GIT_BRANCH)
 	@echo ">>> Updating $(DIR_CORE)"
 	@cd $(DIR_CORE) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
-	@$(ifneq ($(DIR_DOCS),""))
-	@echo ">>> Updating \"$(DIR_DOCS)\""
-	@cd $(DIR_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
-	@$(endif)
-	@$(ifneq ($(DIR_REFERENCES),""))
-	@echo ">>> Updating \"$(DIR_REFERENCES)\""
-	@cd $(DIR_REFERENCES) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
-	@$(endif)
-	@echo ">>> Updating \"$(DIR_USER_DOCS)\""
-	@cd $(DIR_USER_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
-	@$(endif)
-	@echo ">>> Updating \"$(DIR_LUCENE)\""
-	@cd $(DIR_LUCENE) && git fetch $(GIT_REMOTE) $(GIT_BRANCH);
-	@$(endif)
+	@[ "${DIR_DOCS}" ] && echo ">>> Updating \"$(DIR_DOCS)\"" && cd $(DIR_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH); || echo "";
+	@[ "${DIR_REFERENCES}" ] && echo ">>> Updating \"$(DIR_REFERENCES)\"" && cd $(DIR_REFERENCES) && git fetch $(GIT_REMOTE) $(GIT_BRANCH); || echo "";
+	@[ "${DIR_USER_DOCS}" ] && echo ">>> Updating \"$(DIR_USER_DOCS)\"" && cd $(DIR_USER_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH); || echo "";
+	@[ "${DIR_LUCENE}" ] && echo ">>> Updating \"$(DIR_LUCENE)\"" && cd $(DIR_LUCENE) && git fetch $(GIT_REMOTE) $(GIT_BRANCH); || echo "";
 	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
    	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git fetch  $(GIT_REMOTE) $(GIT_BRANCH);)	
 	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
@@ -334,7 +307,7 @@ show-config:
 	@echo "DIR_USER_DOCS: $(DIR_USER_DOCS)"
 	@echo "DIR_LUCENE: $(DIR_LUCENE)"
 	@echo "DIR_APACHE: $(DIR_APACHE)"
-	@echo "DIR_REFERENCES: $(DIR_REFERENCES)"
+	@echo "DIR_REFERENCES: \"$(DIR_REFERENCES)\""
 	@echo "SERVERS_BUILD_DIRS: $(SERVERS_BUILD_DIRS)"
 	@echo "SERVERS_ALL: $(SERVERS_ALL)"
 	@echo "SERVICES_BUILD_DIRS: $(SERVICES_BUILD_DIRS)"
@@ -446,7 +419,7 @@ core-install:
 
 
 references-install:
-ifneq ($(DIR_REFERENCES),"")
+ifneq ($(strip $(DIR_REFERENCES)),)
 	@echo "****** BEGIN GRASSROOTS REFERENCES ******"
 	@echo ">>> DIR_REFERENCES $(DIR_REFERENCES)"
 	echo "****** CALLING $(MAKE) -C $(DIR_REFERENCES)/build/linux install ******";
