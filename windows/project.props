@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <DIR_ROOT>..\..\</DIR_ROOT>
+    <DIR_CORE>$(DIR_ROOT)\core</DIR_CORE>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="DIR_ROOT">
+      <Value>$(DIR_ROOT)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_CORE">
+      <Value>$(DIR_CORE)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
