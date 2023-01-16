@@ -4,6 +4,39 @@
   <PropertyGroup Label="UserMacros">
     <DIR_ROOT>..\..\</DIR_ROOT>
     <DIR_CORE>$(DIR_ROOT)\core</DIR_CORE>
+    <DIR_SHARED_ROOT>$(DIR_CORE)\shared</DIR_SHARED_ROOT>
+    <DIR_SERVER_ROOT>$(DIR_CORE)\server</DIR_SERVER_ROOT>
+    <DIR_CLIENT_ROOT>$(DIR_CORE)\client</DIR_CLIENT_ROOT>
+    <!-- GRASSROOTS UTIL -->
+    <DIR_GRASSROOTS_UTIL>$(DIR_SHARED_ROOT)\util</DIR_GRASSROOTS_UTIL>
+    <DIR_GRASSROOTS_UTIL_BUILD>$(DIR_GRASSROOTS_UTIL)\build\windows</DIR_GRASSROOTS_UTIL_BUILD>
+    <DIR_GRASSROOTS_UTIL_INC>$(DIR_GRASSROOTS_UTIL)\include</DIR_GRASSROOTS_UTIL_INC>
+    <DIR_GRASSROOTS_UTIL_LIB>$(DIR_GRASSROOTS_UTIL_BUILD)\$(Configuration)</DIR_GRASSROOTS_UTIL_LIB>
+    <GRASSROOTS_UTIL_LIB_NAME>grassroots_util</GRASSROOTS_UTIL_LIB_NAME>
+    <!-- GRASSROOTS NETWORK -->
+    <DIR_GRASSROOTS_NETWORK>$(DIR_SHARED_ROOT)\network</DIR_GRASSROOTS_NETWORK>
+    <DIR_GRASSROOTS_NETWORK_BUILD>$(DIR_GRASSROOTS_NETWORK)\build\windows</DIR_GRASSROOTS_NETWORK_BUILD>
+    <DIR_GRASSROOTS_NETWORK_INC>$(DIR_GRASSROOTS_NETWORK)\include</DIR_GRASSROOTS_NETWORK_INC>
+    <DIR_GRASSROOTS_NETWORK_LIB>$(DIR_GRASSROOTS_NETWORK_BUILD)\$(Configuration)</DIR_GRASSROOTS_NETWORK_LIB>
+    <GRASSROOTS_NETWORK_LIB_NAME>grassroots_network</GRASSROOTS_NETWORK_LIB_NAME>
+    <!-- GRASSROOTS UUID -->
+    <DIR_GRASSROOTS_UUID>$(DIR_SHARED_ROOT)\network</DIR_GRASSROOTS_UUID>
+    <DIR_GRASSROOTS_UUID_BUILD>$(DIR_GRASSROOTS_UUID)\build\windows</DIR_GRASSROOTS_UUID_BUILD>
+    <DIR_GRASSROOTS_UUID_INC>$(DIR_GRASSROOTS_UUID)\include</DIR_GRASSROOTS_UUID_INC>
+    <DIR_GRASSROOTS_UUID_LIB>$(DIR_GRASSROOTS_UUID_BUILD)\$(Configuration)</DIR_GRASSROOTS_UUID_LIB>
+    <GRASSROOTS_UUID_LIB_NAME>grassroots_uuid</GRASSROOTS_UUID_LIB_NAME>
+    <!-- GRASSROOTS SERVICES -->
+    <DIR_GRASSROOTS_SERVICES>$(DIR_SERVICES_ROOT)\services</DIR_GRASSROOTS_SERVICES>
+    <DIR_GRASSROOTS_SERVICES_BUILD>$(DIR_GRASSROOTS_SERVICES)\build\windows</DIR_GRASSROOTS_SERVICES_BUILD>
+    <DIR_GRASSROOTS_SERVICES_INC>$(DIR_GRASSROOTS_SERVICES)\include</DIR_GRASSROOTS_SERVICES_INC>
+    <DIR_GRASSROOTS_SERVICES_LIB>$(DIR_GRASSROOTS_SERVICES_BUILD)\$(Configuration)</DIR_GRASSROOTS_SERVICES_LIB>
+    <GRASSROOTS_SERVICES_LIB_NAME>grassroots_services</GRASSROOTS_SERVICES_LIB_NAME>    
+    <!-- GRASSROOTS PARAMS -->
+    <DIR_GRASSROOTS_PARAMS>$(DIR_PARAMS_ROOT)\services</DIR_GRASSROOTS_PARAMS>
+    <DIR_GRASSROOTS_PARAMS_BUILD>$(DIR_GRASSROOTS_PARAMS)\build\windows</DIR_GRASSROOTS_PARAMS_BUILD>
+    <DIR_GRASSROOTS_PARAMS_INC>$(DIR_GRASSROOTS_PARAMS)\include</DIR_GRASSROOTS_PARAMS_INC>
+    <DIR_GRASSROOTS_PARAMS_LIB>$(DIR_GRASSROOTS_PARAMS_BUILD)\$(Configuration)</DIR_GRASSROOTS_PARAMS_LIB>
+    <GRASSROOTS_PARAMS_LIB_NAME>grassroots_params</GRASSROOTS_PARAMS_LIB_NAME>    
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
@@ -13,6 +46,95 @@
     </BuildMacro>
     <BuildMacro Include="DIR_CORE">
       <Value>$(DIR_CORE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_SHARED_ROOT">
+      <Value>$(DIR_SHARED_ROOT)</Value>
+    </BuildMacro>
+	<BuildMacro Include="DIR_SERVER_ROOT">
+      <Value>$(DIR_SERVER_ROOT)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_CLIENT_ROOT">
+      <Value>$(DIR_CLIENT_ROOT)</Value>
+    </BuildMacro>
+    <!-- GRASSROOTS UTIL -->
+    <BuildMacro Include="DIR_GRASSROOTS_UTIL">
+      <Value>$(DIR_GRASSROOTS_UTIL)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_UTIL_BUILD">
+      <Value>$(DIR_GRASSROOTS_UTIL_BUILD)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_UTIL_INC">
+      <Value>$(DIR_GRASSROOTS_UTIL_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_UTIL_LIB">
+      <Value>$(DIR_GRASSROOTS_UTIL_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GRASSROOTS_UTIL_LIB_NAME">
+      <Value>$(GRASSROOTS_UTIL_LIB_NAME)</Value>
+    </BuildMacro>
+    <!-- GRASSROOTS NETWORK -->
+    <BuildMacro Include="DIR_GRASSROOTS_NETWORK">
+      <Value>$(DIR_GRASSROOTS_NETWORK)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_NETWORK_BUILD">
+      <Value>$(DIR_GRASSROOTS_NETWORK_BUILD)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_NETWORK_INC">
+      <Value>$(DIR_GRASSROOTS_NETWORK_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_NETWORK_LIB">
+      <Value>$(DIR_GRASSROOTS_NETWORK_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GRASSROOTS_NETWORK_LIB_NAME">
+      <Value>$(GRASSROOTS_NETWORK_LIB_NAME)</Value>
+    </BuildMacro>
+    <!-- GRASSROOTS UUID -->
+    <BuildMacro Include="DIR_GRASSROOTS_UUID">
+      <Value>$(DIR_GRASSROOTS_UUID)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_UUID_BUILD">
+      <Value>$(DIR_GRASSROOTS_UUID_BUILD)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_UUID_INC">
+      <Value>$(DIR_GRASSROOTS_UUID_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_UUID_LIB">
+      <Value>$(DIR_GRASSROOTS_UUID_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GRASSROOTS_UUID_LIB_NAME">
+      <Value>$(GRASSROOTS_UUID_LIB_NAME)</Value>
+    </BuildMacro>
+    <!-- GRASSROOTS SERVICES -->
+    <BuildMacro Include="DIR_GRASSROOTS_SERVICES">
+      <Value>$(DIR_GRASSROOTS_SERVICES)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_SERVICES_BUILD">
+      <Value>$(DIR_GRASSROOTS_SERVICES_BUILD)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_SERVICES_INC">
+      <Value>$(DIR_GRASSROOTS_SERVICES_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_SERVICES_LIB">
+      <Value>$(DIR_GRASSROOTS_SERVICES_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GRASSROOTS_SERVICES_LIB_NAME">
+      <Value>$(GRASSROOTS_SERVICES_LIB_NAME)</Value>
+    </BuildMacro>
+    <!-- GRASSROOTS PARAMS -->
+    <BuildMacro Include="DIR_GRASSROOTS_PARAMS">
+      <Value>$(DIR_GRASSROOTS_PARAMS)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_PARAMS_BUILD">
+      <Value>$(DIR_GRASSROOTS_PARAMS_BUILD)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_PARAMS_INC">
+      <Value>$(DIR_GRASSROOTS_PARAMS_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_PARAMS_LIB">
+      <Value>$(DIR_GRASSROOTS_PARAMS_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GRASSROOTS_PARAMS_LIB_NAME">
+      <Value>$(GRASSROOTS_PARAMS_LIB_NAME)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
