@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+
+    <DIR_GRASSROOTS_BASE>c:\Applications\grassroots</DIR_GRASSROOTS_BASE>
+  
+    <DIR_GRASSROOTS_INSTALL>$(DIR_GRASSROOTS_BASE)\grassroots</DIR_GRASSROOTS_INSTALL>
+    <DIR_GRASSROOTS_EXTRAS>$(DIR_GRASSROOTS_INSTALL)\extras</DIR_GRASSROOTS_EXTRAS>
+
+    <IRODS_ENABLED>0</IRODS_ENABLED>
+    <IRODS_VERSION>4</IRODS_VERSION>
+
+    <SLURM_DRMAA_ENABLED>0</SLURM_DRMAA_ENABLED>
+    <LSF_DRMAA_ENABLED>0</LSF_DRMAA_ENABLED>
+    <HTCONDOR_DRMAA_ENABLED>0</HTCONDOR_DRMAA_ENABLED>
+
+    <JANSSON_HOME>$(DIR_GRASSROOTS_EXTRAS)\jansson</JANSSON_HOME>
+    <HCXSELECT_HOME>$(DIR_GRASSROOTS_EXTRAS)\hcxselect</HCXSELECT_HOME>
+    <HTMLCXX_HOME>$(DIR_GRASSROOTS_EXTRAS)\htmlcxx</HTMLCXX_HOME>
+    <MONGODB_HOME>$(DIR_GRASSROOTS_EXTRAS)\mongodb-c</MONGODB_HOME>
+    <BSON_HOME>$(DIR_GRASSROOTS_EXTRAS)\mongodb-c</BSON_HOME>
+    <SQLITE_HOME>$(DIR_GRASSROOTS_EXTRAS)\sqlite</SQLITE_HOME>
+    <PCRE_HOME>$(DIR_GRASSROOTS_EXTRAS)\pcre</PCRE_HOME>
+
+    
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="DIR_GRASSROOTS_BASE">
+      <Value>$(DIR_GRASSROOTS_BASE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_INSTALL">
+      <Value>$(DIR_GRASSROOTS_INSTALL)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_GRASSROOTS_EXTRAS">
+      <Value>$(DIR_GRASSROOTS_EXTRAS)</Value>
+    </BuildMacro>
+		<BuildMacro Include="IRODS_ENABLED">
+      <Value>$(IRODS_ENABLED)</Value>
+    </BuildMacro>
+    <BuildMacro Include="IRODS_VERSION">
+      <Value>$(IRODS_VERSION)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SLURM_DRMAA_ENABLED">
+      <Value>$(SLURM_DRMAA_ENABLED)</Value>
+    </BuildMacro>
+    <BuildMacro Include="LSF_DRMAA_ENABLED">
+      <Value>$(LSF_DRMAA_ENABLED)</Value>
+    </BuildMacro>
+    <BuildMacro Include="HTCONDOR_DRMAA_ENABLED">
+      <Value>$(HTCONDOR_DRMAA_ENABLED)</Value>
+    </BuildMacro>
+		<BuildMacro Include="JANSSON_HOME">
+      <Value>$(JANSSON_HOME)</Value>
+    </BuildMacro>
+    <BuildMacro Include="HCXSELECT_HOME">
+      <Value>$(HCXSELECT_HOME)</Value>
+    </BuildMacro> 
+    
+       
+		<BuildMacro Include="HTMLCXX_HOME">
+			<Value>$(HTMLCXX_HOME)</Value>
+		</BuildMacro>
+		<BuildMacro Include="MONGODB_HOME">
+			<Value>$(MONGODB_HOME)</Value>
+		</BuildMacro>
+		<BuildMacro Include="BSON_HOME">
+			<Value>$(BSON_HOME)</Value>
+		</BuildMacro>
+		<BuildMacro Include="SQLITE_HOME">
+			<Value>$(SQLITE_HOME)</Value>
+		</BuildMacro>
+		<BuildMacro Include="PCRE_HOME">
+			<Value>$(PCRE_HOME)</Value>
+    </BuildMacro>  
+    
+     
+  </ItemGroup>
+</Project>

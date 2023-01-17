@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+  
+  	<!-- JANSSON -->
+    <DIR_JANSSON>$(JANSSON_HOME)</DIR_JANSSON>
+    <DIR_JANSSON_INC>$(DIR_JANSSON)\include</DIR_JANSSON_INC>
+    <DIR_JANSSON_LIB>$(DIR_JANSSON)\lib\$(Configuration)</DIR_JANSSON_LIB>
+
+  	<!-- MONGODB -->
+    <DIR_MONGODB>$(MONGODB_HOME)</DIR_MONGODB>
+    <DIR_MONGODB_INC>$(DIR_MONGODB)\include</DIR_MONGODB_INC>
+    <DIR_MONGODB_LIB>$(DIR_MONGODB)\lib\$(Configuration)</DIR_MONGODB_LIB>
+
+  	<!-- BSON -->
+    <DIR_BSON>$(BSON_HOME)</DIR_BSON>
+    <DIR_BSON_INC>$(DIR_BSON)\include</DIR_BSON_INC>
+    <DIR_BSON_LIB>$(DIR_BSON)\lib\$(Configuration)</DIR_BSON_LIB>
+
+  	<!-- HCXSELECT -->
+    <DIR_HCXSELECT>$(HCXSELECT_HOME)</DIR_HCXSELECT>
+    <DIR_HCXSELECT_INC>$(DIR_HCXSELECT)\include</DIR_HCXSELECT_INC>
+    <DIR_HCXSELECT_LIB>$(DIR_HCXSELECT)\lib\$(Configuration)</DIR_HCXSELECT_LIB>
+    
+		<!-- HTMLCXX -->
+		<DIR_HTMLCXX>$(HTMLCXX_HOME)</DIR_HTMLCXX>
+		<DIR_HTMLCXX_INC>$(DIR_HTMLCXX)\include</DIR_HTMLCXX_INC>
+		<DIR_HTMLCXX_LIB>$(DIR_HTMLCXX)\lib\$(Configuration)</DIR_HTMLCXX_LIB>
+
+		<!-- PCRE -->
+		<DIR_PCRE>$(PCRE_HOME)</DIR_PCRE>
+		<DIR_PCRE_INC>$(DIR_PCRE)\include</DIR_PCRE_INC>
+		<DIR_PCRE_LIB>$(DIR_PCRE)\lib\$(Configuration)</DIR_PCRE_LIB>
+    
+		<!-- SQLITE -->
+		<DIR_SQLITE>$(SQLITE_HOME)</DIR_SQLITE>
+		<DIR_SQLITE_INC>$(DIR_SQLITE)\include</DIR_SQLITE_INC>
+		<DIR_SQLITE_LIB>$(DIR_SQLITE)\lib\$(Configuration)</DIR_SQLITE_LIB>
+        
+    
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>    
+    <!--JANSSON -->
+    <BuildMacro Include="DIR_JANSSON">
+      <Value>$(DIR_JANSSON)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_JANSSON_INC">
+      <Value>$(DIR_JANSSON_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_JANSSON_LIB">
+      <Value>$(DIR_JANSSON_LIB)</Value>
+    </BuildMacro>
+
+    <!--MONGODB -->
+    <BuildMacro Include="DIR_MONGODB">
+      <Value>$(DIR_MONGODB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_MONGODB_INC">
+      <Value>$(DIR_MONGODB_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_MONGODB_LIB">
+      <Value>$(DIR_MONGODB_LIB)</Value>
+    </BuildMacro>
+
+    <!--BSON -->
+    <BuildMacro Include="DIR_BSON">
+      <Value>$(DIR_BSON)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_BSON_INC">
+      <Value>$(DIR_BSON_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_BSON_LIB">
+      <Value>$(DIR_BSON_LIB)</Value>
+    </BuildMacro>
+
+    <!--HCXSELECT -->
+    <BuildMacro Include="DIR_HCXSELECT">
+      <Value>$(DIR_HCXSELECT)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_HCXSELECT_INC">
+      <Value>$(DIR_HCXSELECT_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_HCXSELECT_LIB">
+      <Value>$(DIR_HCXSELECT_LIB)</Value>
+    </BuildMacro>    
+    
+    <!--HTMLCXX -->
+    <BuildMacro Include="DIR_HTMLCXX">
+      <Value>$(DIR_HTMLCXX)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_HTMLCXX_INC">
+      <Value>$(DIR_HTMLCXX_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_HTMLCXX_LIB">
+      <Value>$(DIR_HTMLCXX_LIB)</Value>
+    </BuildMacro>
+
+    <!--PCRE -->
+    <BuildMacro Include="DIR_PCRE">
+      <Value>$(DIR_PCRE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_PCRE_INC">
+      <Value>$(DIR_PCRE_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_PCRE_LIB">
+      <Value>$(DIR_PCRE_LIB)</Value>
+    </BuildMacro>
+ 
+    <!--SQLITE -->
+    <BuildMacro Include="DIR_SQLITE">
+      <Value>$(DIR_SQLITE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_SQLITE_INC">
+      <Value>$(DIR_SQLITE_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_SQLITE_LIB">
+      <Value>$(DIR_SQLITE_LIB)</Value>
+    </BuildMacro>
+
+  </ItemGroup>
+</Project>
