@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <DIR_ROOT>..\..\</DIR_ROOT>
     <DIR_CORE>$(DIR_ROOT)\core</DIR_CORE>
     <DIR_SHARED_ROOT>$(DIR_CORE)\shared</DIR_SHARED_ROOT>
     <DIR_SERVER_ROOT>$(DIR_CORE)\server</DIR_SERVER_ROOT>
@@ -120,9 +119,6 @@
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>
-    <BuildMacro Include="DIR_ROOT">
-      <Value>$(DIR_ROOT)</Value>
-    </BuildMacro>
     <BuildMacro Include="DIR_CORE">
       <Value>$(DIR_CORE)</Value>
     </BuildMacro>

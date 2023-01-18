@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
+    <DIR_ROOT>C:\grassroots_source</DIR_ROOT>
 
     <DIR_GRASSROOTS_BASE>c:\Applications\grassroots</DIR_GRASSROOTS_BASE>
   
@@ -28,6 +29,9 @@
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>
+		<BuildMacro Include="DIR_ROOT">
+			<Value>$(DIR_ROOT)</Value>
+		</BuildMacro>  
     <BuildMacro Include="DIR_GRASSROOTS_BASE">
       <Value>$(DIR_GRASSROOTS_BASE)</Value>
     </BuildMacro>
