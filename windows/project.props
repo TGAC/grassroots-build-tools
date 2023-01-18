@@ -393,21 +393,21 @@
       <Value>$(GRASSROOTS_FRICTIONLESS_LIB_NAME)</Value>
     </BuildMacro>
   
-		<!-- GRASSROOTS GEOCODED -->
-		<BuildMacro Include="DIR_GRASSROOTS_GEOCODED">
-			<Value>$(DIR_GRASSROOTS_GEOCODED)</Value>
+		<!-- GRASSROOTS GEOCODER -->
+		<BuildMacro Include="DIR_GRASSROOTS_GEOCODER">
+			<Value>$(DIR_GRASSROOTS_GEOCODER)</Value>
 		</BuildMacro>
-		<BuildMacro Include="DIR_GRASSROOTS_GEOCODED_BUILD">
-			<Value>$(DIR_GRASSROOTS_GEOCODED_BUILD)</Value>
+		<BuildMacro Include="DIR_GRASSROOTS_GEOCODER_BUILD">
+			<Value>$(DIR_GRASSROOTS_GEOCODER_BUILD)</Value>
 		</BuildMacro>
-		<BuildMacro Include="DIR_GRASSROOTS_GEOCODED_INC">
-			<Value>$(DIR_GRASSROOTS_GEOCODED_INC)</Value>
+		<BuildMacro Include="DIR_GRASSROOTS_GEOCODER_INC">
+			<Value>$(DIR_GRASSROOTS_GEOCODER_INC)</Value>
 		</BuildMacro>
-		<BuildMacro Include="DIR_GRASSROOTS_GEOCODED_LIB">
-			<Value>$(DIR_GRASSROOTS_GEOCODED_LIB)</Value>
+		<BuildMacro Include="DIR_GRASSROOTS_GEOCODER_LIB">
+			<Value>$(DIR_GRASSROOTS_GEOCODER_LIB)</Value>
 		</BuildMacro>
-		<BuildMacro Include="GRASSROOTS_GEOCODED_LIB_NAME">
-			<Value>$(GRASSROOTS_GEOCODED_LIB_NAME)</Value>
+		<BuildMacro Include="GRASSROOTS_GEOCODER_LIB_NAME">
+			<Value>$(GRASSROOTS_GEOCODER_LIB_NAME)</Value>
 		</BuildMacro>
 
   
