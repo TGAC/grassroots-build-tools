@@ -12,11 +12,13 @@
     <DIR_MONGODB>$(MONGODB_HOME)</DIR_MONGODB>
     <DIR_MONGODB_INC>$(DIR_MONGODB)\include</DIR_MONGODB_INC>
     <DIR_MONGODB_LIB>$(DIR_MONGODB)\lib\$(Configuration)</DIR_MONGODB_LIB>
+		<MONGODB_LIB_NAME>mongoc-1.0.lib</MONGODB_LIB_NAME>
 
   	<!-- BSON -->
     <DIR_BSON>$(BSON_HOME)</DIR_BSON>
     <DIR_BSON_INC>$(DIR_BSON)\include</DIR_BSON_INC>
     <DIR_BSON_LIB>$(DIR_BSON)\lib\$(Configuration)</DIR_BSON_LIB>
+		<BSON_LIB_NAME>bson-1.0.lib</BSON_LIB_NAME>
 
   	<!-- HCXSELECT -->
     <DIR_HCXSELECT>$(HCXSELECT_HOME)</DIR_HCXSELECT>
@@ -40,6 +42,21 @@
         
     
   </PropertyGroup>
+  <Choose>
+	    <When Condition="'$(Configuration)' == 'Debug'">
+	       <PropertyGroup>
+	         <JANSSON_LIB_NAME>jansson_d.lib</JANSSON_LIB_NAME>
+	         <PCRE_LIB_NAME>pcred.lib</PCRE_LIB_NAME>
+	       </PropertyGroup>
+	    </When>
+	    <Otherwise> <!-- Default -->
+	       <PropertyGroup>
+	         <JANSSON_LIB_NAME>jansson.lib</JANSSON_LIB_NAME>
+	         <PCRE_LIB_NAME>pcre.lib</PCRE_LIB_NAME>
+	       </PropertyGroup>
+	    </Otherwise>
+ </Choose>
+ 
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>    
@@ -53,7 +70,10 @@
     <BuildMacro Include="DIR_JANSSON_LIB">
       <Value>$(DIR_JANSSON_LIB)</Value>
     </BuildMacro>
-
+    <BuildMacro Include="JANSSON_LIB_NAME">
+      <Value>$(JANSSON_LIB_NAME)</Value>
+    </BuildMacro>
+    
     <!--MONGODB -->
     <BuildMacro Include="DIR_MONGODB">
       <Value>$(DIR_MONGODB)</Value>
@@ -63,6 +83,9 @@
     </BuildMacro>
     <BuildMacro Include="DIR_MONGODB_LIB">
       <Value>$(DIR_MONGODB_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="MONGODB_LIB_NAME">
+      <Value>$(MONGODB_LIB_NAME)</Value>
     </BuildMacro>
 
     <!--BSON -->
@@ -75,7 +98,10 @@
     <BuildMacro Include="DIR_BSON_LIB">
       <Value>$(DIR_BSON_LIB)</Value>
     </BuildMacro>
-
+    <BuildMacro Include="BSON_LIB_NAME">
+      <Value>$(BSON_LIB_NAME)</Value>
+    </BuildMacro>
+    
     <!--HCXSELECT -->
     <BuildMacro Include="DIR_HCXSELECT">
       <Value>$(DIR_HCXSELECT)</Value>
@@ -108,7 +134,10 @@
     <BuildMacro Include="DIR_PCRE_LIB">
       <Value>$(DIR_PCRE_LIB)</Value>
     </BuildMacro>
- 
+     <BuildMacro Include="PCRE_LIB_NAME">
+       <Value>$(PCRE_LIB_NAME)</Value>
+    </BuildMacro>
+    
     <!--SQLITE -->
     <BuildMacro Include="DIR_SQLITE">
       <Value>$(DIR_SQLITE)</Value>
