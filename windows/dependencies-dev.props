@@ -2,11 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
+
+  	<!-- CURL -->
+    <DIR_CURL>$(CURL_HOME)</DIR_CURL>
+    <DIR_CURL_INC>$(DIR_CURL)\include</DIR_CURL_INC>
+    <DIR_CURL_LIB>$(DIR_CURL)\lib\$(Configuration)</DIR_CURL_LIB>
   
   	<!-- JANSSON -->
     <DIR_JANSSON>$(JANSSON_HOME)</DIR_JANSSON>
     <DIR_JANSSON_INC>$(DIR_JANSSON)\include</DIR_JANSSON_INC>
-    <DIR_JANSSON_LIB>$(DIR_JANSSON)\lib</DIR_JANSSON_LIB>
+    <DIR_JANSSON_LIB>$(DIR_JANSSON)\lib\$(Configuration)</DIR_JANSSON_LIB>
 
   	<!-- MONGODB -->
     <DIR_MONGODB>$(MONGODB_HOME)</DIR_MONGODB>
@@ -33,7 +38,7 @@
 		<!-- PCRE -->
 		<DIR_PCRE>$(PCRE_HOME)</DIR_PCRE>
 		<DIR_PCRE_INC>$(DIR_PCRE)\include</DIR_PCRE_INC>
-		<DIR_PCRE_LIB>$(DIR_PCRE)\lib</DIR_PCRE_LIB>
+		<DIR_PCRE_LIB>$(DIR_PCRE)\lib\$(Configuration)</DIR_PCRE_LIB>
     
 		<!-- SQLITE -->
 		<DIR_SQLITE>$(SQLITE_HOME)</DIR_SQLITE>
@@ -47,12 +52,14 @@
 	       <PropertyGroup>
 	         <JANSSON_LIB_NAME>jansson_d.lib</JANSSON_LIB_NAME>
 	         <PCRE_LIB_NAME>pcred.lib</PCRE_LIB_NAME>
+	         <CURL_LIB_NAME>libcurl-d_imp.lib</CURL_LIB_NAME>
 	       </PropertyGroup>
 	    </When>
 	    <Otherwise> <!-- Default -->
 	       <PropertyGroup>
 	         <JANSSON_LIB_NAME>jansson.lib</JANSSON_LIB_NAME>
 	         <PCRE_LIB_NAME>pcre.lib</PCRE_LIB_NAME>
+	         <CURL_LIB_NAME>libcurl_imp.lib</CURL_LIB_NAME>
 	       </PropertyGroup>
 	    </Otherwise>
  </Choose>
@@ -60,6 +67,21 @@
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>    
+    <!--CURL -->
+    <BuildMacro Include="DIR_CURL">
+      <Value>$(DIR_CURL)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_CURL_INC">
+      <Value>$(DIR_CURL_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_CURL_LIB">
+      <Value>$(DIR_CURL_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CURL_LIB_NAME">
+      <Value>$(CURL_LIB_NAME)</Value>
+    </BuildMacro>
+    
+
     <!--JANSSON -->
     <BuildMacro Include="DIR_JANSSON">
       <Value>$(DIR_JANSSON)</Value>
