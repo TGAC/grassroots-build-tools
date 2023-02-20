@@ -85,6 +85,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_task", "..\..\co
 		{FD7BC4B6-72D5-4D50-968D-487ED7229006} = {FD7BC4B6-72D5-4D50-968D-487ED7229006}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_lucene", "..\..\core\server\lucene\build\windows\grassroots_lucene.vcxproj", "{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -189,6 +191,14 @@ Global
 		{A72D3F15-C6E5-49BA-BFF5-D0EDC9224517}.Release|x64.Build.0 = Release|x64
 		{A72D3F15-C6E5-49BA-BFF5-D0EDC9224517}.Release|x86.ActiveCfg = Release|Win32
 		{A72D3F15-C6E5-49BA-BFF5-D0EDC9224517}.Release|x86.Build.0 = Release|Win32
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Debug|x64.ActiveCfg = Debug|x64
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Debug|x64.Build.0 = Debug|x64
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Debug|x86.ActiveCfg = Debug|Win32
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Debug|x86.Build.0 = Debug|Win32
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Release|x64.ActiveCfg = Release|x64
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Release|x64.Build.0 = Release|x64
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Release|x86.ActiveCfg = Release|Win32
+		{2A5E55EC-2E9A-4D22-8D48-995DE2B85DB1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
