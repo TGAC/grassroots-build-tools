@@ -3,6 +3,14 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
 
+  	<!-- APACHE -->
+    <DIR_APACHE>$(APACHE_HOME)</DIR_APACHE>
+    <DIR_APACHE_INC>$(DIR_APACHE)\include</DIR_APACHE_INC>
+    <DIR_APACHE_LIB>$(DIR_APACHE)\lib\</DIR_APACHE_LIB>
+    <HTTPD_LIB_NAME>libhttpd.lib</HTTPD_LIB_NAME>
+    <APR_LIB_NAME>libapr-1.lib</APR_LIB_NAME>
+		<APR_UTIL_LIB_NAME>libaprutil-1.lib</APR_UTIL_LIB_NAME>
+
   	<!-- CURL -->
     <DIR_CURL>$(CURL_HOME)</DIR_CURL>
     <DIR_CURL_INC>$(DIR_CURL)\include</DIR_CURL_INC>
@@ -67,6 +75,28 @@
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>    
+    <!--APACHE -->
+    <BuildMacro Include="DIR_APACHE">
+      <Value>$(DIR_APACHE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_APACHE_INC">
+      <Value>$(DIR_APACHE_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_APACHE_LIB">
+      <Value>$(DIR_APACHE_LIB)</Value>
+    </BuildMacro>
+     <BuildMacro Include="HTTPD_LIB_NAME">
+		 		<Value>$(HTTPD_LIB_NAME)</Value>
+    </BuildMacro>
+    <BuildMacro Include="APR_LIB_NAME">
+      <Value>$(APR_LIB_NAME)</Value>
+    </BuildMacro>
+    <BuildMacro Include="APR_UTIL_LIB_NAME">
+      <Value>$(APR_UTIL_LIB_NAME)</Value>
+    </BuildMacro>
+
+
+
     <!--CURL -->
     <BuildMacro Include="DIR_CURL">
       <Value>$(DIR_CURL)</Value>

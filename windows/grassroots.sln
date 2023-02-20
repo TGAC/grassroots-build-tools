@@ -93,6 +93,26 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_lucene", "..\..\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_geocoder", "..\..\libs\geocoder\build\windows\grassroots_geocoder.vcxproj", "{B5266531-A0C3-43B8-A532-99BEB1B7AE27}"
+	ProjectSection(ProjectDependencies) = postProject
+		{75D05A1A-23B0-4019-9E8E-DCDBA2DB2CA2} = {75D05A1A-23B0-4019-9E8E-DCDBA2DB2CA2}
+		{FD7BC4B6-72D5-4D50-968D-487ED7229006} = {FD7BC4B6-72D5-4D50-968D-487ED7229006}
+		{0D14E2CA-5464-4A52-82BF-6D2D9D897E5F} = {0D14E2CA-5464-4A52-82BF-6D2D9D897E5F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_apache", "..\..\servers\httpd\build\windows\grassroots_apache.vcxproj", "{50FA6DAB-1127-41BA-B372-B686C1AB97E1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A72D3F15-C6E5-49BA-BFF5-D0EDC9224517} = {A72D3F15-C6E5-49BA-BFF5-D0EDC9224517}
+		{75D05A1A-23B0-4019-9E8E-DCDBA2DB2CA2} = {75D05A1A-23B0-4019-9E8E-DCDBA2DB2CA2}
+		{E8210159-33A1-44CF-ADD4-218DF4163C05} = {E8210159-33A1-44CF-ADD4-218DF4163C05}
+		{5A91F098-DA74-478C-8BF9-D18C717BEA4A} = {5A91F098-DA74-478C-8BF9-D18C717BEA4A}
+		{FD7BC4B6-72D5-4D50-968D-487ED7229006} = {FD7BC4B6-72D5-4D50-968D-487ED7229006}
+		{0D14E2CA-5464-4A52-82BF-6D2D9D897E5F} = {0D14E2CA-5464-4A52-82BF-6D2D9D897E5F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_mongodb_jobs_manager", "..\..\servers\mongodb-jobs-manager\build\windows\grassroots_mongodb_jobs_manager.vcxproj", "{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{325A8273-4650-4FE3-9632-868E6B60CACA} = {325A8273-4650-4FE3-9632-868E6B60CACA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -214,6 +234,22 @@ Global
 		{B5266531-A0C3-43B8-A532-99BEB1B7AE27}.Release|x64.Build.0 = Release|x64
 		{B5266531-A0C3-43B8-A532-99BEB1B7AE27}.Release|x86.ActiveCfg = Release|Win32
 		{B5266531-A0C3-43B8-A532-99BEB1B7AE27}.Release|x86.Build.0 = Release|Win32
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Debug|x64.ActiveCfg = Debug|x64
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Debug|x64.Build.0 = Debug|x64
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Debug|x86.ActiveCfg = Debug|Win32
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Debug|x86.Build.0 = Debug|Win32
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Release|x64.ActiveCfg = Release|x64
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Release|x64.Build.0 = Release|x64
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Release|x86.ActiveCfg = Release|Win32
+		{50FA6DAB-1127-41BA-B372-B686C1AB97E1}.Release|x86.Build.0 = Release|Win32
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Debug|x64.ActiveCfg = Debug|x64
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Debug|x64.Build.0 = Debug|x64
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Debug|x86.ActiveCfg = Debug|Win32
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Debug|x86.Build.0 = Debug|Win32
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Release|x64.ActiveCfg = Release|x64
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Release|x64.Build.0 = Release|x64
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Release|x86.ActiveCfg = Release|Win32
+		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
