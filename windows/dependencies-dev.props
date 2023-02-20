@@ -53,6 +53,12 @@
 		<DIR_SQLITE_INC>$(DIR_SQLITE)\include</DIR_SQLITE_INC>
 		<DIR_SQLITE_LIB>$(DIR_SQLITE)\lib\$(Configuration)</DIR_SQLITE_LIB>
         
+
+		<!-- LIBEXIF -->
+		<DIR_LIBEXIF>$(LIBEXIF_HOME)</DIR_LIBEXIF>
+		<DIR_LIBEXIF_INC>$(DIR_LIBEXIF)\include</DIR_LIBEXIF_INC>
+		<DIR_LIBEXIF_LIB>$(DIR_LIBEXIF)\lib\$(Configuration)</DIR_LIBEXIF_LIB>
+    <LIBEXIF_LIB_NAME>exif.lib</LIBEXIF_LIB_NAME>
     
   </PropertyGroup>
   <Choose>
@@ -201,5 +207,19 @@
       <Value>$(DIR_SQLITE_LIB)</Value>
     </BuildMacro>
 
+   <!--LIBEXIF -->
+    <BuildMacro Include="DIR_LIBEXIF">
+      <Value>$(DIR_LIBEXIF)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_LIBEXIF_INC">
+      <Value>$(DIR_LIBEXIF_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DIR_LIBEXIF_LIB">
+      <Value>$(DIR_LIBEXIF_LIB)</Value>
+    </BuildMacro>
+     <BuildMacro Include="LIBEXIF_LIB_NAME">
+       <Value>$(LIBEXIF_LIB_NAME)</Value>
+    </BuildMacro>
+    
   </ItemGroup>
 </Project>
