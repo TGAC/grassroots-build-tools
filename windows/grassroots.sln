@@ -114,6 +114,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_mongodb_jobs_man
 		{325A8273-4650-4FE3-9632-868E6B60CACA} = {325A8273-4650-4FE3-9632-868E6B60CACA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_simple_servers_manager", "..\..\servers\simple-servers-manager\build\windows\grassroots_simple_servers_manager.vcxproj", "{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -250,6 +252,14 @@ Global
 		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Release|x64.Build.0 = Release|x64
 		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Release|x86.ActiveCfg = Release|Win32
 		{FD138FD4-46E5-4C9C-AA93-DBA86673B53A}.Release|x86.Build.0 = Release|Win32
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Debug|x64.ActiveCfg = Debug|x64
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Debug|x64.Build.0 = Debug|x64
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Debug|x86.ActiveCfg = Debug|Win32
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Debug|x86.Build.0 = Debug|Win32
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Release|x64.ActiveCfg = Release|x64
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Release|x64.Build.0 = Release|x64
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Release|x86.ActiveCfg = Release|Win32
+		{E35B4C7F-4AE1-4DD1-9AF0-156F90FAA336}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
