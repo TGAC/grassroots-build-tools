@@ -124,6 +124,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "field_trials", "..\..\servi
 		{FD7BC4B6-72D5-4D50-968D-487ED7229006} = {FD7BC4B6-72D5-4D50-968D-487ED7229006}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grassroots_clients", "..\..\core\client\build\windows\grassroots_clients.vcxproj", "{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5A91F098-DA74-478C-8BF9-D18C717BEA4A} = {5A91F098-DA74-478C-8BF9-D18C717BEA4A}
+		{75D05A1A-23B0-4019-9E8E-DCDBA2DB2CA2} = {75D05A1A-23B0-4019-9E8E-DCDBA2DB2CA2}
+		{FD7BC4B6-72D5-4D50-968D-487ED7229006} = {FD7BC4B6-72D5-4D50-968D-487ED7229006}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -268,6 +275,14 @@ Global
 		{94606266-BC1E-4695-8406-CB3F8817E2E5}.Release|x64.Build.0 = Release|x64
 		{94606266-BC1E-4695-8406-CB3F8817E2E5}.Release|x86.ActiveCfg = Release|Win32
 		{94606266-BC1E-4695-8406-CB3F8817E2E5}.Release|x86.Build.0 = Release|Win32
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Debug|x64.ActiveCfg = Debug|x64
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Debug|x64.Build.0 = Debug|x64
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Debug|x86.ActiveCfg = Debug|Win32
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Debug|x86.Build.0 = Debug|Win32
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Release|x64.ActiveCfg = Release|x64
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Release|x64.Build.0 = Release|x64
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Release|x86.ActiveCfg = Release|Win32
+		{9EDAA9B2-7B7A-4563-A4B0-39E3CBF86859}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
