@@ -431,8 +431,8 @@ lucene-all:
 ifneq ($(DIR_LUCENE),"")
 	@echo "****** BEGIN GRASSROOTS LUCENE ******"
 	@echo ">>> DIR_LUCENE $(DIR_LUCENE)"
-	@echo "****** CALLING ant -f $(DIR_LUCENE)/build.xml ******";
-	ant -f $(DIR_LUCENE)/build.xml
+	@echo "****** CALLING make C $(DIR_LUCENE) jars ******";
+	make -C $(DIR_LUCENE) jars
 	@echo "****** END GRASSROOTS LUCENE ******"	
 endif
 
@@ -440,8 +440,8 @@ lucene-install:
 ifneq ($(DIR_LUCENE),"")
 	@echo "****** BEGIN GRASSROOTS LUCENE ******"
 	@echo ">>> DIR_LUCENE $(DIR_LUCENE)"
-	@echo "****** CALLING ant -f $(DIR_LUCENE)/build.xml install ******";
-	ant -f $(DIR_LUCENE)/build.xml install
+	@echo "****** CALLING make C $(DIR_LUCENE) install ******";
+	make -C $(DIR_LUCENE) install
 	@echo "****** END GRASSROOTS LUCENE ******"	
 endif
 
@@ -450,8 +450,8 @@ lucene-clean:
 ifneq ($(DIR_LUCENE),"")
 	@echo "****** BEGIN GRASSROOTS LUCENE ******"
 	@echo ">>> DIR_LUCENE $(DIR_LUCENE)"
-	@echo "****** CALLING ant -f $(DIR_LUCENE)/build.xml clean ******";
-	ant -f $(DIR_LUCENE)/build.xml clean
+	@echo "****** CALLING make C $(DIR_LUCENE) clean ******";
+	make -C $(DIR_LUCENE) clean
 	@echo "****** END GRASSROOTS LUCENE ******"	
 endif
 
