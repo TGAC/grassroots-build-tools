@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmongoc-cxx-check.a  CMakeFiles/mongoc-cxx-check.dir/cpp-check.cpp.o
-/usr/bin/ranlib libmongoc-cxx-check.a

@@ -1,6 +1,0 @@
-Short TODO-List for hcxselect:
-
-	* Support for namespaces
-	* Pseudo-elements (::first-line, ::first-letter)
-	* Raise error on unknown pseudo-classes?
-	* Upcoming CSS Selectors Level 4

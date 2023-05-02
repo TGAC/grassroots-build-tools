@@ -1,1 +1,0 @@
-/usr/bin/cc -O2 -g -DNDEBUG  -rdynamic CMakeFiles/test-mongoc-gssapi.dir/tests/test-mongoc-gssapi.c.o  -o test-mongoc-gssapi  libmongoc-static-1.0.a -lssl -lcrypto -lrt -lresolv -lz -lzstd -lresolv -ldl -lrt -lresolv -lz -lzstd ../libbson/libbson-static-1.0.a -lrt -pthread 

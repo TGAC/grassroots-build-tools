@@ -1,2 +1,0 @@
-/home/billy/Projects/grassroots/build-config/linux/temp/mongo-c-driver-1.20.0/cmake-build/CMakeFiles/CheckCXX/CMakeFiles/rebuild_cache.dir
-/home/billy/Projects/grassroots/build-config/linux/temp/mongo-c-driver-1.20.0/cmake-build/CMakeFiles/CheckCXX/CMakeFiles/edit_cache.dir
