@@ -117,14 +117,16 @@ You can view the available repositories of each type by going to one of the link
 
 ## Setting user preferences
 
-The next stage is to set your preferences which is done in a file called ```build-config/<PLATFORM NAME>/dependencies.properties```. For example if you are running on Linux, then this would be ```build-config/linux/dependencies.properties```. An example one is provided so you can get an initial version of your preferences file by making a copy of this by doing
+### Linux and MacOS
+
+The next stage is to set your preferences which is done in a file called ```build-config/unix/<PLATFORM NAME>/dependencies.properties```. For example if you are running on Linux, then this would be ```build-config/unix/linux/dependencies.properties```, whereas on a mac it would be ```build-config/unix/mac/dependencies.properties```. An example one is provided so you can get an initial version of your preferences file by making a copy of this by doing
 
 ```
 cd build-config
-cp linux/example-dependencies.properties linux/dependencies.properties
+cp unix/linux/example-dependencies.properties unix/linux/dependencies.properties
 ```
 
-We can now proceed to amending this file, ```linux/dependencies.properties```,   to your chosen layout.
+We can now proceed to amending this file, ```unix/linux/dependencies.properties```,   to your chosen layout.
 
 
 ### General configuration

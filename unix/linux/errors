@@ -1,0 +1,14 @@
+/home/billy/Projects/grassroots/core/server/services/src/paired_service.c: In function ‘AddRemoteServiceJob’:
+/home/billy/Projects/grassroots/core/server/services/src/paired_service.c:543:91: warning: unused parameter ‘remote_uri_s’ [-Wunused-parameter]
+ static bool AddRemoteServiceJob (RemoteServiceJob *job_p, Service *service_p, const char *remote_uri_s, const char *remote_service_s, const uuid_t *remote_id_p,  const ServiceData *service_data_p, bool (*save_job_fn) (RemoteServiceJob *job_p, const ServiceData *service_data_p))
+                                                                                           ^
+/home/billy/Projects/grassroots/core/server/services/src/paired_service.c:543:117: warning: unused parameter ‘remote_service_s’ [-Wunused-parameter]
+ static bool AddRemoteServiceJob (RemoteServiceJob *job_p, Service *service_p, const char *remote_uri_s, const char *remote_service_s, const uuid_t *remote_id_p,  const ServiceData *service_data_p, bool (*save_job_fn) (RemoteServiceJob *job_p, const ServiceData *service_data_p))
+                                                                                                                     ^
+/home/billy/Projects/grassroots/core/server/services/src/paired_service.c: In function ‘AddRemoteServiceJob’:
+/home/billy/Projects/grassroots/core/server/services/src/paired_service.c:543:91: warning: unused parameter ‘remote_uri_s’ [-Wunused-parameter]
+ static bool AddRemoteServiceJob (RemoteServiceJob *job_p, Service *service_p, const char *remote_uri_s, const char *remote_service_s, const uuid_t *remote_id_p,  const ServiceData *service_data_p, bool (*save_job_fn) (RemoteServiceJob *job_p, const ServiceData *service_data_p))
+                                                                                           ^
+/home/billy/Projects/grassroots/core/server/services/src/paired_service.c:543:117: warning: unused parameter ‘remote_service_s’ [-Wunused-parameter]
+ static bool AddRemoteServiceJob (RemoteServiceJob *job_p, Service *service_p, const char *remote_uri_s, const char *remote_service_s, const uuid_t *remote_id_p,  const ServiceData *service_data_p, bool (*save_job_fn) (RemoteServiceJob *job_p, const ServiceData *service_data_p))
+                                                                                                                     ^
