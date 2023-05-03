@@ -108,31 +108,31 @@ include $(DIR_BUILD_CONFIG)/project.properties
 # Get all of the build files for each component
 #
 ifneq ($(DIR_SERVERS),)
-	SERVERS_BUILD_DIRS := $(shell find $(DIR_SERVERS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
+	SERVERS_BUILD_DIRS := $(shell find $(DIR_SERVERS) -path '*/build/unix/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
 	SERVERS_BUILD_DIRS :=
 endif
 
 
 ifneq ($(DIR_CLIENTS),)
-	CLIENTS_BUILD_DIRS := $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
+	CLIENTS_BUILD_DIRS := $(shell find $(DIR_CLIENTS) -path '*/build/unix/$(PLATFORM)/makefile' -exec dirname {} \;)
 	
 	# Add any qt projects
-	CLIENTS_BUILD_DIRS += $(shell find $(DIR_CLIENTS) -path '*/build/$(PLATFORM)/*.pro' -exec dirname {} \;)
+	CLIENTS_BUILD_DIRS += $(shell find $(DIR_CLIENTS) -path '*/build/unix/$(PLATFORM)/*.pro' -exec dirname {} \;)
 else
 	CLIENTS_BUILD_DIRS :=
 endif
 
 
 ifneq ($(DIR_SERVICES),)
-	SERVICES_BUILD_DIRS := $(shell find $(DIR_SERVICES) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
+	SERVICES_BUILD_DIRS := $(shell find $(DIR_SERVICES) -path '*/build/unix/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
 	SERVICES_BUILD_DIRS :=
 endif
 
 
 ifneq ($(DIR_HANDLERS),)
-	HANDLERS_BUILD_DIRS := $(shell find $(DIR_HANDLERS) -path '*/build/$(PLATFORM)/makefile' -exec dirname {} \;)
+	HANDLERS_BUILD_DIRS := $(shell find $(DIR_HANDLERS) -path '*/build/unix/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
 	HANDLERS_BUILD_DIRS :=
 endif
