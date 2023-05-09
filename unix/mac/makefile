@@ -1,3 +1,5 @@
 export PLATFORM := mac
 
-include ../unix/makefile
+export BUILD_COMBINED = 1
+
+include ../makefile
