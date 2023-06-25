@@ -4,6 +4,8 @@ Although each component of the Grassroots infrastructure can be built in isolati
 
 # Installing dependencies
 
+## Linux
+
 There are various third party packages that Grassroots uses and there is an installation script to simplify this process. 
 
 The first stage is to make sure that the required OS packages are installed. On most systems the following packages are already installed, but you can make sure by running:
@@ -43,7 +45,7 @@ You only need to install one of these so simply choose whichever one you prefer.
 ## Other dependencies 
 
 
-The other dependencies can be installed using the supplied installation script at ```build-config/linux/install_dependencies```. 
+The other dependencies can be installed using the supplied installation script at ```build-config/unix/linux/install_dependencies```. 
 
 The first stage is to edit this file and set the path that you want to install the Grassroots dependencies to. This is specified by the ```GRASSROOTS_EXTRAS_INSTALL_PATH``` variable within this file. 
 
@@ -52,7 +54,7 @@ The first stage is to edit this file and set the path that you want to install t
 Once you have set this to the path that you would like to install to, you can run this script *e.g.*
 
 ```
-linux/install_dependencies
+unix/linux/install_dependencies
 ```
 
 # Configuration
@@ -206,23 +208,36 @@ sudo a2enmod cache socache socache_shmcb
 
 # Building Grassroots
 
-To build the Grassroots system, navigate to the build subfolder which is ```<PLATFORM>```. So, for example,
-to build it for linux, go to the appropriate build folder
+## Linux and MacOS
+
+To build the Grassroots system, you need to specify the build subfolder which is ```unix/<PLATFORM>```. So, for example,
+to build it for Linux, the folder is ```unix/linux``` and for MacOS it is ```unix/mac```. These are specified using the
+```-C``` argument for make
+
+For example for Linux, the value is
 
 ```
-cd linux
+make -C unix/linux
 ```
 
-and then type
+and for MacOS
 
 ```
-make all
+make -C unix/mac
+```
+
+The following examples assume you are on Linux but just replace the -C parameter if you are on MacOS
+
+To build the platform, you run
+
+```
+make -C unix/linux all
 ```
 
 and the system will proceed to build. To then install it, type
 
 ```
-make install
+make -C unix/linux install
 ```
 
 # Additional build tool functionality
@@ -235,7 +250,7 @@ As well as the standard targets to build the Grassroots system, the makefile has
 If you wish to get the latest versions of all of the Grassroots repositories that you have checked out, you can run 
 
 ```
-make git-pull
+make -C unix/linux git-pull
 ```
 
 to run ```git pull``` on all of the Grassroots repositories that you have checked out. 
@@ -245,7 +260,7 @@ to run ```git pull``` on all of the Grassroots repositories that you have checke
 If you are are developing some of the Grassroots repositories and you wish to see which projects have local changes you can run 
 
 ```
-make git-check
+make -C unix/linux git-check
 ```
 
 to list all of the repositories that have changes.
@@ -256,6 +271,6 @@ to list all of the repositories that have changes.
 If you are having problems building Grassroots which revolve around missing files, you can check the configuration of which folders Grassroots is using to build itself by typing: 
 
 ```
-make show-config
+make -C unix/linux show-config
 ```
  
