@@ -135,7 +135,7 @@ fi
 if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/solr-$SOLR_VER/bin/solr" ]
 then
 	cd $THIS_PATH/temp
-	wget "https://www.apache.org/dyn/closer.lua/lucene/solr/$SOLR_VER/solr-$SOLR_VER.tgz?action=download" -O solr-$SOLR_VER.tgz
+	wget "https://www.apache.org/dyn/closer.lua/solr/solr/$SOLR_VER/solr-$SOLR_VER.tgz?action=download" -O solr-$SOLR_VER.tgz
 	tar xzf solr-$SOLR_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
 fi
 
