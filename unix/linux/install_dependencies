@@ -6,8 +6,6 @@ GRASSROOTS_EXTRAS_INSTALL_PATH=/opt/grassroots/extras
 JANSSON_VER=2.14
 LIBUUID_VER=1.0.3
 MONGO_C_VER=1.24.4
-HTMLCXX_VER=0.86
-HCXSELECT_VER=1.1
 HTSLIB_VER=1.14
 SQLITE_VER=3430200
 PCRE_VER=8.45
@@ -62,7 +60,7 @@ fi
 if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/libsqlite3.so" ]
 then
 	cd $THIS_PATH/temp
-	wget https://www.sqlite.org/2021/sqlite-amalgamation-$SQLITE_VER.zip 
+	wget https://www.sqlite.org/2023/sqlite-amalgamation-$SQLITE_VER.zip 
 	unzip sqlite-amalgamation-$SQLITE_VER.zip 
 	cd sqlite-amalgamation-$SQLITE_VER 
 	gcc sqlite3.c -o libsqlite3.so -shared -fPIC 
@@ -70,33 +68,6 @@ then
 	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib 
 	cp libsqlite3.so $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/ 
 	cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include 
-fi
-
-# HTMLCXX
-if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx/lib/libhtmlcxx.so" ]
-then
-	cd $THIS_PATH/temp
-	wget -O htmlcxx-$HTMLCXX_VER.tar.gz "https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/$HTMLCXX_VER/htmlcxx-0.86.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fhtmlcxx%2Ffiles%2Flatest%2Fdownload%3Fsource%3Dtyp_redirect&ts=1532444157" 
-	tar xzf htmlcxx-$HTMLCXX_VER.tar.gz 
-	cd htmlcxx-$HTMLCXX_VER 
-	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx 
-	make install 
-fi
-
-
-# HCX SELECT
-if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib/libhcxselect.so" ]
-then
-	cd $THIS_PATH/temp
-	wget https://github.com/jgehring/hcxselect/archive/$HCXSELECT_VER.tar.gz  
-	tar xzf $HCXSELECT_VER.tar.gz 
-	cd hcxselect-$HCXSELECT_VER/src 
-	patch < $THIS_PATH/hcxselect.patch 
-	make shared DIR_HTMLCXX=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx 
-	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include 
-	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib 
-	cp libhcxselect.so $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib/ 
-	cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include	 
 fi
 
 # HTSLIB
