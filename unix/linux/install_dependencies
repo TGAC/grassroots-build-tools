@@ -11,7 +11,7 @@ SQLITE_VER=3430200
 PCRE_VER=8.45
 LUCENE_VER=9.8.0
 SOLR_VER=9.4.0
-
+LIBEXIF_VER=0.6.24
 
 
 mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH
@@ -80,6 +80,21 @@ then
 	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/htslib --disable-bz2 --disable-lzma 
 	make install 
 fi
+
+
+# LIBEXIF
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/libexif/lib/libexif.so ]
+then
+	cd $THIS_PATH/temp
+	wget https://github.com/libexif/libexif/releases/download/v$LIBEXIF_VER/libexif-$LIBEXIF_VER.zip
+	unzip libexif-$LIBEXIF_VER.zip
+	cd libexif-$LIBEXIF_VER 
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/libexif 
+	make install 
+fi
+
+
+
 
 # PCRE
 if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre/lib/libpcre.so" ]
