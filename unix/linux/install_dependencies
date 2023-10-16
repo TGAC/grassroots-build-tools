@@ -1,17 +1,18 @@
 #!/bin/bash
 
-GRASSROOTS_EXTRAS_INSTALL_PATH=/home/billy/Applications/grassroots/extras
+# Edit this to specify where we will install these libraries
+GRASSROOTS_EXTRAS_INSTALL_PATH=/opt/grassroots/extras
 
 JANSSON_VER=2.14
 LIBUUID_VER=1.0.3
-MONGO_C_VER=1.20.0
+MONGO_C_VER=1.24.4
 HTMLCXX_VER=0.86
 HCXSELECT_VER=1.1
 HTSLIB_VER=1.14
-SQLITE_VER=3360000
+SQLITE_VER=3430200
 PCRE_VER=8.45
-LUCENE_VER=8.11.2
-SOLR_VER=8.11.2
+LUCENE_VER=9.8.0
+SOLR_VER=9.4.0
 
 
 
