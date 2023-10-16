@@ -80,6 +80,14 @@ ifeq ($(DIR_LUCENE),)
 export DIR_LUCENE := $(realpath $(DIR_BUILD_CONFIG)/../../lucene)
 endif
 
+#
+# If it is not already set, get the path to where the Grassroots
+# docs repository is checked out to.
+#
+ifeq ($(DIR_LIBS),)
+export DIR_LIBS := $(realpath $(DIR_BUILD_CONFIG)/../../libs)
+endif
+
 
 COPY	:= cp
 DELETE := rm
@@ -135,6 +143,13 @@ ifneq ($(DIR_HANDLERS),)
 	HANDLERS_BUILD_DIRS := $(shell find $(DIR_HANDLERS) -path '*/build/unix/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
 	HANDLERS_BUILD_DIRS :=
+endif
+
+
+ifneq ($(DIR_LIBS),)
+	LIBS_BUILD_DIRS := $(shell find $(DIR_LIBS) -path '*/build/unix/$(PLATFORM)/makefile' -exec dirname {} \;)
+else
+	LIBSS_BUILD_DIRS :=
 endif
 
 
