@@ -12,6 +12,11 @@ PCRE2_INSTALL_DIR=/opt/pcre2
 APACHE_INSTALL_DIR=/opt/apache
 MONGODB_INSTALL_DIR=/opt/mongodb
 
+GRASSROOTS_INSTALL_DIR=/opt/grassroots
+
+
+
+
 
 
 declare -A grassroots_services
@@ -43,6 +48,29 @@ grassroots_servers[brapi-module]="https://github.com/TGAC/grassroots-brapi-modul
 declare -A grassroots_clients
 
 declare -A grassroots_handlers
+
+
+#####################################
+#####################################
+#####################################
+#####################################
+#####################################
+#####################################
+#####################################
+
+
+GRASSROOTS_EXTRAS_INSTALL_PATH=$GRASSROOTS_INSTALL_DIR/extras
+
+JANSSON_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/jansson
+LIBUUID_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/libuuid
+MONGOC_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/mongoc
+SQLITE_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite
+HTMLCXX_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx
+HCXSELECT_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect
+HTSLIB_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/htslib
+LUCENE_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/lucene
+SOLR_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/solr
+
 
 
 #sudo apt install default-jdk libcurl4-openssl-dev gcc wget automake unzip bzip2 flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev libexpat1-dev
@@ -163,6 +191,146 @@ if [ ! -d "$MONGODB_INSTALL_DIR" ]; then
 	cp -r $mongo_name/* $MONGODB_INSTALL_DIR
 	mkdir $MONGODB_INSTALL_DIR/dbs
 fi
+
+
+# Install the dependencies
+
+cd ~/Downloads
+
+
+# Install Jansson 
+if [ ! -d "$JANSSON_INSTALL_DIR" ]; then
+	GetAndUnpackArchive jansson-$JANSSON_VER https://github.com/akheron/jansson/releases/download/v$JANSSON_VER/
+	cd jansson-$JANSSON_VER
+	./configure --prefix=$JANSSON_INSTALL_DIR
+	
+	make install
+	
+	echo "About to run: SudoEnsureDir $JANSSON_INSTALL_DIR"
+	SudoEnsureDir $JANSSON_INSTALL_DIR
+
+	echo "installing jansson"
+	make install
+fi
+
+
+
+
+
+
+# LIBUUID
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/libuuid/lib/libuuid.so" ]
+then
+	cd $THIS_PATH/temp
+	wget -O libuuid-$LIBUUID_VER.tar.gz "https://downloads.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-$LIBUUID_VER.tar.gz%2Fdownload&ts=1532275139"  
+	tar xzf libuuid-$LIBUUID_VER.tar.gz 
+	cd libuuid-$LIBUUID_VER  
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/libuuid 
+	make install  
+fi
+
+# MONGO DB C
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c/lib/libmongoc-1.0.so" ]
+then
+	cd $THIS_PATH/temp
+	wget https://github.com/mongodb/mongo-c-driver/releases/download/$MONGO_C_VER/mongo-c-driver-$MONGO_C_VER.tar.gz 
+	tar xzf mongo-c-driver-$MONGO_C_VER.tar.gz 
+	cd mongo-c-driver-$MONGO_C_VER 
+	mkdir cmake-build 
+	cd cmake-build 
+	cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_INSTALL_PREFIX=$GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c .. 
+	make install 
+fi
+
+# SQLITE
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/libsqlite3.so" ]
+then
+	cd $THIS_PATH/temp
+	wget https://www.sqlite.org/2021/sqlite-amalgamation-$SQLITE_VER.zip 
+	unzip sqlite-amalgamation-$SQLITE_VER.zip 
+	cd sqlite-amalgamation-$SQLITE_VER 
+	gcc sqlite3.c -o libsqlite3.so -shared -fPIC 
+	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include 
+	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib 
+	cp libsqlite3.so $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/ 
+	cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include 
+fi
+
+# HTMLCXX
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx/lib/libhtmlcxx.so" ]
+then
+	cd $THIS_PATH/temp
+	wget -O htmlcxx-$HTMLCXX_VER.tar.gz "https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/$HTMLCXX_VER/htmlcxx-0.86.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fhtmlcxx%2Ffiles%2Flatest%2Fdownload%3Fsource%3Dtyp_redirect&ts=1532444157" 
+	tar xzf htmlcxx-$HTMLCXX_VER.tar.gz 
+	cd htmlcxx-$HTMLCXX_VER 
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx 
+	make install 
+fi
+
+
+# HCX SELECT
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib/libhcxselect.so" ]
+then
+	cd $THIS_PATH/temp
+	wget https://github.com/jgehring/hcxselect/archive/$HCXSELECT_VER.tar.gz  
+	tar xzf $HCXSELECT_VER.tar.gz 
+	cd hcxselect-$HCXSELECT_VER/src 
+	patch < $THIS_PATH/hcxselect.patch 
+	make shared DIR_HTMLCXX=$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx 
+	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include 
+	mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib 
+	cp libhcxselect.so $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/lib/ 
+	cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/hcxselect/include	 
+fi
+
+# HTSLIB
+if [ ! -e $GRASSROOTS_EXTRAS_INSTALL_PATH/htslib/lib/libhts.so ]
+then
+	cd $THIS_PATH/temp
+	wget https://github.com/samtools/htslib/releases/download/$HTSLIB_VER/htslib-$HTSLIB_VER.tar.bz2 
+	tar xjf htslib-$HTSLIB_VER.tar.bz2 
+	cd htslib-$HTSLIB_VER 
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/htslib --disable-bz2 --disable-lzma 
+	make install 
+fi
+
+# PCRE
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre/lib/libpcre.so" ]
+then
+	cd $THIS_PATH/temp
+	wget https://altushost-swe.dl.sourceforge.net/project/pcre/pcre/$PCRE_VER/pcre-$PCRE_VER.tar.bz2 
+	tar xjf pcre-$PCRE_VER.tar.bz2 
+	cd pcre-$PCRE_VER 
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre 
+	make install 
+fi
+
+
+# LUCENE
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/lucene-$LUCENE_VER/analysis/common/lucene-analyzers-common-$LUCENE_VER.jar" ]
+then
+	cd $THIS_PATH/temp
+	wget https://dlcdn.apache.org/lucene/java/$LUCENE_VER/lucene-$LUCENE_VER.tgz 
+	tar xzf lucene-$LUCENE_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
+fi
+
+
+# SOLR
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/solr-$SOLR_VER/bin/solr" ]
+then
+	cd $THIS_PATH/temp
+	wget "https://www.apache.org/dyn/closer.lua/lucene/solr/$SOLR_VER/solr-$SOLR_VER.tgz?action=download" -O solr-$SOLR_VER.tgz
+	tar xzf solr-$SOLR_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
+fi
+
+
+
+
+
+
+
+
+
 
 
 # Create the Projects directory
