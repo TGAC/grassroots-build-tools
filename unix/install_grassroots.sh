@@ -72,6 +72,18 @@ LUCENE_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/lucene
 SOLR_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/solr
 
 
+JANSSON_VER=2.14
+LIBUUID_VER=1.0.3
+MONGO_C_VER=1.27.6
+HTMLCXX_VER=0.86
+HCXSELECT_VER=1.1
+HTSLIB_VER=1.20
+SQLITE_VER=3460100
+PCRE2_VER=10.44
+LUCENE_VER=9.11.1
+SOLR_VER=9.7.0
+
+
 
 #sudo apt install default-jdk libcurl4-openssl-dev gcc wget automake unzip bzip2 flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev libexpat1-dev
 
@@ -88,7 +100,13 @@ GetAndUnpackArchive() {
 			wget $file_url/$name.$suffix
 
 			echo "unpacking $name.$suffix"
-			tar zxf $name.$suffix
+
+			if [ $suffix = "zip" ]; then
+				unzip $name.$suffix
+			else
+				tar zxf $name.$suffix				
+			fi
+			
 		fi
 	fi
 }
@@ -195,16 +213,15 @@ fi
 
 # Install the dependencies
 
-cd ~/Downloads
-
-
 # Install Jansson 
-if [ ! -d "$JANSSON_INSTALL_DIR" ]; then
+if [ ! -e "$JANSSON_INSTALL_DIR/lib/libjansson.so" ]; then
+	cd ~/Downloads
+
 	GetAndUnpackArchive jansson-$JANSSON_VER https://github.com/akheron/jansson/releases/download/v$JANSSON_VER/
 	cd jansson-$JANSSON_VER
 	./configure --prefix=$JANSSON_INSTALL_DIR
 	
-	make install
+	make
 	
 	echo "About to run: SudoEnsureDir $JANSSON_INSTALL_DIR"
 	SudoEnsureDir $JANSSON_INSTALL_DIR
@@ -214,36 +231,49 @@ if [ ! -d "$JANSSON_INSTALL_DIR" ]; then
 fi
 
 
-
-
-
-
 # LIBUUID
-if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/libuuid/lib/libuuid.so" ]
-then
-	cd $THIS_PATH/temp
-	wget -O libuuid-$LIBUUID_VER.tar.gz "https://downloads.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-$LIBUUID_VER.tar.gz%2Fdownload&ts=1532275139"  
+if [ ! -e "$LIBUUID_INSTALL_DIR/lib/libuuid.so" ]; then
+	cd ~/Downloads
+
+	wget -O libuuid-$LIBUUID_VER.tar.gz "https://downloads.sourceforge.net/project/libuuid/libuuid-$LIBUUID_VER.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-$LIBUUID_VER.tar.gz%2Fdownload&ts=1532275139"  
 	tar xzf libuuid-$LIBUUID_VER.tar.gz 
 	cd libuuid-$LIBUUID_VER  
-	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/libuuid 
-	make install  
+	./configure --prefix=$LIBUUID_INSTALL_DIR
+
+	make
+	
+	echo "About to run: SudoEnsureDir $LIBUUID_INSTALL_DIR"
+	SudoEnsureDir $LIBUUID_INSTALL_DIR
+
+	echo "installing jansson"
+	make install
 fi
 
+
+
 # MONGO DB C
-if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c/lib/libmongoc-1.0.so" ]
-then
-	cd $THIS_PATH/temp
-	wget https://github.com/mongodb/mongo-c-driver/releases/download/$MONGO_C_VER/mongo-c-driver-$MONGO_C_VER.tar.gz 
-	tar xzf mongo-c-driver-$MONGO_C_VER.tar.gz 
-	cd mongo-c-driver-$MONGO_C_VER 
+if [ ! -e "MONGOC_INSTALL_DIR/lib/libmongoc-1.0.so" ]; then
+	cd ~/Downloads
+
+	GetAndUnpackArchive mongo-c-driver-$MONGO_C_VER https://github.com/mongodb/mongo-c-driver/releases/download/$MONGO_C_VER
+	cd mongo-c-driver-$MONGO_C_VER
+
 	mkdir cmake-build 
 	cd cmake-build 
-	cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_INSTALL_PREFIX=$GRASSROOTS_EXTRAS_INSTALL_PATH/mongodb-c .. 
+
+	cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_INSTALL_PREFIX=$MONGOC_INSTALL_DIR .. 
+
+	make 
+
+	echo "About to run: SudoEnsureDir MONGOC_INSTALL_DIR"
+	SudoEnsureDir MONGOC_INSTALL_DIR
+	
 	make install 
 fi
 
+
 # SQLITE
-if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/libsqlite3.so" ]
+if [ ! -e "SQLITE_INSTALL_DIR/lib/libsqlite3.so" ]
 then
 	cd $THIS_PATH/temp
 	wget https://www.sqlite.org/2021/sqlite-amalgamation-$SQLITE_VER.zip 
@@ -255,6 +285,7 @@ then
 	cp libsqlite3.so $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/ 
 	cp *.h $GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/include 
 fi
+
 
 # HTMLCXX
 if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/htmlcxx/lib/libhtmlcxx.so" ]
