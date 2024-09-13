@@ -326,7 +326,7 @@ then
 fi
 
 # PCRE
-if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre/lib/libpcre.so" ]
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre2/lib/libpcre2.so" ]
 then
 	cd $THIS_PATH/temp
 	wget https://altushost-swe.dl.sourceforge.net/project/pcre/pcre/$PCRE_VER/pcre-$PCRE_VER.tar.bz2 
