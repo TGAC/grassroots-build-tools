@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# edit this to where you want the tools installed to 
+BASE_DIR=/opt
+
 USER=tyrrells
 PCRE2_VER=10.44
 HTTPD_VER=2.4.62
@@ -8,11 +11,11 @@ APR_UTIL_VER=1.6.3
 MONGODB_VER=7.0.14
 MONGODB_TOOLS_VER=100.10.0
 
-PCRE2_INSTALL_DIR=/opt/pcre2
-APACHE_INSTALL_DIR=/opt/apache
-MONGODB_INSTALL_DIR=/opt/mongodb
+PCRE2_INSTALL_DIR=$BASE_DIR/pcre2
+APACHE_INSTALL_DIR=$BASE_DIR/apache
+MONGODB_INSTALL_DIR=$BASE_DIR/mongodb
 
-GRASSROOTS_INSTALL_DIR=/opt/grassroots
+GRASSROOTS_INSTALL_DIR=$BASE_DIR/grassroots
 
 
 
