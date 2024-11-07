@@ -61,7 +61,7 @@ fi
 if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite/lib/libsqlite3.so" ]
 then
 	cd $THIS_PATH/temp
-	wget https://www.sqlite.org/2021/sqlite-amalgamation-$SQLITE_VER.zip 
+	wget https://www.sqlite.org/2024/sqlite-amalgamation-$SQLITE_VER.zip 
 	unzip sqlite-amalgamation-$SQLITE_VER.zip 
 	cd sqlite-amalgamation-$SQLITE_VER 
 	gcc sqlite3.c -o libsqlite3.so -shared -fPIC 

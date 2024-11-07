@@ -272,6 +272,27 @@ if [ ! -e "MONGOC_INSTALL_DIR/lib/libmongoc-1.0.so" ]; then
 fi
 
 
+
+# LIBEXIF
+if [ ! -e "LIBEXIF_INSTALL_DIR/lib/libexif.so" ]; then
+	cd ~/Downloads
+
+	GetAndUnpackArchive libexif-$LIBEXIF_VER https://github.com/libexif/libexif/releases/tag/v$LIBEXIF_VER zip
+	cd libexif-$LIBEXIF_VER 
+
+	./configure --prefix=$LIBEXIF_INSTALL_DIR 
+	make 
+
+
+	echo "About to run: SudoEnsureDir LIBEXIF_INSTALL_DIR "
+	SudoEnsureDir LIBEXIF_INSTALL_DIR 
+	
+	make install 
+fi
+
+
+
+
 # SQLITE
 if [ ! -e "SQLITE_INSTALL_DIR/lib/libsqlite3.so" ]
 then
