@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# edit this to where you want the tools installed to 
+BASE_DIR=/opt
+
 USER=tyrrells
 PCRE2_VER=10.44
 HTTPD_VER=2.4.62
@@ -8,11 +11,11 @@ APR_UTIL_VER=1.6.3
 MONGODB_VER=7.0.14
 MONGODB_TOOLS_VER=100.10.0
 
-PCRE2_INSTALL_DIR=/opt/pcre2
-APACHE_INSTALL_DIR=/opt/apache
-MONGODB_INSTALL_DIR=/opt/mongodb
+PCRE2_INSTALL_DIR=$BASE_DIR/pcre2
+APACHE_INSTALL_DIR=$BASE_DIR/apache
+MONGODB_INSTALL_DIR=$BASE_DIR/mongodb
 
-GRASSROOTS_INSTALL_DIR=/opt/grassroots
+GRASSROOTS_INSTALL_DIR=$BASE_DIR/grassroots
 
 
 
@@ -74,15 +77,15 @@ SOLR_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/solr
 
 JANSSON_VER=2.14
 LIBUUID_VER=1.0.3
-MONGO_C_VER=1.27.6
+MONGO_C_VER=1.28.1
 HTMLCXX_VER=0.86
 HCXSELECT_VER=1.1
-HTSLIB_VER=1.20
-SQLITE_VER=3460100
+HTSLIB_VER=1.21
+SQLITE_VER=3470000
 PCRE2_VER=10.44
-LUCENE_VER=9.11.1
+LUCENE_VER=9.12
 SOLR_VER=9.7.0
-
+PCRE_VER=8.45
 
 
 #sudo apt install default-jdk libcurl4-openssl-dev gcc wget automake unzip bzip2 flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev libexpat1-dev
@@ -150,10 +153,13 @@ SudoEnsureDir() {
 	fi
 }
 
-# Create the Downloads directory
-EnsureDir ~/Downloads
 
-cd ~/Downloads
+THIS_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+echo ">>> ROOT: $THIS_PATH" 
+
+EnsureDir -p $THIS_PATH/temp
+cd $THIS_PATH/temp
+
 
 
 # Install PCRE2
@@ -171,7 +177,7 @@ if [ ! -d "$PCRE2_INSTALL_DIR" ]; then
 fi
 
 
-cd ~/Downloads
+cd $THIS_PATH/temp
 
 # Install Apache
 if [ ! -d "$APACHE_INSTALL_DIR" ]; then
@@ -191,7 +197,7 @@ if [ ! -d "$APACHE_INSTALL_DIR" ]; then
 fi
 
 
-cd ~/Downloads
+cd $THIS_PATH/temp
 
 # Install MongoDB
 if [ ! -d "$MONGODB_INSTALL_DIR" ]; then
@@ -215,8 +221,8 @@ fi
 
 # Install Jansson 
 if [ ! -e "$JANSSON_INSTALL_DIR/lib/libjansson.so" ]; then
-	cd ~/Downloads
-
+	cd $THIS_PATH/temp
+	
 	GetAndUnpackArchive jansson-$JANSSON_VER https://github.com/akheron/jansson/releases/download/v$JANSSON_VER/
 	cd jansson-$JANSSON_VER
 	./configure --prefix=$JANSSON_INSTALL_DIR
@@ -233,7 +239,7 @@ fi
 
 # LIBUUID
 if [ ! -e "$LIBUUID_INSTALL_DIR/lib/libuuid.so" ]; then
-	cd ~/Downloads
+	cd $THIS_PATH/temp
 
 	wget -O libuuid-$LIBUUID_VER.tar.gz "https://downloads.sourceforge.net/project/libuuid/libuuid-$LIBUUID_VER.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-$LIBUUID_VER.tar.gz%2Fdownload&ts=1532275139"  
 	tar xzf libuuid-$LIBUUID_VER.tar.gz 
@@ -253,7 +259,7 @@ fi
 
 # MONGO DB C
 if [ ! -e "MONGOC_INSTALL_DIR/lib/libmongoc-1.0.so" ]; then
-	cd ~/Downloads
+	cd $THIS_PATH/temp
 
 	GetAndUnpackArchive mongo-c-driver-$MONGO_C_VER https://github.com/mongodb/mongo-c-driver/releases/download/$MONGO_C_VER
 	cd mongo-c-driver-$MONGO_C_VER
@@ -297,7 +303,7 @@ fi
 if [ ! -e "SQLITE_INSTALL_DIR/lib/libsqlite3.so" ]
 then
 	cd $THIS_PATH/temp
-	wget https://www.sqlite.org/2021/sqlite-amalgamation-$SQLITE_VER.zip 
+	wget https://www.sqlite.org/2024/sqlite-amalgamation-$SQLITE_VER.zip 
 	unzip sqlite-amalgamation-$SQLITE_VER.zip 
 	cd sqlite-amalgamation-$SQLITE_VER 
 	gcc sqlite3.c -o libsqlite3.so -shared -fPIC 
@@ -347,7 +353,7 @@ then
 fi
 
 # PCRE
-if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre2/lib/libpcre2.so" ]
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre/lib/libpcre.so" ]
 then
 	cd $THIS_PATH/temp
 	wget https://altushost-swe.dl.sourceforge.net/project/pcre/pcre/$PCRE_VER/pcre-$PCRE_VER.tar.bz2 
