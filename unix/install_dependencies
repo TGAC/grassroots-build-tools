@@ -12,7 +12,7 @@ SQLITE_VER=3460100
 PCRE2_VER=10.44
 LUCENE_VER=9.11.1
 SOLR_VER=9.7.0
-
+LIBEXIF_VER=0.6.24
 
 
 mkdir -p $GRASSROOTS_EXTRAS_INSTALL_PATH
@@ -136,6 +136,18 @@ then
 	cd $THIS_PATH/temp
 	wget "https://www.apache.org/dyn/closer.lua/lucene/solr/$SOLR_VER/solr-$SOLR_VER.tgz?action=download" -O solr-$SOLR_VER.tgz
 	tar xzf solr-$SOLR_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
+fi
+
+
+# LIBEXIF
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/libexif-$LIBEXIF_VER/lib/libexif.so" ]
+then
+	cd $THIS_PATH/temp
+	wget https://github.com/libexif/libexif/releases/download/v$LIBEXIF_VER/libexif-$LIBEXIF_VER.zip
+	unzip libexif-$LIBEXIF_VER.zip
+	cd /libexif-$LIBEXIF_VER 
+	./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/libexif 
+	make install 
 fi
 
 

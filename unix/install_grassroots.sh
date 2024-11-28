@@ -86,6 +86,7 @@ PCRE2_VER=10.44
 LUCENE_VER=9.12
 SOLR_VER=9.7.0
 PCRE_VER=8.45
+LIBEXIF_VER=0.6.24
 
 
 #sudo apt install default-jdk libcurl4-openssl-dev gcc wget automake unzip bzip2 flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev libexpat1-dev
@@ -163,7 +164,7 @@ cd $THIS_PATH/temp
 
 
 # Install PCRE2
-if [ ! -d "$PCRE2_INSTALL_DIR" ]; then
+if [ ! -e "$PCRE2_INSTALL_DIR/bin/pcre2-config" ]; then
 	GetAndUnpackArchive pcre2-$PCRE2_VER https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$PCRE2_VER
 	cd pcre2-$PCRE2_VER
 	./configure --prefix=$PCRE2_INSTALL_DIR
@@ -180,7 +181,7 @@ fi
 cd $THIS_PATH/temp
 
 # Install Apache
-if [ ! -d "$APACHE_INSTALL_DIR" ]; then
+if [ ! -e "$APACHE_INSTALL_DIR/bin/apxs" ]; then
 	GetAndUnpackArchive httpd-$HTTPD_VER https://dlcdn.apache.org/httpd/
 	GetAndUnpackArchive apr-$APR_VER https://dlcdn.apache.org/apr/
 	GetAndUnpackArchive apr-util-$APR_UTIL_VER https://dlcdn.apache.org/apr/
@@ -200,7 +201,7 @@ fi
 cd $THIS_PATH/temp
 
 # Install MongoDB
-if [ ! -d "$MONGODB_INSTALL_DIR" ]; then
+if [ ! -e "$MONGODB_INSTALL_DIR/bin/mongod" ]; then
 	tools_name=mongodb-database-tools-ubuntu2404-x86_64-$MONGODB_TOOLS_VER
 	mongo_name=mongodb-linux-x86_64-ubuntu2204-$MONGODB_VER
 
@@ -382,8 +383,17 @@ then
 fi
 
 
-
-
+# LIBEXIF
+if [ ! -e "$GRASSROOTS_EXTRAS_INSTALL_PATH/libexif-$LIBEXIF_VER/lib/libexif.so" ]
+then
+        cd $THIS_PATH/temp
+        echo "getting libexif-$LIBEXIF_VER.zip"
+        wget https://github.com/libexif/libexif/releases/download/v$LIBEXIF_VER/libexif-$LIBEXIF_VER.zip
+        unzip libexif-$LIBEXIF_VER.zip
+        cd libexif-$LIBEXIF_VER
+        ./configure --prefix=$GRASSROOTS_EXTRAS_INSTALL_PATH/libexif
+        make install
+fi
 
 
 
