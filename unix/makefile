@@ -149,9 +149,65 @@ endif
 ifneq ($(DIR_LIBS),)
 	LIBS_BUILD_DIRS := $(shell find $(DIR_LIBS) -path '*/build/unix/$(PLATFORM)/makefile' -exec dirname {} \;)
 else
-	LIBSS_BUILD_DIRS :=
+	LIBS_BUILD_DIRS :=
 endif
 
+
+#
+# Get all of the git repos
+#
+ifneq ($(DIR_SERVERS),)
+	SERVERS_REPO_DIRS := $(shell find $(DIR_SERVERS) -path '*/.git' -exec dirname {} \;)
+else
+	SERVERS_REPO_DIRS :=
+endif
+
+
+ifneq ($(DIR_CLIENTS),)
+	CLIENTS_REPO_DIRS := $(shell find $(DIR_CLIENTS) -path '*/.git' -exec dirname {} \;)
+	else
+	CLIENTS_REPO_DIRS :=
+endif
+
+
+ifneq ($(DIR_SERVICES),)
+	SERVICES_REPO_DIRS := $(shell find $(DIR_SERVICES) -path '*/.git' -exec dirname {} \;)
+else
+	SERVICES_REPO_DIRS :=
+endif
+
+
+ifneq ($(DIR_HANDLERS),)
+	HANDLERS_REPO_DIRS := $(shell find $(DIR_HANDLERS) -path '*/.git' -exec dirname {} \;)
+else
+	HANDLERS_REPO_DIRS :=
+endif
+
+
+ifneq ($(DIR_LIBS),)
+	LIBS_REPO_DIRS := $(shell find $(DIR_LIBS) -path '*/.git' -exec dirname {} \;)
+else
+	LIBS_REPO_DIRS :=
+endif
+
+
+ifneq ($(DIR_DOCS),)
+	DOCS_REPO_DIR := $(shell find $(DIR_DOCS) -path '.git' -exec dirname {} \;)
+else
+	DOCS_REPO_DIR :=
+endif
+
+ifneq ($(DIR_USER_DOCS),)
+	USER_DOCS_REPO_DIR := $(shell find $(DIR_USER_DOCS) -path '.git' -exec dirname {} \;)
+else
+	USER_DOCS_REPO_DIR :=
+endif
+
+ifneq ($(DIR_LUCENE),)
+	LUCENE_REPO_DIR := $(shell find $(DIR_LUCENE) -path '.git' -exec dirname {} \;)
+else
+	LUCENE_REPO_DIR :=
+endif
 
 #
 # Make some phony targets to allow us to pass targets to the makefiles in each of subdirectories
@@ -202,16 +258,16 @@ git-check:
 	@echo "==================================\n"
 	@git diff-index --name-only --quiet HEAD -- || echo "$(DIR_BUILD_CONFIG)";
 	@cd $(DIR_CORE) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_CORE)";
-	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-   	 cd $(SERVER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVER_BUILD_DIR)";)	
-	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-   	 cd $(SERVICE_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVICE_BUILD_DIR)";)
-	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-   	 cd $(HANDLER_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_BUILD_DIR)";)
-	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-   	 cd $(CLIENT_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_BUILD_DIR)";)	
-	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
-   	 cd $(LIB_BUILD_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(LIB_BUILD_DIR)";)	
+	@$(foreach SERVER_REPO_DIR,$(SERVERS_REPO_DIRS), \
+   	 cd $(SERVER_REPO_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVER_REPO_DIR)";)	
+	@$(foreach SERVICE_REPO_DIR,$(SERVICES_REPO_DIRS), \
+   	 cd $(SERVICE_REPO_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(SERVICE_REPO_DIR)";)
+	@$(foreach HANDLER_REPO_DIR,$(HANDLERS_REPO_DIRS), \
+   	 cd $(HANDLER_REPO_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(HANDLER_REPO_DIR)";)
+	@$(foreach CLIENT_REPO_DIR,$(CLIENTS_REPO_DIRS), \
+   	 cd $(CLIENT_REPO_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(CLIENT_REPO_DIR)";)	
+	@$(foreach LIB_REPO_DIR,$(LIBS_REPO_DIRS), \
+   	 cd $(LIB_REPO_DIR); git diff-index --name-only --quiet HEAD -- || echo "$(LIB_REPO_DIR)";)	
 	@[ "${DIR_DOCS}" ] && cd $(DIR_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_DOCS)";
 	@[ "${DIR_REFERENCES}" ] && cd $(DIR_REFERENCES) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_REFERENCES)";
 	@[ "${DIR_USER_DOCS}" ] && cd $(DIR_USER_DOCS) && git diff-index --name-only --quiet HEAD -- || echo "$(DIR_USER_DOCS)";
@@ -233,16 +289,16 @@ git-pull:
 	@[ "${DIR_REFERENCES}" ] && echo ">>> Updating \"$(DIR_REFERENCES)\"" && cd $(DIR_REFERENCES) && git pull $(GIT_ARG) || echo "";
 	@[ "${DIR_USER_DOCS}" ] && echo ">>> Updating \"$(DIR_USER_DOCS)\"" && cd $(DIR_USER_DOCS) && git pull $(GIT_ARG) || echo "";
 	@[ "${DIR_LUCENE}" ] && echo ">>> Updating \"$(DIR_LUCENE)\"" && cd $(DIR_LUCENE) && git pull $(GIT_ARG) || echo "";
-	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-   	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git pull $(GIT_ARG);)	
-	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-   	 echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git pull $(GIT_ARG);)	
-	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-   	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git pull $(GIT_ARG);)	
-	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-   	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git pull $(GIT_ARG);)	
-	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
-   	 echo ">>> Updating $(LIB_BUILD_DIR)"; cd $(LIB_BUILD_DIR); git pull $(GIT_ARG);)	
+	@$(foreach SERVER_REPO_DIR,$(SERVERS_REPO_DIRS), \
+   	 echo ">>> Updating $(SERVER_REPO_DIR)"; cd $(SERVER_REPO_DIR); git pull $(GIT_ARG);)	
+	@$(foreach SERVICE_REPO_DIR,$(SERVICES_REPO_DIRS), \
+   	 echo ">>> Updating $(SERVICE_REPO_DIR)"; cd $(SERVICE_REPO_DIR); git pull $(GIT_ARG);)	
+	@$(foreach HANDLER_REPO_DIR,$(HANDLERS_REPO_DIRS), \
+   	 echo ">>> Updating $(HANDLER_REPO_DIR)"; cd $(HANDLER_REPO_DIR); git pull $(GIT_ARG);)	
+	@$(foreach CLIENT_REPO_DIR,$(CLIENTS_REPO_DIRS), \
+   	 echo ">>> Updating $(CLIENT_REPO_DIR)"; cd $(CLIENT_REPO_DIR); git pull $(GIT_ARG);)	
+	@$(foreach LIB_REPO_DIR,$(LIBS_REPO_DIRS), \
+   	 echo ">>> Updating $(LIB_REPO_DIR)"; cd $(LIB_REPO_DIR); git pull $(GIT_ARG);)	
    	 
 
 git-pull-current:
@@ -268,16 +324,16 @@ git-fetch:
 	@[ "${DIR_REFERENCES}" ] && echo ">>> Updating \"$(DIR_REFERENCES)\"" && cd $(DIR_REFERENCES) && git fetch $(GIT_REMOTE) $(GIT_BRANCH); || echo "";
 	@[ "${DIR_USER_DOCS}" ] && echo ">>> Updating \"$(DIR_USER_DOCS)\"" && cd $(DIR_USER_DOCS) && git fetch $(GIT_REMOTE) $(GIT_BRANCH); || echo "";
 	@[ "${DIR_LUCENE}" ] && echo ">>> Updating \"$(DIR_LUCENE)\"" && cd $(DIR_LUCENE) && git fetch $(GIT_REMOTE) $(GIT_BRANCH); || echo "";
-	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-   	 echo ">>> Updating $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git fetch  $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-   	 echo ">>> Updating $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-   	 echo ">>> Updating $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-   	 echo ">>> Updating $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
-   	 echo ">>> Updating $(LIB_BUILD_DIR)"; cd $(LIB_BUILD_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach SERVER_REPO_DIR,$(SERVERS_REPO_DIRS), \
+   	 echo ">>> Updating $(SERVER_REPO_DIR)"; cd $(SERVER_REPO_DIR); git fetch  $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach SERVICE_REPO_DIR,$(SERVICES_REPO_DIRS), \
+   	 echo ">>> Updating $(SERVICE_REPO_DIR)"; cd $(SERVICE_REPO_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach HANDLER_REPO_DIR,$(HANDLERS_REPO_DIRS), \
+   	 echo ">>> Updating $(HANDLER_REPO_DIR)"; cd $(HANDLER_REPO_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach CLIENT_REPO_DIR,$(CLIENTS_REPO_DIRS), \
+   	 echo ">>> Updating $(CLIENT_REPO_DIR)"; cd $(CLIENT_REPO_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach LIB_REPO_DIR,$(LIBS_REPO_DIRS), \
+   	 echo ">>> Updating $(LIB_REPO_DIR)"; cd $(LIB_REPO_DIR); git fetch $(GIT_REMOTE) $(GIT_BRANCH);)	
    	 
 
 #
@@ -300,16 +356,16 @@ git-push:
 	@cd $(DIR_USER_DOCS) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
 	@echo ">>> Pushing $(DIR_LUCENE)"
 	@cd $(DIR_LUCENE) && git push $(GIT_REMOTE) $(GIT_BRANCH);	
-	@$(foreach SERVER_BUILD_DIR,$(SERVERS_BUILD_DIRS), \
-   	 echo ">>> Pushing $(SERVER_BUILD_DIR)"; cd $(SERVER_BUILD_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach SERVICE_BUILD_DIR,$(SERVICES_BUILD_DIRS), \
-   	 echo ">>> Pushing $(SERVICE_BUILD_DIR)"; cd $(SERVICE_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach HANDLER_BUILD_DIR,$(HANDLERS_BUILD_DIRS), \
-   	 echo ">>> Pushing $(HANDLER_BUILD_DIR)"; cd $(HANDLER_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach CLIENT_BUILD_DIR,$(CLIENTS_BUILD_DIRS), \
-   	 echo ">>> Pushing $(CLIENT_BUILD_DIR)"; cd $(CLIENT_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
-	@$(foreach LIB_BUILD_DIR,$(LIBS_BUILD_DIRS), \
-   	 echo ">>> Pushing $(LIB_BUILD_DIR)"; cd $(LIB_BUILD_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach SERVER_REPO_DIR,$(SERVERS_REPO_DIRS), \
+   	 echo ">>> Pushing $(SERVER_REPO_DIR)"; cd $(SERVER_REPO_DIR); git push  $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach SERVICE_REPO_DIR,$(SERVICES_REPO_DIRS), \
+   	 echo ">>> Pushing $(SERVICE_REPO_DIR)"; cd $(SERVICE_REPO_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach HANDLER_REPO_DIR,$(HANDLERS_REPO_DIRS), \
+   	 echo ">>> Pushing $(HANDLER_REPO_DIR)"; cd $(HANDLER_REPO_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach CLIENT_REPO_DIR,$(CLIENTS_REPO_DIRS), \
+   	 echo ">>> Pushing $(CLIENT_REPO_DIR)"; cd $(CLIENT_REPO_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
+	@$(foreach LIB_REPO_DIR,$(LIBS_REPO_DIRS), \
+   	 echo ">>> Pushing $(LIB_REPO_DIR)"; cd $(LIB_REPO_DIR); git push $(GIT_REMOTE) $(GIT_BRANCH);)	
 
 
 show-config: 
