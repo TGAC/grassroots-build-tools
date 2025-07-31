@@ -1,21 +1,21 @@
-#!/bin/zsh
+#!/bin/bash
 
 # edit this to where you want the tools installed to 
-INSTALL_DIR=/Users/tyrrells/test/dest
+INSTALL_DIR=/home/billy/temp/dest
 
 # This is where all of the Grassroots git repos will get checked out to
 SRC_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 
 
-# array declarations are declae=-A for bash and -a for zah
-#ARRAY_DECL=declare -A 
-ARRAY_DECL=typeset -A 
+# array declarations are declare -A for bash and typeset -A for zsh
+ARRAY_DECL="declare -A"
+#ARRAY_DECL="typeset -A" 
 
 # for Bash set this to -n, for zsh, leave blank
-LOCAL_VAR_ARG=
+LOCAL_VAR_ARG=-n
 
 # so for linux, dylib for mac
-LIB_SUFFIX=dylib
+LIB_SUFFIX=so
 
 # If you need sudo rights to install grassroots
 # then set
@@ -31,7 +31,7 @@ GRASSROOTS_INSTALL_DIR=$INSTALL_DIR/grassroots
 
 # If you are needing to use sudo to install
 # then this will set the owner
-USER=tyrrells
+USER=billy
 
 
 #######################################
@@ -72,7 +72,7 @@ SQLITE_YEAR=2025
 #####################################
 
 
-typeset -A grassroots_services=(
+eval "$ARRAY_DECL" grassroots_services=(
 	[field-trials]="https://github.com/TGAC/grassroots-service-field-trial.git"
 	[search]="https://github.com/TGAC/grassroots-service-search.git"
 	[marti]="https://github.com/TGAC/grassroots-service-marti.git"
@@ -84,21 +84,21 @@ typeset -A grassroots_services=(
 	[field-pathogenomics]="https://github.com/TGAC/grassroots-service-field-pathogenomics.git"
 )
 
-declare -A grassroots_libs=(
+eval "$ARRAY_DECL" grassroots_libs=(
 	[geocoder]="https://github.com/TGAC/grassroots-geocoder.git" 
 	[frictionless-data]="https://github.com/TGAC/grassroots-frictionless-data.git"
 )
 
-declare $ARRAY_DECL grassroots_servers
+eval "$ARRAY_DECL" grassroots_servers
 grassroots_servers["httpd-server"]="https://github.com/TGAC/grassroots-server-apache-httpd.git"
 grassroots_servers["mongodb-jobs-manager"]="https://github.com/TGAC/grassroots-jobs-manager-mongodb.git"
 grassroots_servers["simple-servers-manager"]="https://github.com/TGAC/grassroots-simple-servers-manager.git"
 grassroots_servers["brapi-module"]="https://github.com/TGAC/grassroots-brapi-module.git"
 
 
-declare $ARRAY_DECL grassroots_clients
+eval "$ARRAY_DECL" grassroots_clients
 
-declare $ARRAY_DECL grassroots_handlers
+eval "$ARRAY_DECL" grassroots_handlers
 
 
 GRASSROOTS_EXTRAS_INSTALL_PATH=$GRASSROOTS_INSTALL_DIR/extras
@@ -386,7 +386,7 @@ then
 	cd sqlite-amalgamation-$SQLITE_VER 
 	gcc sqlite3.c -o libsqlite3.$LIB_SUFFIX -shared -fPIC 
 	SudoEnsureDir $SQLITE_INSTALL_DIR/include 
-	mkdir -p $$SQLITE_INSTALL_DIR/lib 
+	mkdir -p $SQLITE_INSTALL_DIR/lib 
 	cp libsqlite3.$LIB_SUFFIX $SQLITE_INSTALL_DIR/lib/ 
 	cp *.h $SQLITE_INSTALL_DIR/include 
 
@@ -533,22 +533,20 @@ EnsureDir $SRC_DIR/Projects/grassroots/services
 cd $SRC_DIR/Projects/grassroots/services
 
 echo "services: ${grassroots_services[@]}"
-GetAllGitRepos $grassroots_services
+GetAllGitRepos grassroots_services
 
 EnsureDir $SRC_DIR/Projects/grassroots/servers
 cd $SRC_DIR/Projects/grassroots/servers
-GetAllGitRepos $grassroots_servers
+GetAllGitRepos grassroots_servers
 
 EnsureDir $SRC_DIR/Projects/grassroots/libs
 cd $SRC_DIR/Projects/grassroots/libs
-echo "keys: ${!grassroots_libs[*]}"
-echo "*** $grassroots_libs length ${#grassroots_libs[@]}"
-GetAllGitRepos $grassroots_libs
+GetAllGitRepos grassroots_libs
 
 EnsureDir $SRC_DIR/Projects/grassroots/clients
 cd $SRC_DIR/Projects/grassroots/clients
-GetAllGitRepos $grassroots_clients
+GetAllGitRepos grassroots_clients
 
 EnsureDir $SRC_DIR/Projects/grassroots/handlers
 cd $SRC_DIR/Projects/grassroots/handlers
-GetAllGitRepos $grassroots_handlers
+GetAllGitRepos grassroots_handlers
