@@ -392,6 +392,7 @@ show-config:
 	@echo "CURRENT_DIR: $(CURRENT_DIR)"
 	@echo "DIR_JANSSON: $(DIR_JANSSON)"
 	@echo "DIR_MONGOC: $(DIR_MONGODB)"
+	@echo "DIR_SQLITE: $(DIR_SQLITE)"
 
 
 #
