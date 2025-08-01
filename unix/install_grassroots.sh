@@ -27,10 +27,9 @@ SUDO=
 # Set this to either linux or mac depending upon your OS
 PLATFORM=linux
 
-
+# The path where you want the Grassroots source code to be checked out to
 GRASSROOTS_PROJECT_DIR=$SRC_DIR/Projects/grassroots
 
-BUILD_CONFIG_DIR_NAME=build-config
 
 # The root path that grassroots will be installed to
 GRASSROOTS_INSTALL_DIR=$INSTALL_DIR/grassroots
@@ -127,6 +126,9 @@ MONGOC_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/mongoc
 PCRE_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/pcre
 SOLR_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/solr
 SQLITE_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/sqlite
+
+
+BUILD_CONFIG_DIR_NAME=build-config
 
 
 #sudo apt install default-jdk libcurl4-openssl-dev gcc wget automake unzip bzip2 flex make git cmake zlib1g-dev g++ libzstd-dev libssl-dev libexpat1-dev
