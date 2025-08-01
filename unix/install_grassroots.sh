@@ -24,6 +24,13 @@ LIB_SUFFIX=so
 #
 SUDO=
 
+# Set this to either linux or mac depending upon your OS
+PLATFORM=linux
+
+
+GRASSROOTS_PROJECT_DIR=$SRC_DIR/Projects/grassroots
+
+BUILD_CONFIG_DIR_NAME=build-config
 
 # The root path that grassroots will be installed to
 GRASSROOTS_INSTALL_DIR=$INSTALL_DIR/grassroots
@@ -60,6 +67,7 @@ PCRE2_VER=10.44
 SOLR_VER=9.9.0
 SQLITE_VER=3500400
 SQLITE_YEAR=2025
+
 
 
 
@@ -196,12 +204,76 @@ SudoEnsureDir() {
 
 DoesFileExist() {
 	local res = 0;
-	if [ -e $1]; then
+	if [ -e $1 ]; then
 		res = 1
 	fi
 	
 	echo res
 }
+
+
+WriteDependencies() {
+	cd $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM
+
+	# if there's an existing file, back it up
+	if [ -e $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties ]; then
+		
+		if [ -e $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties~ ]; then
+			rm $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties~
+		fi
+
+		mv $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties~
+
+	fi
+
+
+
+	echo -e "export DIR_GRASSROOTS_INSTALL := $GRASSROOTS_INSTALL_DIR" > dependencies.properties
+	echo -e "export DIR_GRASSROOTS_EXTRAS := $GRASSROOTS_EXTRAS_INSTALL_PATH\n" >> dependencies.properties
+
+	echo -e "export HCXSELECT_HOME := $HCXSELECT_INSTALL_DIR" >> dependencies.properties
+	echo -e "export HTMLCXX_HOME := $HTMLCXX_INSTALL_DIR" >> dependencies.properties
+	echo -e "export HTSLIB_HOME := $HTSLIB_INSTALL_DIR" >> dependencies.properties
+	echo -e "export JANSSON_HOME := $JANSSON_INSTALL_DIR" >> dependencies.properties
+	echo -e "export LIBEXIF_HOME := $LIBEXIF_INSTALL_DIR" >> dependencies.properties
+	echo -e "export JANSSON_HOME := $JANSSON_INSTALL_DIR" >> dependencies.properties
+	echo -e "export MONGODB_HOME := $MONGOC_INSTALL_DIR" >> dependencies.properties
+	echo -e "export BSON_HOME := $MONGOC_INSTALL_DIR" >> dependencies.properties
+	echo -e "export PCRE_HOME := $PCRE_INSTALL_DIR" >> dependencies.properties
+	echo -e "export PCRE2_HOME := $PCRE2_INSTALL_DIR" >> dependencies.properties
+	echo -e "export SQLITE_HOME := $SQLITE_INSTALL_DIR\n" >> dependencies.properties
+
+
+	echo -e "export DIR_APACHE := $APACHE_INSTALL_DIR" >> dependencies.properties
+	echo -e "export APXS := \$(DIR_APACHE)/bin/apxs" >> dependencies.properties
+	echo -e "export SUDO := $SUDO" >> dependencies.properties
+
+	echo -e "export IRODS_ENABLED := 0" >> dependencies.properties
+
+
+	if [[ MONGO_C_VER == 1.* ]]; then
+		BSON_LIB_NAME="bson-1.0"
+		MONGO_LIB_NAME="mongoc-1.0"
+		BSON_INC_NAME="lib$BSON_LIB_NAME"
+		MONGO_INC_NAME="lib$MONGO_LIB_NAME"
+	else 
+		local c=${MONGO_C_VER:0:1}
+		BSON_LIB_NAME="bson$c"	
+		MONGO_LIB_NAME="mongoc$c"	
+		BSON_INC_NAME="bson-$MONGO_C_VER"
+		MONGO_INC_NAME="mongoc-$MONGO_C_VER"
+	fi
+
+	echo -e "export BSON_LIB_NAME := $BSON_LIB_NAME" >> dependencies.properties
+	echo -e "export BSON_INC_NAME := $BSON_INC_NAME" >> dependencies.properties
+	echo -e "export MONGO_LIB_NAME := $MONGO_LIB_NAME" >> dependencies.properties
+	echo -e "export MONGO_INC_NAME := $MONGO_INC_NAME" >> dependencies.properties
+
+
+#LUCENE_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/lucene
+#SOLR_INSTALL_DIR=$GRASSROOTS_EXTRAS_INSTALL_PATH/solr
+}
+
 
 echo ">>> ROOT: $SRC_DIR" 
 
@@ -468,7 +540,7 @@ then
 	./configure --prefix=$PCRE_INSTALL_DIR
 	make install 
 
-	echo ">>>> EWND INSTALLING PCRE"
+	echo ">>>> END INSTALLING PCRE"
 
 fi
 
@@ -519,34 +591,42 @@ fi
 
 
 # Create the Projects directory
-EnsureDir $SRC_DIR/Projects
-EnsureDir $SRC_DIR/Projects/grassroots
+EnsureDir $GRASSROOTS_PROJECT_DIR
 
 # Install Grassroots
-cd $SRC_DIR/Projects/grassroots
+cd $GRASSROOTS_PROJECT_DIR
 
-GetGitRepo https://github.com/TGAC/grassroots-build-tools.git build-config
+GetGitRepo https://github.com/TGAC/grassroots-build-tools.git $BUILD_CONFIG_DIR_NAME
 GetGitRepo https://github.com/TGAC/grassroots-core.git core
 GetGitRepo https://github.com/TGAC/grassroots-lucene.git lucene
 
-EnsureDir $SRC_DIR/Projects/grassroots/services
-cd $SRC_DIR/Projects/grassroots/services
+EnsureDir $GRASSROOTS_PROJECT_DIR/services
+cd $GRASSROOTS_PROJECT_DIR/services
 
 echo "services: ${grassroots_services[@]}"
 GetAllGitRepos grassroots_services
 
-EnsureDir $SRC_DIR/Projects/grassroots/servers
-cd $SRC_DIR/Projects/grassroots/servers
+EnsureDir $GRASSROOTS_PROJECT_DIR/servers
+cd $GRASSROOTS_PROJECT_DIR/servers
 GetAllGitRepos grassroots_servers
 
-EnsureDir $SRC_DIR/Projects/grassroots/libs
-cd $SRC_DIR/Projects/grassroots/libs
+EnsureDir $GRASSROOTS_PROJECT_DIR/libs
+cd $GRASSROOTS_PROJECT_DIR/libs
 GetAllGitRepos grassroots_libs
 
-EnsureDir $SRC_DIR/Projects/grassroots/clients
-cd $SRC_DIR/Projects/grassroots/clients
+EnsureDir $GRASSROOTS_PROJECT_DIR/clients
+cd $GRASSROOTS_PROJECT_DIR/clients
 GetAllGitRepos grassroots_clients
 
-EnsureDir $SRC_DIR/Projects/grassroots/handlers
-cd $SRC_DIR/Projects/grassroots/handlers
+EnsureDir $GRASSROOTS_PROJECT_DIR/handlers
+cd $GRASSROOTS_PROJECT_DIR/handlers
 GetAllGitRepos grassroots_handlers
+
+
+
+
+# Set the dependencies.propeties file up
+
+WriteDependencies
+
+
