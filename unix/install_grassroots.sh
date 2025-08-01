@@ -275,6 +275,36 @@ WriteDependencies() {
 }
 
 
+# lucene/grassroots-lucene.properties
+WriteLuceneProperties() {
+
+	cd $GRASSROOTS_PROJECT_DIR/lucene/
+
+	# if there's an existing file, back it up
+	if [ -e $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties ]; then
+		
+		if [ -e $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties~ ]; then
+			rm $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties~
+		fi
+
+		mv $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties~
+
+	fi
+
+
+	echo -e "install.dir = $GRASSROOTS_INSTALL_DIR/lucene\n" > grassroots-lucene.properties
+
+	echo -e "index.dir=\${install.dir}/index" >> grassroots-lucene.properties
+	echo -e "tax.dir=\${install.dir}/tax\n" >> grassroots-lucene.properties
+
+	echo -e "lucene.dir=$LUCENE_INSTALL_DIR" >> grassroots-lucene.properties
+	echo -e "lucene.version=$LUCENE_VER\n" >> grassroots-lucene.properties
+
+	echo -e "solr.dir=$SOLR_INSTALL_DIR" >> grassroots-lucene.properties
+	echo -e "solr.version=$SOLR_VER\n" >> grassroots-lucene.properties
+}
+
+
 echo ">>> ROOT: $SRC_DIR" 
 
 EnsureDir $SRC_DIR/temp
@@ -628,5 +658,11 @@ GetAllGitRepos grassroots_handlers
 # Set the dependencies.propeties file up
 
 WriteDependencies
+
+
+WriteLuceneProperties
+
+
+
 
 
