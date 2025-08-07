@@ -40,6 +40,23 @@ GRASSROOTS_INSTALL_DIR=$INSTALL_DIR/grassroots
 USER=billy
 
 
+# The port to run apache on
+APACHE_PORT=2000
+
+
+APACHE_GRASSROOTS_LOCATION=grassroots/public_backend
+
+# name of the grassroots config
+GRASSROOTS_SERVER_CONFIG=public
+
+
+PROVIDER_NAME=localhost
+
+PROVIDER_DESRCIPTION="Grassroots running on localhost"
+
+PROVIDER_LOGO="grassroots/logo.png"
+
+
 #######################################
 ## The versions of the various tools ##
 #######################################
@@ -305,6 +322,127 @@ WriteLuceneProperties() {
 	echo -e "solr.dir=$SOLR_INSTALL_DIR" >> grassroots-lucene.properties
 	echo -e "solr.version=$SOLR_VER\n" >> grassroots-lucene.properties
 }
+
+
+
+WriteGrassrootsServerConfig() {
+
+	local -n global_config_filename = "$GRASSROOTS_INSTALL_DIR/config/$GRASSROOTS_SERVER_CONFIG_config"
+	cd $GRASSROOTS_INSTALL_DIR
+
+	# create the config folder
+	mkdir -p config
+
+
+	echo -e "{\n" > $global_config_filename
+
+	# The Grassroots backend url
+	echo -e "\t\"so:url\": \"http://localhost:$APACHE_PORT/$APACHE_GRASSROOTS_LOCATION\"," >> $global_config_filename
+
+
+	echo -e "\t\"jobs_manager\": \"mongodb_jobs_manager\"," >> $global_config_filename
+	echo -e "\t\"servers_manager\": \"simple_external_servers_manager\"," >> $global_config_filename
+
+	echo -e "\t\"mongodb_jobs_manager\": {" >> $global_config_filename
+	echo -e "\t\t\"database\": \"grassroots\"," >> $global_config_filename
+	echo -e "\t\t\"collection\": \"jobs\"" >> $global_config_filename
+	echo -e "\t}," >> $global_config_filename
+
+	echo -e "\t\"users\": {" >> $global_config_filename
+	echo -e "\t\t\"database\": \"users_and_groups\"," >> $global_config_filename
+	echo -e "\t\t\"users_collection\": \"users\"" >> $global_config_filename
+	echo -e "\t\t\"groups_collection\": \"groups\"" >> $global_config_filename
+	echo -e "\t}," >> $global_config_filename
+
+	# provider
+	"provider": {
+		"@type": "so:Organization",
+		"so:name": "Billy Mac Laptop",
+		"so:description": "Billy's work Grassroots instance",
+		"so:url": "http://localhost:2000/grassroots",
+		"so:logo": "http://grassroots.tools/images/ei_logo.png"
+	},
+
+	echo -e "\t\"provider\": {" >> $global_config_filename
+	echo -e "\t\t\"@type\": \"so:Organization\"," >> $global_config_filename
+	echo -e "\t\t\"so:name\": \"$PROVIDER_NAME\"" >> $global_config_filename
+	echo -e "\t\t\"so:description\": \"$PROVIDER_DESCRIPTION\"" >> $global_config_filename
+	echo -e "\t\t\"so:url\": \"http://localhost:$APACHE_PORT/$APACHE_GRASSROOTS_LOCATION\"" >> $global_config_filename
+	echo -e "\t\t\"so:llogo\": \"http://localhost:$APACHE_PORT/$PROVIDER_LOGO\"" >> $global_config_filename
+	echo -e "\t}," >> $global_config_filename
+
+
+	# geocoder
+	echo -e "\t\"geocoder\": {" >> $global_config_filename
+	echo -e "\t\t\"default_geocoder\": \"nominatim\"," >> $global_config_filename
+	echo -e "\t\t\"geocoders\": [{" >> $global_config_filename
+	
+	echo -e "\t\t\t\"name\": \"nominatim\"," >> $global_config_filename
+	echo -e "\t\t\t\"reverse_geocode_url\": \"https://nominatim.openstreetmap.org/reverse\"," >> $global_config_filename
+	echo -e "\t\t\t\"geocode_url\": \"https://nominatim.openstreetmap.org/search?format=json\"" >> $global_config_filename
+	
+	echo -e "\t\t}]" >> $global_config_filename
+	echo -e "\t}," >> $global_config_filename
+
+
+	# write the mongo config
+	echo -e "\t\"mongodb\": {" >> $global_config_filename
+	echo -e "\t\t\"uri\": \"mongodb://localhost:27017\"" >> $global_config_filename
+	echo -e "\t}," >> $global_config_filename
+	
+	
+	# lucene
+	echo -e "\t\"lucene\": {" >> $global_config_filename
+
+
+
+
+
+
+	# classpath
+	local -n lucene_mods_dir=$LUCENE_INSTALL_DIR/modules
+	local -n classpath = "$lucene_mods_dir/lucene-analysis-common-$LUCENE_VER.jar"
+	
+	classpath += ":$lucene_mods_dir/lucene-core-$LUCENE_VER.jar"
+	classpath += ":$lucene_mods_dir/lucene-facet-$LUCENE_VER.jar"
+	classpath += ":$lucene_mods_dir/lucene-queryparser-$LUCENE_VER.jar"
+	classpath += ":$lucene_mods_dir/lucene-backward-codecs-$LUCENE_VER.jar"
+	classpath += ":$lucene_mods_dir/lucene-highlighter-$LUCENE_VER.jar"
+	classpath += ":$lucene_mods_dir/lucene-memory-$LUCENE_VER.jar"
+	classpath += ":$lucene_mods_dir/lucene-queries-$LUCENE_VER.jar"
+
+	classpath += ":$GRASSROOTS_INSTALL_DIR/lucene/lib/json-simple-1.1.1.jar"
+	
+	classpath += ":$GRASSROOTS_INSTALL_DIR/lucene/lib/grassroots-search-core-0.1.jar"
+	classpath += ":$GRASSROOTS_INSTALL_DIR/lucene/lib/grassroots-search-lucene-app-0.1.jar"	
+	
+	
+	echo -e "\t\t\"classpath\": \"$classpath\"" >> $global_config_filename
+
+
+	echo -e "\t\t\"index\": \"$GRASSROOTS_INSTALL_DIR/lucene/index\"" >> $global_config_filename
+	echo -e "\t\t\"taxonomy\": \"$GRASSROOTS_INSTALL_DIR/lucene/tax\"" >> $global_config_filename
+
+	echo -e "\t\t\"search_class\": \"uk.ac.earlham.grassroots.app.lucene.Searcher\"" >> $global_config_filename
+	echo -e "\t\t\"delete_class\": \"uk.ac.earlham.grassroots.app.lucene.Deleter\"" >> $global_config_filename
+	echo -e "\t\t\"index_class\": \"uk.ac.earlham.grassroots.app.lucene.Indexer\"" >> $global_config_filename
+
+	echo -e "\t\t\"working_directory\": \"$GRASSROOTS_INSTALL_DIR/working_directory/lucene\"" >> $global_config_filename
+	echo -e "\t\t\"facet_key\": \"facet_type\"" >> $global_config_filename
+
+	echo -e "\t}," >> $global_config_filename
+	
+	
+
+
+	echo -e "\n}" >> $global_config_filename
+
+}
+
+
+#######################
+### START OF SCRIPT ###
+#######################
 
 
 echo ">>> ROOT: $SRC_DIR" 
@@ -665,6 +803,7 @@ WriteDependencies
 WriteLuceneProperties
 
 
+WriteGrassrootsServerConfig
 
 
 
