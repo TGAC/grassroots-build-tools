@@ -52,7 +52,7 @@ GRASSROOTS_SERVER_CONFIG=public
 
 PROVIDER_NAME=localhost
 
-PROVIDER_DESRCIPTION="Grassroots running on localhost"
+PROVIDER_DESCRIPTION="Grassroots running on localhost"
 
 PROVIDER_LOGO="grassroots/logo.png"
 
@@ -327,17 +327,20 @@ WriteLuceneProperties() {
 
 WriteGrassrootsServerConfig() {
 
-	local -n global_config_filename = "$GRASSROOTS_INSTALL_DIR/config/$GRASSROOTS_SERVER_CONFIG_config"
+	local global_config_filename="$GRASSROOTS_INSTALL_DIR/config/${GRASSROOTS_SERVER_CONFIG}_config"
 	cd $GRASSROOTS_INSTALL_DIR
+
+
+	echo "global_config_filename: $global_config_filename"
 
 	# create the config folder
 	mkdir -p config
 
 
-	echo -e "{\n" > $global_config_filename
+	echo -e "{" > $global_config_filename
 
 	# The Grassroots backend url
-	echo -e "\t\"so:url\": \"http://localhost:$APACHE_PORT/$APACHE_GRASSROOTS_LOCATION\"," >> $global_config_filename
+	echo -e "\t\"so:url\": \"http://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION}\"," >> $global_config_filename
 
 
 	echo -e "\t\"jobs_manager\": \"mongodb_jobs_manager\"," >> $global_config_filename
@@ -350,25 +353,17 @@ WriteGrassrootsServerConfig() {
 
 	echo -e "\t\"users\": {" >> $global_config_filename
 	echo -e "\t\t\"database\": \"users_and_groups\"," >> $global_config_filename
-	echo -e "\t\t\"users_collection\": \"users\"" >> $global_config_filename
+	echo -e "\t\t\"users_collection\": \"users\"," >> $global_config_filename
 	echo -e "\t\t\"groups_collection\": \"groups\"" >> $global_config_filename
 	echo -e "\t}," >> $global_config_filename
 
 	# provider
-	"provider": {
-		"@type": "so:Organization",
-		"so:name": "Billy Mac Laptop",
-		"so:description": "Billy's work Grassroots instance",
-		"so:url": "http://localhost:2000/grassroots",
-		"so:logo": "http://grassroots.tools/images/ei_logo.png"
-	},
-
 	echo -e "\t\"provider\": {" >> $global_config_filename
 	echo -e "\t\t\"@type\": \"so:Organization\"," >> $global_config_filename
-	echo -e "\t\t\"so:name\": \"$PROVIDER_NAME\"" >> $global_config_filename
-	echo -e "\t\t\"so:description\": \"$PROVIDER_DESCRIPTION\"" >> $global_config_filename
-	echo -e "\t\t\"so:url\": \"http://localhost:$APACHE_PORT/$APACHE_GRASSROOTS_LOCATION\"" >> $global_config_filename
-	echo -e "\t\t\"so:llogo\": \"http://localhost:$APACHE_PORT/$PROVIDER_LOGO\"" >> $global_config_filename
+	echo -e "\t\t\"so:name\": \"${PROVIDER_NAME}\"," >> $global_config_filename
+	echo -e "\t\t\"so:description\": \"${PROVIDER_DESCRIPTION}\"," >> $global_config_filename
+	echo -e "\t\t\"so:url\": \"http://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION}\"," >> $global_config_filename
+	echo -e "\t\t\"so:logo\": \"http://localhost:${APACHE_PORT}/${PROVIDER_LOGO}\"" >> $global_config_filename
 	echo -e "\t}," >> $global_config_filename
 
 
@@ -400,37 +395,39 @@ WriteGrassrootsServerConfig() {
 
 
 	# classpath
-	local -n lucene_mods_dir=$LUCENE_INSTALL_DIR/modules
-	local -n classpath = "$lucene_mods_dir/lucene-analysis-common-$LUCENE_VER.jar"
+	local lucene_mods_dir=${LUCENE_INSTALL_DIR}/modules
+
+	echo -e -n "\t\t\"classpath\": \"${lucene_mods_dir}/lucene-analysis-common-${LUCENE_VER}.jar" >> $global_config_filename
+
+	echo -e -n ":${lucene_mods_dir}/lucene-core-${LUCENE_VER}.jar" >> $global_config_filename
+
+	echo -e -n ":${lucene_mods_dir}/lucene-facet-${LUCENE_VER}.jar" >> $global_config_filename
+	echo -e -n ":${lucene_mods_dir}/lucene-queryparser-${LUCENE_VER}.jar" >> $global_config_filename
+	echo -e -n ":${lucene_mods_dir}/lucene-backward-codecs-${LUCENE_VER}.jar" >> $global_config_filename
+	echo -e -n ":${lucene_mods_dir}/lucene-highlighter-${LUCENE_VER}.jar" >> $global_config_filename
+
+	echo -e -n ":${lucene_mods_dir}/lucene-memory-${LUCENE_VER}.jar" >> $global_config_filename
+	echo -e -n ":${lucene_mods_dir}/lucene-queries-${LUCENE_VER}.jar" >> $global_config_filename
+	echo -e -n ":${GRASSROOTS_INSTALL_DIR}/lucene/lib/json-simple-1.1.1.jar" >> $global_config_filename
+	echo -e -n ":${GRASSROOTS_INSTALL_DIR}/lucene/lib/grassroots-search-core-0.1.jar" >> $global_config_filename
+
+	echo -e ":${GRASSROOTS_INSTALL_DIR}/lucene/lib/grassroots-search-lucene-app-0.1.jar\"," >> $global_config_filename
 	
-	classpath += ":$lucene_mods_dir/lucene-core-$LUCENE_VER.jar"
-	classpath += ":$lucene_mods_dir/lucene-facet-$LUCENE_VER.jar"
-	classpath += ":$lucene_mods_dir/lucene-queryparser-$LUCENE_VER.jar"
-	classpath += ":$lucene_mods_dir/lucene-backward-codecs-$LUCENE_VER.jar"
-	classpath += ":$lucene_mods_dir/lucene-highlighter-$LUCENE_VER.jar"
-	classpath += ":$lucene_mods_dir/lucene-memory-$LUCENE_VER.jar"
-	classpath += ":$lucene_mods_dir/lucene-queries-$LUCENE_VER.jar"
-
-	classpath += ":$GRASSROOTS_INSTALL_DIR/lucene/lib/json-simple-1.1.1.jar"
-	
-	classpath += ":$GRASSROOTS_INSTALL_DIR/lucene/lib/grassroots-search-core-0.1.jar"
-	classpath += ":$GRASSROOTS_INSTALL_DIR/lucene/lib/grassroots-search-lucene-app-0.1.jar"	
-	
-	
-	echo -e "\t\t\"classpath\": \"$classpath\"" >> $global_config_filename
 
 
-	echo -e "\t\t\"index\": \"$GRASSROOTS_INSTALL_DIR/lucene/index\"" >> $global_config_filename
-	echo -e "\t\t\"taxonomy\": \"$GRASSROOTS_INSTALL_DIR/lucene/tax\"" >> $global_config_filename
 
-	echo -e "\t\t\"search_class\": \"uk.ac.earlham.grassroots.app.lucene.Searcher\"" >> $global_config_filename
-	echo -e "\t\t\"delete_class\": \"uk.ac.earlham.grassroots.app.lucene.Deleter\"" >> $global_config_filename
-	echo -e "\t\t\"index_class\": \"uk.ac.earlham.grassroots.app.lucene.Indexer\"" >> $global_config_filename
 
-	echo -e "\t\t\"working_directory\": \"$GRASSROOTS_INSTALL_DIR/working_directory/lucene\"" >> $global_config_filename
+	echo -e "\t\t\"index\": \"$GRASSROOTS_INSTALL_DIR/lucene/index\"," >> $global_config_filename
+	echo -e "\t\t\"taxonomy\": \"$GRASSROOTS_INSTALL_DIR/lucene/tax\"," >> $global_config_filename
+
+	echo -e "\t\t\"search_class\": \"uk.ac.earlham.grassroots.app.lucene.Searcher\"," >> $global_config_filename
+	echo -e "\t\t\"delete_class\": \"uk.ac.earlham.grassroots.app.lucene.Deleter\"," >> $global_config_filename
+	echo -e "\t\t\"index_class\": \"uk.ac.earlham.grassroots.app.lucene.Indexer\"," >> $global_config_filename
+
+	echo -e "\t\t\"working_directory\": \"$GRASSROOTS_INSTALL_DIR/working_directory/lucene\"," >> $global_config_filename
 	echo -e "\t\t\"facet_key\": \"facet_type\"" >> $global_config_filename
 
-	echo -e "\t}," >> $global_config_filename
+	echo -e "\t}" >> $global_config_filename
 	
 	
 
@@ -438,6 +435,436 @@ WriteGrassrootsServerConfig() {
 	echo -e "\n}" >> $global_config_filename
 
 }
+
+
+
+# Install PCRE2
+InstallPCRE2() {
+
+	if [ ! -e "$PCRE2_INSTALL_DIR/bin/pcre2-config" ]; then
+
+		cd $SRC_DIR/temp
+
+		echo "$PCRE2_INSTALL_DIR/bin/pcre2-config doesn't exist"
+		GetAndUnpackArchive pcre2-$PCRE2_VER https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$PCRE2_VER
+		cd pcre2-$PCRE2_VER
+		./configure --prefix=$PCRE2_INSTALL_DIR
+		make
+
+		echo "About to run: SudoEnsureDir $PCRE2_INSTALL_DIR"
+		SudoEnsureDir $PCRE2_INSTALL_DIR
+
+		echo "installing pcre2"
+		make install
+	fi
+}
+
+
+# Install Apache
+InstallApache() {
+	if [ ! -e "$APACHE_INSTALL_DIR/bin/apxs" ]; then
+
+		cd $SRC_DIR/temp
+
+		echo "$APACHE_INSTALL_DIR/bin/apxs doesn't exist"
+		echo ">>>> START INSTALLAING APACHE"
+		GetAndUnpackArchive httpd-$HTTPD_VER https://dlcdn.apache.org/httpd/
+		GetAndUnpackArchive apr-$APR_VER https://dlcdn.apache.org/apr/
+		GetAndUnpackArchive apr-util-$APR_UTIL_VER https://dlcdn.apache.org/apr/
+		tar zxf apr-util-$APR_UTIL_VER.tar.gz
+		tar zxf apr-$APR_VER.tar.gz
+		tar zxf httpd-$HTTPD_VER.tar.gz
+		mv apr-$APR_VER httpd-$HTTPD_VER/srclib/apr
+		mv apr-util-$APR_UTIL_VER httpd-$HTTPD_VER/srclib/apr-util
+		cd httpd-$HTTPD_VER
+		./configure --prefix=$APACHE_INSTALL_DIR --with-included-apr --with-pcre=$PCRE2_INSTALL_DIR/bin/pcre2-config
+		make
+		SudoEnsureDir $APACHE_INSTALL_DIR
+		make install
+		echo ">>>> END INSTALLAING APACHE"
+	fi
+}
+
+
+# Install MongoDB
+InstallMongoDB() {
+	if [ ! -e "$MONGODB_INSTALL_DIR/bin/mongod" ]; then
+
+		cd $SRC_DIR/temp
+
+		echo "$MONGODB_INSTALL_DIR/bin/mongod doesn't exist"
+		echo ">>>> START INSTALLAING MONGO"
+		tools_name=mongodb-database-tools-ubuntu2404-x86_64-$MONGODB_TOOLS_VER
+		mongo_name=mongodb-linux-x86_64-ubuntu2204-$MONGODB_VER
+
+		GetAndUnpackArchive $mongo_name https://fastdl.mongodb.org/linux tgz
+		GetAndUnpackArchive $tools_name https://fastdl.mongodb.org/tools/db tgz
+
+		tar zxf $mongo_name.tgz
+		tar zxf $tools_name.tgz
+
+		SudoEnsureDir $MONGODB_INSTALL_DIR
+		cp -r $tools_name/* $MONGODB_INSTALL_DIR
+		cp -r $mongo_name/* $MONGODB_INSTALL_DIR
+		mkdir $MONGODB_INSTALL_DIR/dbs
+		echo ">>>> END INSTALLAING MONGO"
+	fi
+}
+
+# Install the dependencies
+
+# Install Jansson 
+InstallJansson() {
+	if [ ! -e "$JANSSON_INSTALL_DIR/lib/libjansson.$LIB_SUFFIX" ]; then
+		echo "$JANSSON_INSTALL_DIR/lib/libjansson.$LIB_SUFFIX doesn't exist"
+		echo ">>>> START INSTALLAING JANSSON"
+		
+		cd $SRC_DIR/temp
+		
+		GetAndUnpackArchive jansson-$JANSSON_VER https://github.com/akheron/jansson/releases/download/v$JANSSON_VER/
+		cd jansson-$JANSSON_VER
+		./configure --prefix=$JANSSON_INSTALL_DIR
+		
+		make
+		
+		echo "About to run: SudoEnsureDir $JANSSON_INSTALL_DIR"
+		SudoEnsureDir $JANSSON_INSTALL_DIR
+
+		echo "installing jansson"
+		make install
+
+		echo ">>>> END INSTALLAING JANSSON"
+	fi
+}
+
+# LIBUUID
+InstallLibUUID() {
+	if [ ! -e "$LIBUUID_INSTALL_DIR/lib/libuuid.$LIB_SUFFIX" ]; then
+		echo "$LIBUUID_INSTALL_DIR/lib/libuuid.$LIB_SUFFIX doesn't exist"
+		echo ">>>> START INSTALLING UUID"
+
+		cd $SRC_DIR/temp
+
+		wget -O libuuid-$LIBUUID_VER.tar.gz "https://downloads.sourceforge.net/project/libuuid/libuuid-$LIBUUID_VER.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-$LIBUUID_VER.tar.gz%2Fdownload&ts=1532275139"  
+		tar xzf libuuid-$LIBUUID_VER.tar.gz 
+		cd libuuid-$LIBUUID_VER  
+		./configure --prefix=$LIBUUID_INSTALL_DIR
+
+		make
+		
+		echo "About to run: SudoEnsureDir $LIBUUID_INSTALL_DIR"
+		SudoEnsureDir $LIBUUID_INSTALL_DIR
+
+		echo "installing jansson"
+		make install
+
+		echo ">>>> END INSTALLING UUID"
+	fi
+}
+
+
+# MONGO DB C
+InstallMongoC() {
+	if [ ! -e "$MONGOC_INSTALL_DIR/lib/libmongoc2.$LIB_SUFFIX" ]; then
+		echo "$MONGOC_INSTALL_DIR/lib/libmongoc2.$LIB_SUFFIX doesn't exist"
+		echo ">>>> START INSTALLING MONGOC"
+
+		cd $SRC_DIR/temp
+
+		GetAndUnpackArchive mongo-c-driver-$MONGO_C_VER https://github.com/mongodb/mongo-c-driver/releases/download/$MONGO_C_VER
+		cd mongo-c-driver-$MONGO_C_VER
+
+		EnsureDir _build 
+
+		cmake -S . -B _build -D CMAKE_BUILD_TYPE=RelWithDebInfo -D BUILD_VERSION="$MONGO_C_VER" -D ENABLE_MONGOC=ON -D ENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
+		cmake --build _build --config RelWithDebInfo --parallel
+
+		echo "About to run: SudoEnsureDir $MONGOC_INSTALL_DIR"
+		SudoEnsureDir $MONGOC_INSTALL_DIR
+
+		cmake --install _build --config RelWithDebInfo --prefix=$MONGOC_INSTALL_DIR
+
+
+		echo ">>>> END INSTALLING MONGOC"
+	fi
+}
+
+
+# LIBEXIF
+InstallLibExif() {
+	if [ ! -e "$LIBEXIF_INSTALL_DIR/lib/libexif.$LIB_SUFFIX" ]; then
+		echo "$LIBEXIF_INSTALL_DIR/lib/libexif.$LIB_SUFFIX doesn't exist"
+		echo ">>>> START INSTALLING EXIF"
+
+		cd $SRC_DIR/temp
+
+		GetAndUnpackArchive libexif-$LIBEXIF_VER https://github.com/libexif/libexif/releases/tag/v$LIBEXIF_VER zip
+		cd libexif-$LIBEXIF_VER 
+
+		./configure --prefix=$LIBEXIF_INSTALL_DIR 
+		make 
+
+
+		echo "About to run: SudoEnsureDir LIBEXIF_INSTALL_DIR "
+		SudoEnsureDir $LIBEXIF_INSTALL_DIR 
+		
+		make install 
+
+		echo ">>>> END INSTALLING EXIF"
+	fi
+}
+
+
+
+# SQLITE
+InstallSQLite() {
+	if [ ! -e "$SQLITE_INSTALL_DIR/lib/libsqlite3.$LIB_SUFFIX" ]
+	then
+		echo "$SQLITE_INSTALL_DIR/lib/libsqlite3.$LIB_SUFFIX doesn't exist"
+
+		echo ">>>> START INSTALLING SQLITE"
+
+		cd $SRC_DIR/temp
+		wget https://www.sqlite.org/$SQLITE_YEAR/sqlite-amalgamation-$SQLITE_VER.zip 
+		unzip sqlite-amalgamation-$SQLITE_VER.zip 
+		cd sqlite-amalgamation-$SQLITE_VER 
+		gcc sqlite3.c -o libsqlite3.$LIB_SUFFIX -shared -fPIC 
+		SudoEnsureDir $SQLITE_INSTALL_DIR/include 
+		mkdir -p $SQLITE_INSTALL_DIR/lib 
+		cp libsqlite3.$LIB_SUFFIX $SQLITE_INSTALL_DIR/lib/ 
+		cp *.h $SQLITE_INSTALL_DIR/include 
+
+		echo ">>>> END INSTALLING SQLITE"
+	fi
+}
+
+
+# HTMLCXX
+InstallHTMLCXX() {
+	if [ ! -e "$HTMLCXX_INSTALL_DIR/lib/libhtmlcxx.$LIB_SUFFIX" ]
+	then
+
+		echo "$HTMLCXX_INSTALL_DIR/lib/libhtmlcxx.$LIB_SUFFIX doesn't exist"
+		echo ">>>> START INSTALLING HTMLCXX"
+
+		cd $SRC_DIR/temp
+		wget -O htmlcxx-$HTMLCXX_VER.tar.gz "https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/$HTMLCXX_VER/htmlcxx-0.86.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fhtmlcxx%2Ffiles%2Flatest%2Fdownload%3Fsource%3Dtyp_redirect&ts=1532444157" 
+		tar xzf htmlcxx-$HTMLCXX_VER.tar.gz 
+		cd htmlcxx-$HTMLCXX_VER 
+		./configure --prefix=$HTMLCXX_INSTALL_DIR
+		make install 
+
+		echo ">>>> END INSTALLING HTMLCXX"
+
+	fi
+}
+
+# HCX SELECT
+InstallHCXSelect () {
+	if [ ! -e "$HCXSELECT_INSTALL_DIR/lib/libhcxselect.$LIB_SUFFIX" ]
+	then
+
+		echo "$HCXSELECT_INSTALL_DIR/lib/libhcxselect.$LIB_SUFFIX"
+		echo ">>>> START INSTALLING HCX SELECT"
+
+		cd $SRC_DIR/temp
+		wget https://github.com/jgehring/hcxselect/archive/$HCXSELECT_VER.tar.gz  
+		tar xzf $HCXSELECT_VER.tar.gz 
+		cd hcxselect-$HCXSELECT_VER/src 
+		patch < $SRC_DIR/hcxselect.patch 
+		make shared DIR_HTMLCXX=$HCXSELECT_INSTALL_DIR
+		mkdir -p $HCXSELECT_INSTALL_DIR/include 
+		mkdir -p $HCXSELECT_INSTALL_DIR/lib 
+		cp libhcxselect.so $HCXSELECT_INSTALL_DIR/lib/ 
+		cp *.h $HCXSELECT_INSTALL_DIR/include	 
+
+		echo ">>>> END INSTALLING HCX SELECT"
+
+	fi
+}
+
+# HTSLIB
+InstallHTSLib () {
+	if [ ! -e "$HTSLIB_INSTALL_DIR/lib/libhts.$LIB_SUFFIX" ]
+	then
+		echo "$HTSLIB_INSTALL_DIR/lib/libhts.$LIB_SUFFIX doesn't exist"
+
+		echo ">>>> START INSTALLING HTSLIB"
+
+		cd $SRC_DIR/temp
+		wget https://github.com/samtools/htslib/releases/download/$HTSLIB_VER/htslib-$HTSLIB_VER.tar.bz2 
+		tar xjf htslib-$HTSLIB_VER.tar.bz2 
+		cd htslib-$HTSLIB_VER 
+		./configure --prefix=$HTSLIB_INSTALL_DIR --disable-bz2 --disable-lzma 
+		make install 
+
+		echo ">>>> END INSTALLING HTSLIB"
+
+	fi
+}
+
+# PCRE
+InstallPCRE() {
+	if [ ! -e "$PCRE_INSTALL_DIR/lib/libpcre.$LIB_SUFFIX" ]
+	then
+		echo "$PCRE_INSTALL_DIR/lib/libpcre.$LIB_SUFFIX doesn't exist"
+
+		echo ">>>> START INSTALLING PCRE"
+
+		cd $SRC_DIR/temp
+		wget https://altushost-swe.dl.sourceforge.net/project/pcre/pcre/$PCRE_VER/pcre-$PCRE_VER.tar.bz2 
+		tar xjf pcre-$PCRE_VER.tar.bz2 
+		cd pcre-$PCRE_VER 
+		./configure --prefix=$PCRE_INSTALL_DIR
+		make install 
+
+		echo ">>>> END INSTALLING PCRE"
+
+	fi
+}
+
+
+# LUCENE
+InstallLucene() {
+	if [ ! -e "$LUCENE_INSTALL_DIR/modules/lucene-core-${LUCENE_VER}.jar" ]
+	then
+
+		echo "$LUCENE_INSTALL_DIR/modules/lucene-core-${LUCENE_VER}.jar doesn't exist"
+		echo ">>>> START INSTALLING LUCENE"
+
+		cd $SRC_DIR/temp
+		wget https://dlcdn.apache.org/lucene/java/$LUCENE_VER/lucene-${LUCENE_VER}.tgz 
+		tar xzf lucene-${LUCENE_VER}.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
+		
+		if [ -d $LUCENE_INSTALL_DIR ]; then
+			rm -fr $LUCENE_INSTALL_DIR
+		fi
+		
+		mv $GRASSROOTS_EXTRAS_INSTALL_PATH/lucene-${LUCENE_VER} $LUCENE_INSTALL_DIR
+
+		echo ">>>> END INSTALLING LUCENE"
+
+	fi
+}
+
+
+# SOLR
+InstallSolr() {
+	if [ ! -e "$SOLR_INSTALL_DIR/bin/solr" ]
+	then
+
+		echo "$SOLR_INSTALL_DIR/bin/solr doesn't exist"
+		echo ">>>> START INSTALLING SOLR"
+
+		cd $SRC_DIR/temp
+		wget --max-redirect 20 "https://www.apache.org/dyn/closer.lua/solr/solr/$SOLR_VER/solr-$SOLR_VER.tgz?action=download" -O solr-$SOLR_VER.tgz
+		tar xzf solr-$SOLR_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
+
+		if [ -d $SOLR_INSTALL_DIR ]; then
+			rm -fr $SOLR_INSTALL_DIR
+		fi
+		
+
+		mv $GRASSROOTS_EXTRAS_INSTALL_PATH/solr-$SOLR_VER $SOLR_INSTALL_DIR
+
+
+		echo ">>>> END INSTALLING SOLR"
+	fi
+}
+
+
+GetGrassrootsRepos() {
+	# Create the Projects directory
+	EnsureDir $GRASSROOTS_PROJECT_DIR
+
+	# Install Grassroots
+	cd $GRASSROOTS_PROJECT_DIR
+
+	GetGitRepo https://github.com/TGAC/grassroots-build-tools.git $BUILD_CONFIG_DIR_NAME
+	GetGitRepo https://github.com/TGAC/grassroots-core.git core
+	GetGitRepo https://github.com/TGAC/grassroots-lucene.git lucene
+
+	EnsureDir $GRASSROOTS_PROJECT_DIR/services
+	cd $GRASSROOTS_PROJECT_DIR/services
+
+	echo "services: ${grassroots_services[@]}"
+	GetAllGitRepos grassroots_services
+
+	EnsureDir $GRASSROOTS_PROJECT_DIR/servers
+	cd $GRASSROOTS_PROJECT_DIR/servers
+	GetAllGitRepos grassroots_servers
+
+	EnsureDir $GRASSROOTS_PROJECT_DIR/libs
+	cd $GRASSROOTS_PROJECT_DIR/libs
+	GetAllGitRepos grassroots_libs
+
+	EnsureDir $GRASSROOTS_PROJECT_DIR/clients
+	cd $GRASSROOTS_PROJECT_DIR/clients
+	GetAllGitRepos grassroots_clients
+
+	EnsureDir $GRASSROOTS_PROJECT_DIR/handlers
+	cd $GRASSROOTS_PROJECT_DIR/handlers
+	GetAllGitRepos grassroots_handlers
+}
+
+
+# Write the Grassroots Apache config and 
+# add the include statement for it, if not 
+# already there, to the main httpd.conf file
+WriteApacheGrassrootsConfig() {
+	local gr_conf=conf/extra/grassroots.conf
+	cd ${APACHE_INSTALL_DIR}
+
+	# if there's an existing file, back it up
+	if [ -e ${gr_conf} ]; then
+		
+		if [ -e ${gr_conf}~ ]; then
+			rm ${gr_conf}~
+		fi
+
+		mv ${gr_conf} ${gr_conf}~
+	fi
+
+
+	echo -e "#" > ${gr_conf}
+	echo -e "# Load the Grassroots module and the caching modules required" >> ${gr_conf}
+	echo -e "# for storing persistent data when the server is running" >> ${gr_conf}
+	echo -e "#\n" >> ${gr_conf}
+
+	echo -e "LoadModule grassroots_module modules/mod_grassroots.so" >> ${gr_conf}
+	echo -e "LoadModule cache_module modules/mod_cache.so" >> ${gr_conf}
+	echo -e "LoadModule cache_socache_module modules/mod_cache_socache.so" >> ${gr_conf}
+	echo -e "LoadModule socache_shmcb_module modules/mod_socache_shmcb.so\n" >> ${gr_conf}
+
+	echo -e "# Set the caching preferences for storing the persistent data" >> ${gr_conf}
+	echo -e "CacheSocache shmcb" >> ${gr_conf}
+	echo -e "CacheSocacheMaxSize 102400\n\n" >> ${gr_conf}
+
+
+	echo -e "# Let Grassroots handle these requests" >> ${gr_conf}
+	echo -e "<LocationMatch \"${APACHE_GRASSROOTS_LOCATION}\">\n" >> ${gr_conf}
+
+	echo -e "\t# Set the uri for the Grassroots infrastructure requests" >> ${gr_conf}
+	echo -e "\tSetHandler grassroots-handler\n" >> ${gr_conf}
+
+	echo -e "\t# The path to the Grassroots root directory" >> ${gr_conf}
+	echo -e "\tGrassrootsRoot ${GRASSROOTS_INSTALL_DIR}\n" >> ${gr_conf}
+
+	echo -e "\t# The global configuration file to use" >> ${gr_conf}
+	echo -e "\tGrassrootsConfig ${GRASSROOTS_SERVER_CONFIG}_config\n" >> ${gr_conf}
+
+	echo -e "\t# The path to the service configuration files" >> ${gr_conf}
+	echo -e "\tGrassrootsServicesConfigPath ${GRASSROOTS_SERVER_CONFIG}\n" >> ${gr_conf}
+
+
+	echo -e "</LocationMatch>" >> ${gr_conf}
+
+	# Add the config file to the main apache config 
+	# if it's not already there
+	local line="Include ${gr_conf}"
+	local httpd_conf=${APACHE_INSTALL_DIR}/conf/httpd.conf
+	grep -qF -- "${line}" "${httpd_conf}" || echo -e "# Add Grassroots\n${line}\n" >> "${httpd_conf}"
+} 
 
 
 #######################
@@ -450,360 +877,53 @@ echo ">>> ROOT: $SRC_DIR"
 EnsureDir $SRC_DIR/temp
 cd $SRC_DIR/temp
 
+# Install the depecndencies
 
+InstallPCRE2
 
-# Install PCRE2
-if [ ! -e "$PCRE2_INSTALL_DIR/bin/pcre2-config" ]; then
-	echo "$PCRE2_INSTALL_DIR/bin/pcre2-config doesn't exist"
-	GetAndUnpackArchive pcre2-$PCRE2_VER https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$PCRE2_VER
-	cd pcre2-$PCRE2_VER
-	./configure --prefix=$PCRE2_INSTALL_DIR
-	make
-
-	echo "About to run: SudoEnsureDir $PCRE2_INSTALL_DIR"
-	SudoEnsureDir $PCRE2_INSTALL_DIR
-
-	echo "installing pcre2"
-	make install
-fi
-
-
-cd $SRC_DIR/temp
-
-# Install Apache
-if [ ! -e "$APACHE_INSTALL_DIR/bin/apxs" ]; then
-	echo "$APACHE_INSTALL_DIR/bin/apxs doesn't exist"
-	echo ">>>> START INSTALLAING APACHE"
-	GetAndUnpackArchive httpd-$HTTPD_VER https://dlcdn.apache.org/httpd/
-	GetAndUnpackArchive apr-$APR_VER https://dlcdn.apache.org/apr/
-	GetAndUnpackArchive apr-util-$APR_UTIL_VER https://dlcdn.apache.org/apr/
-	tar zxf apr-util-$APR_UTIL_VER.tar.gz
-	tar zxf apr-$APR_VER.tar.gz
-	tar zxf httpd-$HTTPD_VER.tar.gz
-	mv apr-$APR_VER httpd-$HTTPD_VER/srclib/apr
-	mv apr-util-$APR_UTIL_VER httpd-$HTTPD_VER/srclib/apr-util
-	cd httpd-$HTTPD_VER
-	./configure --prefix=$APACHE_INSTALL_DIR --with-included-apr --with-pcre=$PCRE2_INSTALL_DIR/bin/pcre2-config
-	make
-	SudoEnsureDir $APACHE_INSTALL_DIR
-	make install
-	echo ">>>> END INSTALLAING APACHE"
-fi
+InstallApache
 
+InstallMongoDB
 
-cd $SRC_DIR/temp
+InstallJansson
 
-# Install MongoDB
-if [ ! -e "$MONGODB_INSTALL_DIR/bin/mongod" ]; then
-	echo "$MONGODB_INSTALL_DIR/bin/mongod doesn't exist"
-	echo ">>>> START INSTALLAING MONGO"
-	tools_name=mongodb-database-tools-ubuntu2404-x86_64-$MONGODB_TOOLS_VER
-	mongo_name=mongodb-linux-x86_64-ubuntu2204-$MONGODB_VER
+InstallLibUUID
 
-	GetAndUnpackArchive $mongo_name https://fastdl.mongodb.org/linux tgz
-	GetAndUnpackArchive $tools_name https://fastdl.mongodb.org/tools/db tgz
+InstallMongoC
 
-	tar zxf $mongo_name.tgz
-	tar zxf $tools_name.tgz
+InstallLibExif
 
-	SudoEnsureDir $MONGODB_INSTALL_DIR
-	cp -r $tools_name/* $MONGODB_INSTALL_DIR
-	cp -r $mongo_name/* $MONGODB_INSTALL_DIR
-	mkdir $MONGODB_INSTALL_DIR/dbs
-	echo ">>>> END INSTALLAING MONGO"
-fi
+InstallSQLite
 
+#InstallHTMLCXX
 
-# Install the dependencies
+#InstallHCXSelect
 
-# Install Jansson 
-if [ ! -e "$JANSSON_INSTALL_DIR/lib/libjansson.$LIB_SUFFIX" ]; then
-	echo "$JANSSON_INSTALL_DIR/lib/libjansson.$LIB_SUFFIX doesn't exist"
-	echo ">>>> START INSTALLAING JANSSON"
-	
-	cd $SRC_DIR/temp
-	
-	GetAndUnpackArchive jansson-$JANSSON_VER https://github.com/akheron/jansson/releases/download/v$JANSSON_VER/
-	cd jansson-$JANSSON_VER
-	./configure --prefix=$JANSSON_INSTALL_DIR
-	
-	make
-	
-	echo "About to run: SudoEnsureDir $JANSSON_INSTALL_DIR"
-	SudoEnsureDir $JANSSON_INSTALL_DIR
+InstallHTSLib
 
-	echo "installing jansson"
-	make install
+InstallPCRE
 
-	echo ">>>> END INSTALLAING JANSSON"
-fi
+InstallLucene
 
+InstallSolr
 
-# LIBUUID
-if [ ! -e "$LIBUUID_INSTALL_DIR/lib/libuuid.$LIB_SUFFIX" ]; then
-	echo "$LIBUUID_INSTALL_DIR/lib/libuuid.$LIB_SUFFIX doesn't exist"
-	echo ">>>> START INSTALLING UUID"
 
-	cd $SRC_DIR/temp
+# Get all of the grassroots code
 
-	wget -O libuuid-$LIBUUID_VER.tar.gz "https://downloads.sourceforge.net/project/libuuid/libuuid-$LIBUUID_VER.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flibuuid%2Ffiles%2Flibuuid-$LIBUUID_VER.tar.gz%2Fdownload&ts=1532275139"  
-	tar xzf libuuid-$LIBUUID_VER.tar.gz 
-	cd libuuid-$LIBUUID_VER  
-	./configure --prefix=$LIBUUID_INSTALL_DIR
-
-	make
-	
-	echo "About to run: SudoEnsureDir $LIBUUID_INSTALL_DIR"
-	SudoEnsureDir $LIBUUID_INSTALL_DIR
-
-	echo "installing jansson"
-	make install
-
-	echo ">>>> END INSTALLING UUID"
-fi
-
-
-
-# MONGO DB C
-if [ ! -e "$MONGOC_INSTALL_DIR/lib/libmongoc2.$LIB_SUFFIX" ]; then
-	echo "$MONGOC_INSTALL_DIR/lib/libmongoc2.$LIB_SUFFIX doesn't exist"
-	echo ">>>> START INSTALLING MONGOC"
-
-	cd $SRC_DIR/temp
-
-	GetAndUnpackArchive mongo-c-driver-$MONGO_C_VER https://github.com/mongodb/mongo-c-driver/releases/download/$MONGO_C_VER
-	cd mongo-c-driver-$MONGO_C_VER
-
-	EnsureDir _build 
-
-	cmake -S . -B _build -D CMAKE_BUILD_TYPE=RelWithDebInfo -D BUILD_VERSION="$MONGO_C_VER" -D ENABLE_MONGOC=ON -D ENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
-	cmake --build _build --config RelWithDebInfo --parallel
-
-	echo "About to run: SudoEnsureDir $MONGOC_INSTALL_DIR"
-	SudoEnsureDir $MONGOC_INSTALL_DIR
-
-	cmake --install _build --config RelWithDebInfo --prefix=$MONGOC_INSTALL_DIR
-
-
-	echo ">>>> END INSTALLING MONGOC"
-fi
-
-
-
-# LIBEXIF
-if [ ! -e "$LIBEXIF_INSTALL_DIR/lib/libexif.$LIB_SUFFIX" ]; then
-	echo "$LIBEXIF_INSTALL_DIR/lib/libexif.$LIB_SUFFIX doesn't exist"
-	echo ">>>> START INSTALLING EXIF"
-
-	cd ~/Downloads
-
-	GetAndUnpackArchive libexif-$LIBEXIF_VER https://github.com/libexif/libexif/releases/tag/v$LIBEXIF_VER zip
-	cd libexif-$LIBEXIF_VER 
-
-	./configure --prefix=$LIBEXIF_INSTALL_DIR 
-	make 
-
-
-	echo "About to run: SudoEnsureDir LIBEXIF_INSTALL_DIR "
-	SudoEnsureDir $LIBEXIF_INSTALL_DIR 
-	
-	make install 
-
-	echo ">>>> END INSTALLING EXIF"
-fi
-
-
-
-
-# SQLITE
-if [ ! -e "$SQLITE_INSTALL_DIR/lib/libsqlite3.$LIB_SUFFIX" ]
-then
-	echo "$SQLITE_INSTALL_DIR/lib/libsqlite3.$LIB_SUFFIX doesn't exist"
-
-	echo ">>>> START INSTALLING SQLITE"
-
-	cd $SRC_DIR/temp
-	wget https://www.sqlite.org/$SQLITE_YEAR/sqlite-amalgamation-$SQLITE_VER.zip 
-	unzip sqlite-amalgamation-$SQLITE_VER.zip 
-	cd sqlite-amalgamation-$SQLITE_VER 
-	gcc sqlite3.c -o libsqlite3.$LIB_SUFFIX -shared -fPIC 
-	SudoEnsureDir $SQLITE_INSTALL_DIR/include 
-	mkdir -p $SQLITE_INSTALL_DIR/lib 
-	cp libsqlite3.$LIB_SUFFIX $SQLITE_INSTALL_DIR/lib/ 
-	cp *.h $SQLITE_INSTALL_DIR/include 
-
-	echo ">>>> END INSTALLING SQLITE"
-fi
-
-
-
-# HTMLCXX
-if [ ! -e "$HTMLCXX_INSTALL_DIR/lib/libhtmlcxx.$LIB_SUFFIX" ]
-then
-
-	echo "$HTMLCXX_INSTALL_DIR/lib/libhtmlcxx.$LIB_SUFFIX doesn't exist"
-	echo ">>>> START INSTALLING HTMLCXX"
-
-	cd $SRC_DIR/temp
-	wget -O htmlcxx-$HTMLCXX_VER.tar.gz "https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/$HTMLCXX_VER/htmlcxx-0.86.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fhtmlcxx%2Ffiles%2Flatest%2Fdownload%3Fsource%3Dtyp_redirect&ts=1532444157" 
-	tar xzf htmlcxx-$HTMLCXX_VER.tar.gz 
-	cd htmlcxx-$HTMLCXX_VER 
-	./configure --prefix=$HTMLCXX_INSTALL_DIR
-	make install 
-
-	echo ">>>> END INSTALLING HTMLCXX"
-
-fi
-
-
-# HCX SELECT
-if [ ! -e "$HCXSELECT_INSTALL_DIR/lib/libhcxselect.$LIB_SUFFIX" ]
-then
-
-	echo "$HCXSELECT_INSTALL_DIR/lib/libhcxselect.$LIB_SUFFIX"
-	echo ">>>> START INSTALLING HCX SELECT"
-
-	cd $SRC_DIR/temp
-	wget https://github.com/jgehring/hcxselect/archive/$HCXSELECT_VER.tar.gz  
-	tar xzf $HCXSELECT_VER.tar.gz 
-	cd hcxselect-$HCXSELECT_VER/src 
-	patch < $SRC_DIR/hcxselect.patch 
-	make shared DIR_HTMLCXX=$HCXSELECT_INSTALL_DIR
-	mkdir -p $HCXSELECT_INSTALL_DIR/include 
-	mkdir -p $HCXSELECT_INSTALL_DIR/lib 
-	cp libhcxselect.so $HCXSELECT_INSTALL_DIR/lib/ 
-	cp *.h $HCXSELECT_INSTALL_DIR/include	 
-
-	echo ">>>> END INSTALLING HCX SELECT"
-
-fi
-
-# HTSLIB
-if [ ! -e "$HTSLIB_INSTALL_DIR/lib/libhts.$LIB_SUFFIX" ]
-then
-	echo "$HTSLIB_INSTALL_DIR/lib/libhts.$LIB_SUFFIX doesn't exist"
-
-	echo ">>>> START INSTALLING HTSLIB"
-
-	cd $SRC_DIR/temp
-	wget https://github.com/samtools/htslib/releases/download/$HTSLIB_VER/htslib-$HTSLIB_VER.tar.bz2 
-	tar xjf htslib-$HTSLIB_VER.tar.bz2 
-	cd htslib-$HTSLIB_VER 
-	./configure --prefix=$HTSLIB_INSTALL_DIR --disable-bz2 --disable-lzma 
-	make install 
-
-	echo ">>>> END INSTALLING HTSLIB"
-
-fi
-
-# PCRE
-if [ ! -e "$PCRE_INSTALL_DIR/lib/libpcre.$LIB_SUFFIX" ]
-then
-	echo "$PCRE_INSTALL_DIR/lib/libpcre.$LIB_SUFFIX doesn't exist"
-
-	echo ">>>> START INSTALLING PCRE"
-
-	cd $SRC_DIR/temp
-	wget https://altushost-swe.dl.sourceforge.net/project/pcre/pcre/$PCRE_VER/pcre-$PCRE_VER.tar.bz2 
-	tar xjf pcre-$PCRE_VER.tar.bz2 
-	cd pcre-$PCRE_VER 
-	./configure --prefix=$PCRE_INSTALL_DIR
-	make install 
-
-	echo ">>>> END INSTALLING PCRE"
-
-fi
-
-
-# LUCENE
-if [ ! -e "$LUCENE_INSTALL_DIR/modules/lucene-core-$LUCENE_VER.jar" ]
-then
-
-	echo "$LUCENE_INSTALL_DIR/modules/lucene-core-$LUCENE_VER.jar doesn't exist"
-	echo ">>>> START INSTALLING LUCENE"
-
-	cd $SRC_DIR/temp
-	wget https://dlcdn.apache.org/lucene/java/$LUCENE_VER/lucene-$LUCENE_VER.tgz 
-	tar xzf lucene-$LUCENE_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
-	
-	if [ -d $LUCENE_INSTALL_DIR ]; then
-		rm -fr $LUCENE_INSTALL_DIR
-	fi
-	
-	mv $GRASSROOTS_EXTRAS_INSTALL_PATH/lucene-$LUCENE_VER $LUCENE_INSTALL_DIR
-
-	echo ">>>> END INSTALLING LUCENE"
-
-fi
-
-
-# SOLR
-if [ ! -e "$SOLR_INSTALL_DIR/bin/solr" ]
-then
-
-	echo "$SOLR_INSTALL_DIR/bin/solr doesn't exist"
-	echo ">>>> START INSTALLING SOLR"
-
-	cd $SRC_DIR/temp
-	wget --max-redirect 20 "https://www.apache.org/dyn/closer.lua/solr/solr/$SOLR_VER/solr-$SOLR_VER.tgz?action=download" -O solr-$SOLR_VER.tgz
-	tar xzf solr-$SOLR_VER.tgz --directory $GRASSROOTS_EXTRAS_INSTALL_PATH
-
-	if [ -d $SOLR_INSTALL_DIR ]; then
-		rm -fr $SOLR_INSTALL_DIR
-	fi
-	
-
-	mv $GRASSROOTS_EXTRAS_INSTALL_PATH/solr-$SOLR_VER $SOLR_INSTALL_DIR
-
-
-	echo ">>>> END INSTALLING SOLR"
-fi
-
-
-# Create the Projects directory
-EnsureDir $GRASSROOTS_PROJECT_DIR
-
-# Install Grassroots
-cd $GRASSROOTS_PROJECT_DIR
-
-GetGitRepo https://github.com/TGAC/grassroots-build-tools.git $BUILD_CONFIG_DIR_NAME
-GetGitRepo https://github.com/TGAC/grassroots-core.git core
-GetGitRepo https://github.com/TGAC/grassroots-lucene.git lucene
-
-EnsureDir $GRASSROOTS_PROJECT_DIR/services
-cd $GRASSROOTS_PROJECT_DIR/services
-
-echo "services: ${grassroots_services[@]}"
-GetAllGitRepos grassroots_services
-
-EnsureDir $GRASSROOTS_PROJECT_DIR/servers
-cd $GRASSROOTS_PROJECT_DIR/servers
-GetAllGitRepos grassroots_servers
-
-EnsureDir $GRASSROOTS_PROJECT_DIR/libs
-cd $GRASSROOTS_PROJECT_DIR/libs
-GetAllGitRepos grassroots_libs
-
-EnsureDir $GRASSROOTS_PROJECT_DIR/clients
-cd $GRASSROOTS_PROJECT_DIR/clients
-GetAllGitRepos grassroots_clients
-
-EnsureDir $GRASSROOTS_PROJECT_DIR/handlers
-cd $GRASSROOTS_PROJECT_DIR/handlers
-GetAllGitRepos grassroots_handlers
-
-
+GetGrassrootsRepos
 
 
 # Set the dependencies.propeties file up
-
 WriteDependencies
 
 
+# Configure Lucene
 WriteLuceneProperties
 
 
+# Weite the main config file
 WriteGrassrootsServerConfig
 
 
+WriteApacheGrassrootsConfig
 
