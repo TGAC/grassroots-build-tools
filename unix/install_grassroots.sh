@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# edit this to where you want the tools installed to 
+# Edit this to where you want Grassroots installed to 
 INSTALL_DIR=/home/billy/temp/dest
 
-# This is where all of the Grassroots git repos will get checked out to
+# This gets the current directory
 SRC_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 
 
@@ -11,10 +11,10 @@ SRC_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 ARRAY_DECL="declare -A"
 #ARRAY_DECL="typeset -A" 
 
-# for Bash set this to -n, for zsh, leave blank
+# For Bash set this to -n, for zsh, leave blank
 LOCAL_VAR_ARG=-n
 
-# so for linux, dylib for mac
+# This is the library extension for this platform e.g. so for linux, dylib for mac
 LIB_SUFFIX=so
 
 # If you need sudo rights to install grassroots
@@ -43,29 +43,33 @@ USER=billy
 # The port to run apache on
 APACHE_PORT=2000
 
-
+# This is the web path that Grassroots backend server will be working on
 APACHE_GRASSROOTS_LOCATION=grassroots/public_backend
 
-# name of the grassroots config
+# This is the name of the Grassroots config that we will generate
 GRASSROOTS_SERVER_CONFIG=public
 
-
+# This is the name that this Grassroots Server will use
 PROVIDER_NAME=localhost
 
+# This is the description that this Grassroots Server will use
 PROVIDER_DESCRIPTION="Grassroots running on localhost"
 
+# This is the logo that this Grassroots Server will use
 PROVIDER_LOGO="grassroots/logo.png"
 
-# set this to the path of the mongorestore tool
+# Set this to the path of the mongorestore tool
 MONGORESTORE=mongorestore
 
-# name to give field trials database
+# The name to give to the field trials database
 FIELD_TRIALS_DB=field_trials
 
+
+# This is the web address that the Django server will be running on
 DJANGO_URL="http://localhost:8000"
 
 
-# the path to pdflatex
+# The path to pdflatex used to generate the Study handbooks
 PDFLATEX="/opt/texlive/bin/x86_64-linux/pdflatex"
 
 
@@ -1086,19 +1090,56 @@ BaseWriteFieldTrialsServiceConfig() {
 }
 
 
-
 WriteSearchGrassrootsConfig() {
+	cd ${GRASSROOTS_INSTALL_DIR}/config/${GRASSROOTS_SERVER_CONFIG}
+	local cfg_file="Search Grassroots"
 
+
+	echo -e "{" > "${cfg_file}"
+	echo -e "\t\"so:image\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/search\"," >> "${cfg_file}"
+
+	echo -e "\t\"facets\": [{," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Dataset\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Dataset\"" >> "${cfg_file}"
+	echo -e "\t}, {," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Service\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Service\"" >> "${cfg_file}"
+	echo -e "\t}, {," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Field Trial\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Field Trial\"" >> "${cfg_file}"
+	echo -e "\t}, {," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Study\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Study\"" >> "${cfg_file}"
+	echo -e "\t}, {," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Location\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Location\"" >> "${cfg_file}"
+	echo -e "\t}, {," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Measured Variable\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Measured Variable\"" >> "${cfg_file}"
+	echo -e "\t}, {," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Programme\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Programme\"" >> "${cfg_file}"
+	echo -e "\t}, {," >> "${cfg_file}"
+
+	echo -e "\t\t\"so:name\": \"Publication\"," >> "${cfg_file}"
+	echo -e "\t\t\"so:description\": \"Publication\"" >> "${cfg_file}"
+	echo -e "\t}]" >> "${cfg_file}"
+
+	echo -e "}" >> "${cfg_file}"
 }
 
 
 
 WriteUsersSubmissionConfig() {
-
-
 	cd ${GRASSROOTS_INSTALL_DIR}/config/${GRASSROOTS_SERVER_CONFIG}
 	local cfg_file="Users submission service"
-
 
 	echo -e "{" > "${cfg_file}"
 	echo -e "\t\"so:image\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/useradd\"," >> "${cfg_file}"
@@ -1106,8 +1147,10 @@ WriteUsersSubmissionConfig() {
 	echo -e "\t\"users_collection\": \"users\"," >> "${cfg_file}"
 	echo -e "\t\"groups_collection\": \"groups\"," >> "${cfg_file}"
 	echo -e "}" >> "${cfg_file}"
+}
 
 
+ConfigureDjango() {
 }
 
 
