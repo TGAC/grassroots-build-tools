@@ -56,6 +56,27 @@ PROVIDER_DESCRIPTION="Grassroots running on localhost"
 
 PROVIDER_LOGO="grassroots/logo.png"
 
+# set this to the path of the mongorestore tool
+MONGORESTORE=mongorestore
+
+# name to give field trials database
+FIELD_TRIALS_DB=field_trials
+
+DJANGO_URL="http://localhost:8000"
+
+
+# the path to pdflatex
+PDFLATEX="/opt/texlive/bin/x86_64-linux/pdflatex"
+
+
+# your geoify api key, see https://www.geoapify.com/ for details
+GEOIFY_API_KEY=""
+
+
+# Set this to http or https depending upon if your server is
+# set up for secure traffic or not
+HTTP="http"
+
 
 #######################################
 ## The versions of the various tools ##
@@ -178,11 +199,11 @@ GetAndUnpackArchive() {
 GetAllGitRepos() {
 	local $LOCAL_VAR_ARG data_ref=$1
 
-	echo ">>> length ${#data_ref[@]}"
+#	echo ">>> length ${#data_ref[@]}"
 
 	for key in ${!data_ref[@]}
 	do
-		echo "Calling GetGitRepo 1:${data_ref[${key}]} 2:${key}"
+#		echo "Calling GetGitRepo 1:${data_ref[${key}]} 2:${key}"
 		GetGitRepo ${data_ref[$key]} $key
 	done
 }
@@ -192,7 +213,7 @@ GetGitRepo() {
 	git_url=$1
 	name=$2
 
-	echo ">>>> GetGitRepo $git_url $name"
+#	echo ">>>> GetGitRepo $git_url $name"
 
 	if [ ! -d $name ]; then
 		echo "calling: git clone $git_url $name"
@@ -340,7 +361,7 @@ WriteGrassrootsServerConfig() {
 	echo -e "{" > $global_config_filename
 
 	# The Grassroots backend url
-	echo -e "\t\"so:url\": \"http://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION}\"," >> $global_config_filename
+	echo -e "\t\"so:url\": \"${HTTP}://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION}\"," >> $global_config_filename
 
 
 	echo -e "\t\"jobs_manager\": \"mongodb_jobs_manager\"," >> $global_config_filename
@@ -362,8 +383,8 @@ WriteGrassrootsServerConfig() {
 	echo -e "\t\t\"@type\": \"so:Organization\"," >> $global_config_filename
 	echo -e "\t\t\"so:name\": \"${PROVIDER_NAME}\"," >> $global_config_filename
 	echo -e "\t\t\"so:description\": \"${PROVIDER_DESCRIPTION}\"," >> $global_config_filename
-	echo -e "\t\t\"so:url\": \"http://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION}\"," >> $global_config_filename
-	echo -e "\t\t\"so:logo\": \"http://localhost:${APACHE_PORT}/${PROVIDER_LOGO}\"" >> $global_config_filename
+	echo -e "\t\t\"so:url\": \"${HTTP}://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION}\"," >> $global_config_filename
+	echo -e "\t\t\"so:logo\": \"${HTTP}://localhost:${APACHE_PORT}/${PROVIDER_LOGO}\"" >> $global_config_filename
 	echo -e "\t}," >> $global_config_filename
 
 
@@ -787,7 +808,7 @@ GetGrassrootsRepos() {
 	EnsureDir $GRASSROOTS_PROJECT_DIR/services
 	cd $GRASSROOTS_PROJECT_DIR/services
 
-	echo "services: ${grassroots_services[@]}"
+#	echo "services: ${grassroots_services[@]}"
 	GetAllGitRepos grassroots_services
 
 	EnsureDir $GRASSROOTS_PROJECT_DIR/servers
@@ -867,6 +888,229 @@ WriteApacheGrassrootsConfig() {
 } 
 
 
+
+InstallDemoDatabases() {
+	read -p "Would you like to install the demo field trial data? [y/N] " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		# Get the demo mongodb and lucene databases
+		echo "Install the dbs"
+		local server="https://grassroots.tools/demo/downloads/"
+		local lucene_db="demo_lucene_db.zip"
+		local field_trials_db="demo_field_trials"
+
+		cd $SRC_DIR/temp
+		wget ${server}/${field_trials_db}.zip
+		unzip ${field_trials_db}.zip
+		${MONGORESTORE} -d ${FIELD_TRIALS_DB} ${field_trials_db}/${field_trials_db}
+
+
+		
+	else
+		echo "Skipping the dummy field trial install"
+	fi
+}
+
+
+
+WriteFieldTrialsServiceConfigs(){
+
+	echo ">>>>>>> ${GRASSROOTS_INSTALL_DIR}/config/${GRASSROOTS_SERVER_CONFIG}"
+
+	mkdir -p ${GRASSROOTS_INSTALL_DIR}/config/${GRASSROOTS_SERVER_CONFIG}
+	cd ${GRASSROOTS_INSTALL_DIR}/config/${GRASSROOTS_SERVER_CONFIG}
+
+	local cfg_file="Browse Programme Revisions"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_programme_url\": \"${DJANGO_URL}/fieldtrial/programme/\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Browse Study Revisions"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Browse Field Trial Revisions"	
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_trial_url\": \"${DJANGO_URL}/fieldtrial/trial/\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Manage Field Trial data"	
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"," >> "${cfg_file}"
+  echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"">> "${cfg_file}"
+  echo -e "\t\"wastebasket_path\": \"${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials/backups\",">> "${cfg_file}"
+  echo -e "\t\"pdflatex_path\": \"${PDFLATEX}\",">> "${cfg_file}"
+  echo -e "\t\"geoapify_api_key\": \"${GEOIFY_API_KEY}\",">> "${cfg_file}"
+  echo -e "\t\"handbook_phenotype_images\": \"${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials/backup\"">> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Manage Study"	
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"," >> "${cfg_file}"
+  echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+  echo -e "\t\"wastebasket_path\": \"${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials/backups\"," >> "${cfg_file}"
+  echo -e "\t\"pdflatex_path\": \"${PDFLATEX}\"," >> "${cfg_file}"
+  echo -e "\t\"geoapify_api_key\": \"${GEOIFY_API_KEY}\"," >> "${cfg_file}"
+  echo -e "\t\"handbook_phenotype_images\": \"${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials/backup\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Search Field Trials"	
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"," >> "${cfg_file}"
+  echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+  echo -e "\t\"use_mv_cache\": false," >> "${cfg_file}"
+  echo -e "\t\"images\": {," >> "${cfg_file}"
+
+  echo -e "\t\t\"Grassroots:Location\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/map\"," >> "${cfg_file}"
+  echo -e "\t\t\"Grassroots:Study\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/polygonchange\"," >> "${cfg_file}"
+  echo -e "\t\t\"Grassroots:FieldTrial\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/polygonchange\"," >> "${cfg_file}"
+  echo -e "\t\t\"Grassroots:Phenotype\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/distance\"" >> "${cfg_file}"
+
+  echo -e "\t}," >> "${cfg_file}"
+  echo -e "\t\"geoapify_api_key\": \"${GEOIFY_API_KEY}\"," >> "${cfg_file}"
+  echo -e "\t\"handbook_phenotype_images\": \"${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials/backup\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Edit Field Trial Rack"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_plots_url\": \"${DJANGO_URL}/fieldtrial/plots/\"," >> "${cfg_file}"
+  echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Any Field Trial data"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"default_crop\": \"wheat\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Crop"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Gene Banks"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Location"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_location_url\": \"${DJANGO_URL}/fieldtrial/location/\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Materials"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Measured Variables"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e "}" >> "${cfg_file}"
+	
+
+	cfg_file="Submit Field Trial Phenoytypes"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "Submit Field Trial Phenoytypes" "grassroots/images/polygonchange"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Plots"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_plots_url\": \"${DJANGO_URL}/fieldtrial/plots/\"," >> "${cfg_file}"
+  echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Programme"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_programme_url\": \"${DJANGO_URL}/fieldtrial/programme/\"," >> "${cfg_file}"
+  echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trials"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_trial_url\": \"${DJANGO_URL}/fieldtrial/trial/\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Study"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"," >> "${cfg_file}"
+  echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Treatment Factor"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e "}" >> "${cfg_file}"
+
+
+	cfg_file="Submit Field Trial Treatments"
+	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
+	echo -e "}" >> "${cfg_file}"
+
+}
+
+
+
+# $1 is config filename
+# $2 is the icon
+BaseWriteFieldTrialsServiceConfig() {
+
+
+	cd ${GRASSROOTS_INSTALL_DIR}/config/${GRASSROOTS_SERVER_CONFIG}
+
+	local working_directory=${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials
+	echo -e "{" > "$1"
+	echo -e "\t\"so:image\": \"${HTTP}://localhost:${APACHE_PORT}/$2\"," >> "$1"
+	echo -e "\t\"cache_path\": \"${working_directory}\"," >> "$1"
+	echo -e "\t\"database\": \"${FIELD_TRIALS_DB}\"," >> "$1"
+	echo -e -n "\t\"database_type\": \"mongodb\"" >> "$1"
+
+}
+
+
+
+WriteSearchGrassrootsConfig() {
+
+}
+
+
+
+WriteUsersSubmissionConfig() {
+
+
+	cd ${GRASSROOTS_INSTALL_DIR}/config/${GRASSROOTS_SERVER_CONFIG}
+	local cfg_file="Users submission service"
+
+
+	echo -e "{" > "${cfg_file}"
+	echo -e "\t\"so:image\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/useradd\"," >> "${cfg_file}"
+	echo -e "\t\"database\": \"users_and_groups\"," >> "${cfg_file}"
+	echo -e "\t\"users_collection\": \"users\"," >> "${cfg_file}"
+	echo -e "\t\"groups_collection\": \"groups\"," >> "${cfg_file}"
+	echo -e "}" >> "${cfg_file}"
+
+
+}
+
+
 #######################
 ### START OF SCRIPT ###
 #######################
@@ -926,4 +1170,17 @@ WriteGrassrootsServerConfig
 
 
 WriteApacheGrassrootsConfig
+
+
+WriteFieldTrialsServiceConfigs
+
+
+WriteSearchGrassrootsConfig 
+
+
+WriteUsersSubmissionConfig
+
+
+InstallDemoDatabases
+
 
