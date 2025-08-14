@@ -81,6 +81,7 @@ GEOIFY_API_KEY=""
 # set up for secure traffic or not
 HTTP="http"
 
+DJANGO_DIR="django-server"
 
 #######################################
 ## The versions of the various tools ##
@@ -143,6 +144,7 @@ grassroots_servers["httpd-server"]="https://github.com/TGAC/grassroots-server-ap
 grassroots_servers["mongodb-jobs-manager"]="https://github.com/TGAC/grassroots-jobs-manager-mongodb.git"
 grassroots_servers["simple-servers-manager"]="https://github.com/TGAC/grassroots-simple-servers-manager.git"
 grassroots_servers["brapi-module"]="https://github.com/TGAC/grassroots-brapi-module.git"
+grassroots_servers[${DJANGO_DIR}]="https://github.com/TGAC/grassroots_services_django_web.git"
 
 
 eval "$ARRAY_DECL" grassroots_clients
@@ -1150,7 +1152,53 @@ WriteUsersSubmissionConfig() {
 }
 
 
+
+
+
+
+
+# The Base URL used to generate the links from the single study page to the plots, etc.
+#BASE_URL = "https://overhere"
+
+
+#MEDIA_ROOT = '/mnt/irods_mount/grassroots/app_media/'
+#MEDIA_URL = '/media/'
+#MEDIA_URL = '/app_media/'
+
+#PHOTO_URL_SERVER = "http://localhost"
+
+#DEBUG = True
+
 ConfigureDjango() {
+	local django="grassroots_services_django_web/custom_settings.py"
+	cd $GRASSROOTS_PROJECT_DIR/servers/${DJANGO_DIR}/
+
+	# if there's an existing file, back it up
+	if [ -e ${django} ]; then
+		
+		if [ -e ${django}~ ]; then
+			rm ${django}~
+		fi
+
+		mv ${django} ${django}~
+	fi
+	
+
+	echo -e "# The filesystem path to where the static files" >> "${django}"
+	echo -e "# that Django uses will be installed" >> "${django}"
+	echo -e "STATIC_ROOT = ${APACHE_INSTALL_DIR}/htdocs/static\n" >> "${django}"
+
+	echo -e "# The web address to access the static files" >> "${django}"
+	echo -e "STATIC_URL = '/static/'\n" >> "${django}"
+
+	echo -e "# The web address for the grassroots server to connect to" >> "${django}"
+	echo -e "SERVER_URL = \"${HTTP}://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION\"\n" >> "${django}"
+	
+	local key=`LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 13; echo`
+	echo -e "# SECURITY WARNING: keep the secret key used in production secret!" >> "${django}"
+	echo -e "SECRET_KEY = \"{key}\"\n" >> "${django}"
+	
+	
 }
 
 
@@ -1223,6 +1271,7 @@ WriteSearchGrassrootsConfig
 
 WriteUsersSubmissionConfig
 
+ConfigureDjango
 
 InstallDemoDatabases
 
