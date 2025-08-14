@@ -1154,21 +1154,6 @@ WriteUsersSubmissionConfig() {
 
 
 
-
-
-
-# The Base URL used to generate the links from the single study page to the plots, etc.
-#BASE_URL = "https://overhere"
-
-
-#MEDIA_ROOT = '/mnt/irods_mount/grassroots/app_media/'
-#MEDIA_URL = '/media/'
-#MEDIA_URL = '/app_media/'
-
-#PHOTO_URL_SERVER = "http://localhost"
-
-#DEBUG = True
-
 ConfigureDjango() {
 	local django="grassroots_services_django_web/custom_settings.py"
 	cd $GRASSROOTS_PROJECT_DIR/servers/${DJANGO_DIR}/
@@ -1192,13 +1177,29 @@ ConfigureDjango() {
 	echo -e "STATIC_URL = '/static/'\n" >> "${django}"
 
 	echo -e "# The web address for the grassroots server to connect to" >> "${django}"
-	echo -e "SERVER_URL = \"${HTTP}://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION\"\n" >> "${django}"
+	echo -e "SERVER_URL = \"${HTTP}://localhost:${APACHE_PORT}/${APACHE_GRASSROOTS_LOCATION}\"\n" >> "${django}"
 	
-	local key=`LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 13; echo`
+	local security_key=`LC_ALL=C tr -dc '[:graph:]' < /dev/urandom | head -c 32; echo`
+	
 	echo -e "# SECURITY WARNING: keep the secret key used in production secret!" >> "${django}"
-	echo -e "SECRET_KEY = \"{key}\"\n" >> "${django}"
+	echo -e "SECRET_KEY = \"${security_key}\"\n" >> "${django}"
 	
-	
+	echo -e "# The Base URL used to generate the links from the single study page to the plots, etc." >> "${django}"
+	echo -e "BASE_URL = "${HTTP}://localhost:${APACHE_PORT}"\n" >> "${django}"
+
+	echo -e "# The path for the uploaded photos" >> "${django}"
+	echo -e "MEDIA_ROOT = \"${APACHE_INSTALL_DIR}/htdocs/media\"\n" >> "${django}"
+
+	echo -e "# The url for the uploaded photos" >> "${django}"
+	echo -e "MEDIA_URL = \"media\"\n" >> "${django}"
+
+	echo -e "# The url for the photo server." >> "${django}"
+	echo -e "PHOTO_URL_SERVER = "${HTTP}://localhost:${APACHE_PORT}"\n" >> "${django}"
+
+
+	echo -e "# Set this to True to enable debugging output" >> "${django}"
+	echo -e "DEBUG = False\n" >> "${django}"
+
 }
 
 
