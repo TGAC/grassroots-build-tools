@@ -258,21 +258,23 @@ DoesFileExist() {
 }
 
 
+BackUp() {
+	if [ -e "$1" ]; then
+		
+		if [ -e "$1"~ ]; then
+			rm "$1"~
+		fi
+
+		mv "$1" "$1"~
+	fi
+}
+
+
 WriteDependencies() {
 	cd $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM
 
 	# if there's an existing file, back it up
-	if [ -e $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties ]; then
-		
-		if [ -e $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties~ ]; then
-			rm $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties~
-		fi
-
-		mv $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties $GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties~
-
-	fi
-
-
+	BackUp "$GRASSROOTS_PROJECT_DIR/$BUILD_CONFIG_DIR_NAME/unix/$PLATFORM/dependencies.properties"
 
 	echo -e "export DIR_GRASSROOTS_INSTALL := $GRASSROOTS_INSTALL_DIR" > dependencies.properties
 	echo -e "export DIR_GRASSROOTS_EXTRAS := $GRASSROOTS_EXTRAS_INSTALL_PATH\n" >> dependencies.properties
@@ -327,27 +329,18 @@ WriteLuceneProperties() {
 	cd $GRASSROOTS_PROJECT_DIR/lucene/
 
 	# if there's an existing file, back it up
-	if [ -e $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties ]; then
-		
-		if [ -e $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties~ ]; then
-			rm $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties~
-		fi
+	BackUp "$GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties"
 
-		mv $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties $GRASSROOTS_PROJECT_DIR/$lucene/grassroots-lucene.properties~
-
-	fi
-
-
-	echo -e "install.dir = $GRASSROOTS_INSTALL_DIR/lucene\n" > grassroots-lucene.properties
+	echo -e "install.dir = ${GRASSROOTS_INSTALL_DIR}/lucene\n" > grassroots-lucene.properties
 
 	echo -e "index.dir=\${install.dir}/index" >> grassroots-lucene.properties
 	echo -e "tax.dir=\${install.dir}/tax\n" >> grassroots-lucene.properties
 
-	echo -e "lucene.dir=$LUCENE_INSTALL_DIR" >> grassroots-lucene.properties
-	echo -e "lucene.version=$LUCENE_VER\n" >> grassroots-lucene.properties
+	echo -e "lucene.dir=${LUCENE_INSTALL_DIR}" >> grassroots-lucene.properties
+	echo -e "lucene.version=${LUCENE_VER}\n" >> grassroots-lucene.properties
 
-	echo -e "solr.dir=$SOLR_INSTALL_DIR" >> grassroots-lucene.properties
-	echo -e "solr.version=$SOLR_VER\n" >> grassroots-lucene.properties
+	echo -e "solr.dir=${SOLR_INSTALL_DIR}" >> grassroots-lucene.properties
+	echo -e "solr.version=${SOLR_VER}\n" >> grassroots-lucene.properties
 }
 
 
@@ -843,14 +836,7 @@ WriteApacheGrassrootsConfig() {
 	cd ${APACHE_INSTALL_DIR}
 
 	# if there's an existing file, back it up
-	if [ -e ${gr_conf} ]; then
-		
-		if [ -e ${gr_conf}~ ]; then
-			rm ${gr_conf}~
-		fi
-
-		mv ${gr_conf} ${gr_conf}~
-	fi
+	BackUp "${gr_conf}"	
 
 
 	echo -e "#" > ${gr_conf}
@@ -894,7 +880,6 @@ WriteApacheGrassrootsConfig() {
 } 
 
 
-
 InstallDemoDatabases() {
 	read -p "Would you like to install the demo field trial data? [y/N] " -n 1 -r
 	echo    # (optional) move to a new line
@@ -902,15 +887,23 @@ InstallDemoDatabases() {
 		# Get the demo mongodb and lucene databases
 		echo "Install the dbs"
 		local server="https://grassroots.tools/demo/downloads/"
-		local lucene_db="demo_lucene_db.zip"
+		local lucene_db="demo_lucene_db"
 		local field_trials_db="demo_field_trials"
 
 		cd $SRC_DIR/temp
 		wget ${server}/${field_trials_db}.zip
 		unzip ${field_trials_db}.zip
 		${MONGORESTORE} -d ${FIELD_TRIALS_DB} ${field_trials_db}/${field_trials_db}
+		rm -fr ${field_trials_db}
 
+		wget ${server}/${lucene_db}.zip
+		unzip ${lucene_db}.zip
 
+		BackUp "${GRASSROOTS_INSTALL_DIR}/lucene/index"
+		BackUp "${GRASSROOTS_INSTALL_DIR}/lucene/tax"
+
+		mv index ${GRASSROOTS_INSTALL_DIR}/lucene
+		mv tax ${GRASSROOTS_INSTALL_DIR}/lucene
 		
 	else
 		echo "Skipping the dummy field trial install"
@@ -948,7 +941,7 @@ WriteFieldTrialsServiceConfigs(){
 	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
 	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"," >> "${cfg_file}"
   echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
-  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"">> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\",">> "${cfg_file}"
   echo -e "\t\"wastebasket_path\": \"${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials/backups\",">> "${cfg_file}"
   echo -e "\t\"pdflatex_path\": \"${PDFLATEX}\",">> "${cfg_file}"
   echo -e "\t\"geoapify_api_key\": \"${GEOIFY_API_KEY}\",">> "${cfg_file}"
@@ -960,7 +953,7 @@ WriteFieldTrialsServiceConfigs(){
 	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
 	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"," >> "${cfg_file}"
   echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
-  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"," >> "${cfg_file}"
   echo -e "\t\"wastebasket_path\": \"${GRASSROOTS_INSTALL_DIR}/working_directory/field_trials/backups\"," >> "${cfg_file}"
   echo -e "\t\"pdflatex_path\": \"${PDFLATEX}\"," >> "${cfg_file}"
   echo -e "\t\"geoapify_api_key\": \"${GEOIFY_API_KEY}\"," >> "${cfg_file}"
@@ -972,9 +965,9 @@ WriteFieldTrialsServiceConfigs(){
 	BaseWriteFieldTrialsServiceConfig "${cfg_file}" "grassroots/images/polygonchange"
 	echo -e ",\n\t\"view_study_url\": \"${DJANGO_URL}/fieldtrial/study/\"," >> "${cfg_file}"
   echo -e "\t\"fd_path\": \"${APACHE_INSTALL_DIR}/grassroots/frictionless\"," >> "${cfg_file}"
-  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"" >> "${cfg_file}"
+  echo -e "\t\"fd_url\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/frictionless\"," >> "${cfg_file}"
   echo -e "\t\"use_mv_cache\": false," >> "${cfg_file}"
-  echo -e "\t\"images\": {," >> "${cfg_file}"
+  echo -e "\t\"images\": {" >> "${cfg_file}"
 
   echo -e "\t\t\"Grassroots:Location\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/map\"," >> "${cfg_file}"
   echo -e "\t\t\"Grassroots:Study\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/polygonchange\"," >> "${cfg_file}"
@@ -1100,35 +1093,35 @@ WriteSearchGrassrootsConfig() {
 	echo -e "{" > "${cfg_file}"
 	echo -e "\t\"so:image\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/search\"," >> "${cfg_file}"
 
-	echo -e "\t\"facets\": [{," >> "${cfg_file}"
+	echo -e "\t\"facets\": [{" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Dataset\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Dataset\"" >> "${cfg_file}"
-	echo -e "\t}, {," >> "${cfg_file}"
+	echo -e "\t}, {" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Service\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Service\"" >> "${cfg_file}"
-	echo -e "\t}, {," >> "${cfg_file}"
+	echo -e "\t}, {" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Field Trial\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Field Trial\"" >> "${cfg_file}"
-	echo -e "\t}, {," >> "${cfg_file}"
+	echo -e "\t}, {" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Study\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Study\"" >> "${cfg_file}"
-	echo -e "\t}, {," >> "${cfg_file}"
+	echo -e "\t}, {" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Location\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Location\"" >> "${cfg_file}"
-	echo -e "\t}, {," >> "${cfg_file}"
+	echo -e "\t}, {" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Measured Variable\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Measured Variable\"" >> "${cfg_file}"
-	echo -e "\t}, {," >> "${cfg_file}"
+	echo -e "\t}, {" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Programme\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Programme\"" >> "${cfg_file}"
-	echo -e "\t}, {," >> "${cfg_file}"
+	echo -e "\t}, {" >> "${cfg_file}"
 
 	echo -e "\t\t\"so:name\": \"Publication\"," >> "${cfg_file}"
 	echo -e "\t\t\"so:description\": \"Publication\"" >> "${cfg_file}"
@@ -1147,7 +1140,7 @@ WriteUsersSubmissionConfig() {
 	echo -e "\t\"so:image\": \"${HTTP}://localhost:${APACHE_PORT}/grassroots/images/useradd\"," >> "${cfg_file}"
 	echo -e "\t\"database\": \"users_and_groups\"," >> "${cfg_file}"
 	echo -e "\t\"users_collection\": \"users\"," >> "${cfg_file}"
-	echo -e "\t\"groups_collection\": \"groups\"," >> "${cfg_file}"
+	echo -e "\t\"groups_collection\": \"groups\"" >> "${cfg_file}"
 	echo -e "}" >> "${cfg_file}"
 }
 
@@ -1159,15 +1152,7 @@ ConfigureDjango() {
 	cd $GRASSROOTS_PROJECT_DIR/servers/${DJANGO_DIR}/
 
 	# if there's an existing file, back it up
-	if [ -e ${django} ]; then
-		
-		if [ -e ${django}~ ]; then
-			rm ${django}~
-		fi
-
-		mv ${django} ${django}~
-	fi
-	
+	BackUp "${django}"		
 
 	echo -e "# The filesystem path to where the static files" >> "${django}"
 	echo -e "# that Django uses will be installed" >> "${django}"
@@ -1272,7 +1257,9 @@ WriteSearchGrassrootsConfig
 
 WriteUsersSubmissionConfig
 
+
 ConfigureDjango
+
 
 InstallDemoDatabases
 
